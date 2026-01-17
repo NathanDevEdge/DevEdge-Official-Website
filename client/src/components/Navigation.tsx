@@ -44,10 +44,7 @@ export default function Navigation() {
       <div className="container flex items-center justify-between">
         <Link href="/">
           <a className="text-2xl font-display font-bold tracking-tighter flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-mono text-lg">
-              &lt;/&gt;
-            </div>
-            DevEdge
+           <img src="/images/logo-transparent.png" alt="DevEdge Logo" className="h-8 w-auto" />            DevEdge
           </a>
         </Link>
 

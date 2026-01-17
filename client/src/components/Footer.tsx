@@ -7,10 +7,7 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-2">
             <a href="/" className="text-2xl font-display font-bold tracking-tighter flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-mono text-lg">
-                &lt;/&gt;
-              </div>
-              DevEdge
+             <img src="/images/logo-transparent.png" alt="DevEdge Logo" className="h-8 w-auto" />              DevEdge
             </a>
             <p className="text-muted-foreground max-w-sm mb-8">
               Linking Ideas to Execution. We build digital solutions that drive real business growth.
