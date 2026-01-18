@@ -42,10 +42,9 @@ export default function Navigation() {
       )}
     >
       <div className="container flex items-center justify-between">
-        <Link href="/">
-          <a className="text-2xl font-display font-bold tracking-tighter flex items-center gap-2">
-           <img src="/images/logo-transparent.png" alt="DevEdge Logo" className="h-8 w-auto" />            DevEdge
-          </a>
+        <Link href="/" className="text-2xl font-display font-bold tracking-tighter flex items-center gap-2">
+          <img src="/images/logo-transparent.png" alt="DevEdge Logo" className="h-8 w-auto" />
+          DevEdge
         </Link>
 
         {/* Desktop Navigation */}
