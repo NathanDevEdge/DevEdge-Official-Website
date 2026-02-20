@@ -4,13 +4,19 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { HelmetProvider } from "react-helmet-async";
 import Home from "./pages/Home";
+import ServicePage from "./pages/ServicePage";
+import BlogPost from "./pages/BlogPost";
 
 
 function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/services/:slug"} component={ServicePage} />
+      <Route path={"/blog"} component={BlogPost} />
+      <Route path={"/blog/:slug"} component={BlogPost} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
@@ -28,11 +34,13 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider
         defaultTheme="light"
-        // switchable
+      // switchable
       >
         <TooltipProvider>
-          <Toaster />
-          <Router />
+          <HelmetProvider>
+            <Toaster />
+            <Router />
+          </HelmetProvider>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

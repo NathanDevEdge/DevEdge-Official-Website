@@ -1,0 +1,6 @@
+﻿
+> devedge-website@1.0.0 check C:\Users\ndann\.gemini\antigravity\scratch\DevEdge-Official-Website
+> tsc --noEmit
+
+client/src/components/Navigation.tsx(38,3): error TS1109: Expression expected.
+ΓÇëELIFECYCLEΓÇë Command failed with exit code 1.
