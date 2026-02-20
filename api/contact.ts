@@ -18,7 +18,7 @@ export default async function handler(req: any, res: any) {
             const resend = new Resend(RESEND_API_KEY);
 
             await resend.emails.send({
-                from: 'Contact Form <info@developeredge.net>',
+                from: 'Contact Form <noreply@devedge.com.au>',
                 to: ['info@developeredge.net', 'nathan@developeredge.net'],
                 subject: `New Lead: ${service} inquiry from ${name}`,
                 html: `<p><strong>Name:</strong> ${name}</p>
