@@ -43,7 +43,7 @@ async function startServer() {
 
         await resend.emails.send({
           from: 'Contact Form <onboarding@resend.dev>',
-          to: ['info@devedge.com.au'], // Replace with actual client email
+          to: ['info@developeredge.net', 'nathan@developeredge.net'],
           subject: `New Lead: ${service} inquiry from ${name}`,
           html: `<p><strong>Name:</strong> ${name}</p>
                  <p><strong>Email:</strong> ${email}</p>
