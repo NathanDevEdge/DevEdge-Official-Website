@@ -36,7 +36,7 @@ async function startServer() {
       }
 
       // We'll use resend here if an API key is provided, otherwise log it
-      const RESEND_API_KEY = process.env.RESEND_API_KEY;
+      const RESEND_API_KEY = process.env.RESEND_API_KEY || "re_AC8DJyDu_N9eHMTT2dpY67KFCfUpTh3tP";
 
       if (RESEND_API_KEY) {
         const resend = new Resend(RESEND_API_KEY);
