@@ -1,0 +1,38 @@
+[
+    {
+        "id": "deckmate",
+        "title": "DeckMate",
+        "url": "https://deckmate.au",
+        "image": "/images/deckmate-hero.png",
+        "tags": [
+            "Web App",
+            "Zoho Integration",
+            "Architecture"
+        ],
+        "description": "A comprehensive digital ecosystem for decking professionals, featuring a dynamic 3D calculator and deep business automation.",
+        "features": [
+            "Dynamic Deck Calculator with material and cost estimation",
+            "End-to-end Zoho CRM integration for Leads & Contacts",
+            "Automated sales pipeline and customer communications",
+            "Custom-built frontend for architectural visualization"
+        ]
+    },
+    {
+        "id": "tradeflow",
+        "title": "Tradeflow",
+        "url": "https://tradeflow.devedge.com.au",
+        "image": "/images/tradeflow-hero.png",
+        "tags": [
+            "Enterprise SaaS",
+            "Logistics",
+            "Automation"
+        ],
+        "description": "A bespoke business management platform designed to streamline supplier relationships, quoting, and procurement.",
+        "features": [
+            "Advanced supplier and price list management",
+            "Automated quote and purchase order generation",
+            "Integrated email communication engine",
+            "Real-time lead and customer tracking"
+        ]
+    }
+]
