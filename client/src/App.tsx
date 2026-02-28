@@ -6,6 +6,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { HelmetProvider } from "react-helmet-async";
 import Home from "./pages/Home";
+import ProjectsPage from "./pages/ProjectsPage";
 import ServicePage from "./pages/ServicePage";
 import BlogPost from "./pages/BlogPost";
 
@@ -14,6 +15,7 @@ function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/projects"} component={ProjectsPage} />
       <Route path={"/services/:slug"} component={ServicePage} />
       <Route path={"/blog"} component={BlogPost} />
       <Route path={"/blog/:slug"} component={BlogPost} />

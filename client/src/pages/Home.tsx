@@ -1,7 +1,6 @@
 import SEO from "@/components/SEO";
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
-import Projects from "@/components/Projects";
 import Services from "@/components/Services";
 import Features from "@/components/Features";
 import Workflow from "@/components/Workflow";
@@ -19,7 +18,6 @@ export default function Home() {
 
       <main>
         <Hero />
-        <Projects />
         <Services />
         <Features />
         <Workflow />
