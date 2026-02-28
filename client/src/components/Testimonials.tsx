@@ -7,28 +7,7 @@ import {
 } from "@/components/ui/carousel";
 import { Quote } from "lucide-react";
 
-const testimonials = [
-  {
-    name: "Steve",
-    role: "Product Designer, Bloom",
-    content: "They completely nailed our branding - from the visual identity to the tone of voice. Since launch, we've seen a clear uptick in client engagement and have gotten compliments on our new look almost daily."
-  },
-  {
-    name: "Sarah",
-    role: "Head of Marketing, NovaSkin",
-    content: "Working with this team felt like adding a full creative department to our company overnight. They're fast, responsive, and ridiculously talented - honestly one of the smoothest collaborations we've had."
-  },
-  {
-    name: "Max",
-    role: "Founder, Craft & Code",
-    content: "The website they built for us wasn't just beautiful - it actually performs. We saw a 60% increase in bookings within the first month, and the feedback from our customers has been amazing."
-  },
-  {
-    name: "Elena",
-    role: "Product Manager, Streamly",
-    content: "Every part of the process felt effortless. The communication was clear, the design thinking was sharp, and the final result exceeded expectations in every way. We felt like we were in good hands throughout."
-  }
-];
+import testimonials from "@/data/testimonials.json";
 
 export default function Testimonials() {
   return (
@@ -53,11 +32,11 @@ export default function Testimonials() {
               <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
                 <div className="h-full bg-card/30 border border-white/5 p-8 rounded-3xl flex flex-col relative group hover:bg-card/50 transition-colors">
                   <Quote className="absolute top-8 right-8 w-8 h-8 text-white/5 group-hover:text-primary/20 transition-colors" />
-                  
+
                   <div className="mb-6 grow">
                     <p className="text-muted-foreground leading-relaxed">"{testimonial.content}"</p>
                   </div>
-                  
+
                   <div className="flex items-center gap-4 pt-6 border-t border-white/5">
                     <div className="w-10 h-10 rounded-full bg-linear-to-br from-primary to-purple-600 flex items-center justify-center text-white font-bold text-sm">
                       {testimonial.name[0]}
