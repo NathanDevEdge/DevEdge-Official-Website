@@ -3,7 +3,6 @@ import { useAuth } from "../contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 export default function ClientPortal() {
   const { user, token, logout } = useAuth();
@@ -59,74 +58,102 @@ export default function ClientPortal() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 p-4 sm:p-8">
-      <div className="max-w-6xl mx-auto space-y-8">
-        <div className="flex justify-between items-center bg-white dark:bg-zinc-900/50 p-6 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800">
+    <div className="min-h-screen bg-black relative overflow-hidden">
+      {/* Dynamic Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-background to-background"></div>
+        <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[800px] h-[800px] bg-primary/10 blur-[120px] rounded-full opacity-50 mix-blend-screen animate-pulse duration-[8000ms]"></div>
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto p-4 sm:p-8 space-y-8 pt-12">
+        
+        {/* Header */}
+        <div className="glass-panel p-6 rounded-3xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Client Portal</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Welcome back, {user?.name}</p>
+            <h1 className="text-3xl font-display font-medium tracking-tight text-white mb-1">
+              Client <span className="text-gradient">Portal</span>
+            </h1>
+            <p className="text-muted-foreground font-light">Welcome back, {user?.name}</p>
           </div>
-          <Button variant="outline" onClick={logout}>Sign Out</Button>
+          <Button variant="outline" onClick={logout} className="rounded-full border-white/10 bg-white/5 hover:bg-white/10 text-white transition-all px-8">
+            Sign Out
+          </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="md:col-span-1">
-            <Card className="bg-white dark:bg-zinc-900/50">
-              <CardHeader>
-                <CardTitle>Open New Ticket</CardTitle>
-                <CardDescription>Submit a new development request or issue.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleCreateTicket} className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium mb-1 block">Title</label>
-                    <Input required value={title} onChange={e => setTitle(e.target.value)} placeholder="Brief summary" className="bg-white dark:bg-zinc-950" />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium mb-1 block">Description</label>
-                    <Textarea required value={description} onChange={e => setDescription(e.target.value)} placeholder="Provide details..." className="min-h-[120px] bg-white dark:bg-zinc-950" />
-                  </div>
-                  <Button type="submit" className="w-full h-10" disabled={creating}>
-                    {creating ? "Submitting..." : "Submit Ticket"}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          {/* Create Ticket Form */}
+          <div className="lg:col-span-1">
+            <div className="glass-panel rounded-3xl p-8">
+              <h3 className="text-2xl font-display font-medium text-white mb-2">New Ticket</h3>
+              <p className="text-sm text-muted-foreground mb-8 font-light">Submit a development request directly to the DevEdge team.</p>
+              
+              <form onSubmit={handleCreateTicket} className="space-y-6">
+                <div>
+                  <label className="text-sm font-medium text-white/80 mb-2 block">Ticket Title</label>
+                  <Input 
+                    required 
+                    value={title} 
+                    onChange={e => setTitle(e.target.value)} 
+                    placeholder="Brief summary" 
+                    className="bg-white/5 border-white/10 text-white placeholder:text-white/30 h-12 rounded-xl focus:border-primary/50" 
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-white/80 mb-2 block">Detailed Description</label>
+                  <Textarea 
+                    required 
+                    value={description} 
+                    onChange={e => setDescription(e.target.value)} 
+                    placeholder="Provide information..." 
+                    className="min-h-[160px] bg-white/5 border-white/10 text-white placeholder:text-white/30 rounded-xl focus:border-primary/50 resize-none p-4" 
+                  />
+                </div>
+                <Button type="submit" className="w-full h-12 mt-4 rounded-xl bg-white text-black hover:bg-white/90 hover:scale-[1.02] transition-all duration-300 font-medium shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)]" disabled={creating}>
+                  {creating ? "Submitting Request..." : "Submit Ticket"}
+                </Button>
+              </form>
+            </div>
           </div>
 
-          <div className="md:col-span-2 space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Your Tickets</h2>
+          {/* Tickets List */}
+          <div className="lg:col-span-2 space-y-6">
+            <h2 className="text-2xl font-display font-medium tracking-tight text-white flex items-center gap-3 px-2">
+              Your Active Tickets
+              <span className="text-xs font-mono bg-primary/20 text-primary px-3 py-1 rounded-full border border-primary/30">
+                {tickets.length} TOTAL
+              </span>
+            </h2>
+            
             {loading ? (
-              <p className="text-gray-500">Loading tickets...</p>
+              <div className="text-white/50 animate-pulse font-light px-2">Loading tickets securely...</div>
             ) : tickets.length === 0 ? (
-              <Card className="p-8 text-center bg-zinc-50 dark:bg-zinc-900/20 border-dashed">
-                <p className="text-gray-500">No tickets found. Create your first one!</p>
-              </Card>
+              <div className="glass-panel p-16 text-center rounded-3xl border-dashed border-white/10">
+                <p className="text-muted-foreground font-light text-lg">No tickets found. You are all caught up!</p>
+              </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-5">
                 {tickets.map(ticket => (
-                  <Card key={ticket.id} className="bg-white dark:bg-zinc-900/50">
-                    <CardHeader className="py-4">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <CardTitle className="text-lg">{ticket.title}</CardTitle>
-                          <CardDescription className="mt-1">
-                            {new Date(ticket.created_at).toLocaleDateString()}
-                          </CardDescription>
-                        </div>
-                        <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${
-                          ticket.status === 'resolved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
-                          ticket.status === 'in_progress' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
-                          'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
-                        }`}>
-                          {ticket.status.replace('_', ' ').toUpperCase()}
-                        </span>
+                  <div key={ticket.id} className="glass-panel p-6 rounded-3xl hover:border-primary/30 transition-colors duration-500 group">
+                    <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-5">
+                      <div>
+                        <h3 className="text-xl font-medium text-white group-hover:text-primary transition-colors">{ticket.title}</h3>
+                        <p className="text-sm text-muted-foreground mt-1 font-light">
+                          Submitted on {new Date(ticket.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric'})}
+                        </p>
                       </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap">{ticket.description}</p>
-                    </CardContent>
-                  </Card>
+                      <span className={`px-4 py-1.5 text-xs font-bold tracking-wider uppercase rounded-full border ${
+                        ticket.status === 'resolved' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
+                        ticket.status === 'in_progress' ? 'bg-primary/10 text-primary border-primary/20' :
+                        'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
+                      }`}>
+                        {ticket.status.replace('_', ' ')}
+                      </span>
+                    </div>
+                    <div className="p-5 rounded-2xl bg-black/40 border border-white/5">
+                      <p className="text-sm text-white/70 whitespace-pre-wrap leading-relaxed font-light">{ticket.description}</p>
+                    </div>
+                  </div>
                 ))}
               </div>
             )}
