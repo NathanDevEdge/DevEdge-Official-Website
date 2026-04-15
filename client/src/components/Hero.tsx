@@ -1,24 +1,37 @@
-import { Button } from "@/components/ui/button";
 import ContactModal from "@/components/ContactModal";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 
-const CODE_LINES = [
-  { text: "// Small team. Full attention.", type: "comment" },
-  { text: "const devedge = {", type: "code" },
-  { text: '  approach:    "precise",', type: "prop" },
-  { text: '  farming_out:  false,', type: "prop" },
-  { text: '  templates:    false,', type: "prop" },
-  { text: '  bs:           0,', type: "prop" },
-  { text: "};", type: "code" },
-  { text: "", type: "blank" },
-  { text: "// Got a complex problem?", type: "comment" },
-  { text: "// Good. That's where we", type: "comment" },
-  { text: "// do our best work.", type: "comment" },
-  { text: "", type: "blank" },
-  { text: "devedge.ship(yourProject);", type: "code" },
-  { text: "// → It works.", type: "comment" },
+// ─── Typing terminal ──────────────────────────────────────────────────────────
+const CODE_LINES: { text: string; tokens: { t: string; c: string }[] }[] = [
+  { text: "", tokens: [{ t: 'import type { Project } from "@devedge/core";', c: "#A89070" }] },
+  { text: "", tokens: [] },
+  { text: "", tokens: [{ t: "// Got a complex problem? Good.", c: "#A89070" }] },
+  { text: "", tokens: [{ t: "// That's where we do our best work.", c: "#A89070" }] },
+  { text: "", tokens: [] },
+  {
+    text: "", tokens: [
+      { t: "const ", c: "#C97B3A" }, { t: "devedge", c: "#F5E6D5" }, { t: " = {", c: "#A89070" },
+    ]
+  },
+  { text: "", tokens: [{ t: '  team:        ', c: "#A89070" }, { t: '"small"', c: "#C97B3A" }, { t: ",", c: "#A89070" }] },
+  { text: "", tokens: [{ t: "  attention:   ", c: "#A89070" }, { t: '"full"', c: "#C97B3A" }, { t: ",", c: "#A89070" }] },
+  { text: "", tokens: [{ t: "  farming_out: ", c: "#A89070" }, { t: "false", c: "#C97B3A" }, { t: ",", c: "#A89070" }] },
+  { text: "", tokens: [{ t: "  templates:   ", c: "#A89070" }, { t: "false", c: "#C97B3A" }, { t: ",", c: "#A89070" }] },
+  { text: "", tokens: [{ t: "};", c: "#A89070" }] },
+  { text: "", tokens: [] },
+  {
+    text: "", tokens: [
+      { t: "export async function ", c: "#C97B3A" },
+      { t: "ship", c: "#F5E6D5" },
+      { t: "(project: ", c: "#A89070" },
+      { t: "Project", c: "#C97B3A" },
+      { t: ") {", c: "#A89070" },
+    ]
+  },
+  { text: "", tokens: [{ t: "  return ", c: "#C97B3A" }, { t: "build", c: "#F5E6D5" }, { t: "(project); ", c: "#A89070" }, { t: "// it works.", c: "#664422" }] },
+  { text: "", tokens: [{ t: "}", c: "#A89070" }] },
 ];
 
 function CodeTerminal() {
@@ -26,48 +39,44 @@ function CodeTerminal() {
 
   useEffect(() => {
     if (visibleLines >= CODE_LINES.length) return;
-    const delay = visibleLines === 0 ? 700 : CODE_LINES[visibleLines - 1].type === "blank" ? 80 : 160;
-    const timer = setTimeout(() => setVisibleLines((v) => v + 1), delay);
+    const isBlank = CODE_LINES[visibleLines]?.tokens.length === 0;
+    const timer = setTimeout(
+      () => setVisibleLines((v) => v + 1),
+      visibleLines === 0 ? 900 : isBlank ? 60 : 130
+    );
     return () => clearTimeout(timer);
   }, [visibleLines]);
 
   return (
-    <div className="relative w-full rounded-none border border-white/10 bg-[#0D0804] shadow-2xl overflow-hidden">
-      {/* Terminal header */}
-      <div className="flex items-center gap-2 px-5 py-3 bg-white/5 border-b border-white/10">
-        <div className="w-3 h-3 rounded-full bg-red-500/80" />
-        <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-        <div className="w-3 h-3 rounded-full bg-green-500/80" />
-        <span className="ml-auto font-mono text-xs text-white/30 tracking-widest">devedge.ts</span>
+    <div className="w-full border border-[#2E1F0F] bg-[#0D0804] overflow-hidden">
+      {/* window chrome */}
+      <div className="flex items-center gap-2 px-5 py-3 border-b border-[#2E1F0F]">
+        <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />
+        <span className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
+        <span className="w-3 h-3 rounded-full bg-[#28C840]" />
+        <span className="ml-auto font-mono text-[11px] text-[#664422] tracking-widest">devedge.ts</span>
       </div>
-
-      {/* Code body */}
-      <div className="p-6 font-mono text-sm leading-relaxed min-h-[300px]">
+      {/* code */}
+      <div className="px-6 py-5 font-mono text-[13px] leading-[1.7] min-h-[320px]">
         {CODE_LINES.slice(0, visibleLines).map((line, i) => (
-          <div key={i} className="flex gap-4">
-            <span className="w-5 shrink-0 text-right text-white/20 select-none text-xs pt-0.5">
-              {line.type !== "blank" ? i + 1 : ""}
+          <div key={i} className="flex gap-5">
+            <span className="w-4 shrink-0 text-right text-[#332010] select-none text-xs pt-px">
+              {line.tokens.length > 0 ? i + 1 : ""}
             </span>
-            <span
-              className={
-                line.type === "comment"
-                  ? "text-[#A89070]"
-                  : line.type === "prop"
-                  ? "text-[#E8D9C6]"
-                  : "text-[#F5E6D5]"
-              }
-            >
-              {line.text}
+            <span>
+              {line.tokens.map((token, j) => (
+                <span key={j} style={{ color: token.c }}>{token.t}</span>
+              ))}
               {i === visibleLines - 1 && visibleLines < CODE_LINES.length && (
-                <span className="inline-block w-[7px] h-[14px] bg-[#C97B3A] ml-0.5 animate-pulse align-middle" />
+                <span className="inline-block w-[7px] h-[13px] bg-[#C97B3A] ml-px animate-pulse align-middle" />
               )}
             </span>
           </div>
         ))}
         {visibleLines >= CODE_LINES.length && (
-          <div className="flex gap-4 mt-1">
-            <span className="w-5 shrink-0" />
-            <span className="inline-block w-[7px] h-[14px] bg-[#C97B3A] animate-pulse align-middle" />
+          <div className="flex gap-5 mt-0.5">
+            <span className="w-4 shrink-0" />
+            <span className="inline-block w-[7px] h-[13px] bg-[#C97B3A] animate-pulse align-middle" />
           </div>
         )}
       </div>
@@ -75,92 +84,116 @@ function CodeTerminal() {
   );
 }
 
+// ─── Hero ─────────────────────────────────────────────────────────────────────
 export default function Hero() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.1 },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as any },
-    },
-  };
+  const ease = [0.16, 1, 0.3, 1] as const;
 
   return (
-    <section className="relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden">
+    <section className="relative min-h-screen flex items-center pt-24 pb-20 overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/8 via-background to-background" />
-        <div className="absolute top-1/3 right-0 w-[480px] h-[480px] bg-primary/6 blur-[120px] rounded-full" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff04_1px,transparent_1px),linear-gradient(to_bottom,#ffffff04_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_70%_20%,rgba(201,123,58,0.07)_0%,transparent_70%)]" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#C97B3A]/4 blur-[140px] rounded-full" />
+        <div
+          className="absolute inset-0 opacity-[0.025]"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right,#ffffff 1px,transparent 1px),linear-gradient(to bottom,#ffffff 1px,transparent 1px)",
+            backgroundSize: "48px 48px",
+            maskImage:
+              "radial-gradient(ellipse 70% 60% at 50% 0%,#000 60%,transparent 100%)",
+          }}
+        />
       </div>
 
-      <div className="container relative z-10 grid lg:grid-cols-2 gap-16 items-center">
+      <div className="container relative z-10">
+        <div className="grid lg:grid-cols-[1fr_460px] gap-20 items-center">
 
-        {/* Left: Copy */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="space-y-8"
-        >
-          <motion.div variants={itemVariants}>
-            <span className="font-mono text-xs text-primary tracking-widest uppercase inline-flex items-center gap-3">
-              <span className="w-6 h-px bg-primary" />
-              DevEdge · Software & Systems
-            </span>
-          </motion.div>
+          {/* ── Left ── */}
+          <div>
+            {/* Eyebrow */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease }}
+            >
+              <span className="font-mono text-[11px] text-primary tracking-[0.18em] uppercase inline-flex items-center gap-3">
+                <span className="w-8 h-px bg-primary inline-block" />
+                DevEdge · Software & Systems
+              </span>
+            </motion.div>
 
-          <motion.div variants={itemVariants} className="space-y-5">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-display font-bold leading-[1.0] tracking-tight">
-              We build things<br />
-              that actually{" "}
+            {/* Headline */}
+            <motion.h1
+              className="mt-6 font-display font-black leading-[0.88] tracking-tight text-foreground"
+              style={{ fontSize: "clamp(64px, 8vw, 108px)" }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.08, ease }}
+            >
+              We build<br />
+              things that<br />
+              actually{" "}
               <span className="text-primary">work.</span>
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-lg leading-relaxed font-normal">
+            </motion.h1>
+
+            {/* Sub */}
+            <motion.p
+              className="mt-7 text-[17px] text-muted-foreground max-w-[420px] leading-relaxed"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.18, ease }}
+            >
               Custom software, web platforms, and backend systems
               for businesses that need results — not just deliverables.
-            </p>
-          </motion.div>
+            </motion.p>
 
-          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 pt-2">
-            <ContactModal
-              buttonText="Start a Project"
-              triggerClassName="group text-base font-semibold px-8 h-12 bg-primary text-[#1A1008] hover:bg-primary/90 transition-colors duration-150 rounded-none"
-            />
-            <Button
-              size="lg"
-              variant="outline"
-              className="text-base font-medium px-8 h-12 border-white/15 bg-transparent hover:bg-white/5 transition-colors duration-150 rounded-none text-foreground"
+            {/* CTAs */}
+            <motion.div
+              className="mt-9 flex flex-wrap gap-3"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.26, ease }}
             >
-              See Our Work <ArrowRight className="ml-2 w-4 h-4" />
-            </Button>
+              <ContactModal
+                buttonText="Start a Project"
+                triggerClassName="bg-primary text-[#1A1008] hover:bg-primary/90 font-semibold px-8 h-12 rounded-none text-[15px] transition-colors duration-150"
+              />
+              <a
+                href="#services"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.querySelector("#services")?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="inline-flex items-center gap-2 px-8 h-12 border border-white/15 text-foreground hover:border-primary/50 hover:text-primary text-[15px] font-medium transition-colors duration-150"
+              >
+                See Our Work <ArrowRight className="w-4 h-4" />
+              </a>
+            </motion.div>
+
+            {/* Differentiator */}
+            <motion.div
+              className="mt-10 pt-8 border-t border-white/8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+            >
+              <p className="font-mono text-[11px] text-muted-foreground tracking-[0.12em] uppercase">
+                Small team&nbsp;·&nbsp;Full attention&nbsp;·&nbsp;No farming out, no templates
+              </p>
+            </motion.div>
+          </div>
+
+          {/* ── Right: Terminal ── */}
+          <motion.div
+            className="hidden lg:block"
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.45, ease: "easeOut" }}
+          >
+            <CodeTerminal />
           </motion.div>
-
-          <motion.div variants={itemVariants} className="pt-4 border-t border-white/8">
-            <p className="font-mono text-xs text-muted-foreground tracking-wide">
-              Small team.&nbsp;&nbsp;Full attention.&nbsp;&nbsp;No farming out, no templates.
-            </p>
-          </motion.div>
-        </motion.div>
-
-        {/* Right: Code Terminal */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut", delay: 0.5 }}
-          className="hidden lg:block"
-        >
-          <CodeTerminal />
-        </motion.div>
-
+        </div>
       </div>
     </section>
   );
