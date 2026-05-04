@@ -1,148 +1,194 @@
-import { Zap, TrendingUp, Globe, MessageSquare } from "lucide-react";
-import { motion, Variants } from "framer-motion";
+import { motion } from "framer-motion";
+import { MessageSquare, Zap, TrendingUp, Globe } from "lucide-react";
+
+const ease = [0.21, 0.47, 0.32, 0.98] as const;
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease } },
+};
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
+};
 
 export default function Features() {
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.15 }
-    }
-  };
-
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.7, ease: [0.21, 0.47, 0.32, 0.98] }
-    }
-  };
-
   return (
-    <section className="py-32 bg-black/40 border-y border-white/5 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-background to-background pointer-events-none"></div>
+    <section className="py-32 border-y border-[#2E1F0F] relative overflow-hidden">
+      {/* Subtle background glow */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-[#C97B3A]/3 blur-[160px] rounded-full" />
+      </div>
 
       <div className="container relative z-10">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-3xl mx-auto mb-20"
+          className="mb-20"
         >
-          <span className="text-primary font-mono text-sm tracking-widest uppercase mb-4 block inline-flex items-center gap-2">
-            <span className="w-8 h-px bg-primary"></span> 02 Features <span className="w-8 h-px bg-primary"></span>
+          <span className="font-mono text-[11px] text-primary tracking-[0.18em] uppercase inline-flex items-center gap-3 mb-6">
+            <span className="w-8 h-px bg-primary inline-block" />
+            02 Why DevEdge
           </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-medium mb-6 leading-tight">
-            You'll get more than just great design - <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/40">you'll get results.</span>
+          <h2
+            className="font-display font-black text-foreground leading-[0.9] tracking-tight"
+            style={{ fontSize: "clamp(48px, 5.5vw, 80px)" }}
+          >
+            You'll get more than<br />
+            <span className="text-muted-foreground font-normal" style={{ fontSize: "clamp(36px, 4vw, 60px)" }}>
+              just great code — you'll get results.
+            </span>
           </h2>
         </motion.div>
 
+        {/* Bento grid */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid lg:grid-cols-3 gap-8"
+          viewport={{ once: true, margin: "-80px" }}
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-[#2E1F0F]"
         >
-          {/* Feature 1 - Collaboration */}
-          <motion.div variants={itemVariants} className="lg:col-span-2 bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden group transition-colors duration-500 shadow-2xl">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-
-            <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center h-full">
+          {/* Collaboration — wide */}
+          <motion.div
+            variants={itemVariants}
+            className="lg:col-span-2 bg-background hover:bg-[#EDD9C0] transition-colors duration-300 p-10 group relative overflow-hidden"
+          >
+            <div className="flex flex-col md:flex-row gap-10 items-start md:items-center h-full">
               <div className="flex-1">
-                <div className="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-8 text-blue-400 shadow-[0_0_30px_-5px_var(--color-blue-500)]">
-                  <MessageSquare className="w-6 h-6" />
+                <div className="w-10 h-10 border border-primary/30 flex items-center justify-center mb-8 text-primary">
+                  <MessageSquare className="w-5 h-5" />
                 </div>
-                <h3 className="text-3xl font-display font-medium mb-4">Effortless Collaboration</h3>
-                <p className="text-muted-foreground text-lg mb-8 leading-relaxed font-light">
-                  Real-time updates and fast replies that make you feel like we're right there with you. No ghosting, just clear, immediate communication.
+                <h3
+                  className="font-display font-bold text-foreground mb-4 leading-tight"
+                  style={{ fontSize: "clamp(26px, 2.2vw, 34px)" }}
+                >
+                  Effortless Collaboration
+                </h3>
+                <p className="text-muted-foreground text-[15px] leading-relaxed max-w-sm">
+                  Real-time updates and fast replies that make you feel like we're right there with you.
+                  No ghosting, just clear, immediate communication.
                 </p>
               </div>
 
-              {/* Chat UI Mockup */}
-              <div className="flex-1 w-full bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 space-y-4 shadow-2xl transform group-hover:scale-105 group-hover:-rotate-2 transition-transform duration-700">
-                <div className="flex gap-4 items-end">
-                  <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs border border-primary/30 shrink-0">You</div>
-                  <div className="bg-white/10 backdrop-blur-md rounded-2xl rounded-bl-none p-4 text-sm border border-white/5 text-white/90">
-                    Just saw the first draft - this is 🔥🔥🔥
+              {/* Chat mockup — warm palette */}
+              <div className="flex-1 w-full bg-[#1A1008] border border-[#2E1F0F] p-6 space-y-4 group-hover:-rotate-1 group-hover:scale-[1.02] transition-transform duration-500">
+                <div className="flex gap-3 items-end">
+                  <div className="w-7 h-7 bg-primary/20 border border-primary/30 flex items-center justify-center text-[10px] font-mono text-primary shrink-0">
+                    YOU
+                  </div>
+                  <div className="bg-[#2E1F0F] border border-[#2E1F0F] p-3 text-sm text-[#F5E6D5] font-sans">
+                    Just saw the first draft — this is exactly what I wanted.
                   </div>
                 </div>
-                <div className="flex gap-4 items-end flex-row-reverse">
-                  <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-xs border border-blue-500/30 shrink-0">Dev</div>
-                  <div className="bg-blue-500/20 backdrop-blur-md text-blue-50 rounded-2xl rounded-br-none p-4 text-sm border border-blue-500/20">
-                    Yes! So glad you like it. Want me to prep a second direction too?
+                <div className="flex gap-3 items-end flex-row-reverse">
+                  <div className="w-7 h-7 bg-[#2E1F0F] border border-[#2E1F0F] flex items-center justify-center text-[10px] font-mono text-[#F5E6D5] shrink-0">
+                    DEV
                   </div>
+                  <div className="bg-primary/10 border border-primary/20 p-3 text-sm text-primary/90">
+                    Great! I'll prep the second direction and send it over tonight.
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary/60 animate-pulse" />
+                  <span className="font-mono text-[10px] text-muted-foreground tracking-widest">Nathan is typing...</span>
                 </div>
               </div>
             </div>
-
-            <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 filter blur-3xl mix-blend-screen pointer-events-none"></div>
           </motion.div>
 
-          {/* Feature 2 - Speed */}
-          <motion.div variants={itemVariants} className="bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 rounded-[2.5rem] p-8 md:p-12 flex flex-col justify-center relative overflow-hidden group transition-colors duration-500 shadow-2xl">
-            <div className="relative z-10">
-              <div className="w-14 h-14 rounded-2xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center mb-8 text-yellow-400 shadow-[0_0_30px_-5px_var(--color-yellow-500)]">
-                <Zap className="w-6 h-6" />
+          {/* Speed */}
+          <motion.div
+            variants={itemVariants}
+            className="bg-background hover:bg-[#EDD9C0] transition-colors duration-300 p-10 flex flex-col justify-between relative overflow-hidden group"
+          >
+            <div>
+              <div className="w-10 h-10 border border-primary/30 flex items-center justify-center mb-8 text-primary">
+                <Zap className="w-5 h-5" />
               </div>
-              <h3 className="text-3xl font-display font-medium mb-3">Lightning Fast</h3>
-              <p className="text-muted-foreground text-lg mb-8 font-light">Projects transformed and launched in as little as</p>
-              <div className="text-7xl font-display font-medium text-white tracking-tighter">
-                3 <span className="text-2xl text-white/50 font-normal">weeks</span>
-              </div>
+              <h3 className="font-display font-bold text-foreground text-2xl mb-3">Lightning Fast</h3>
+              <p className="text-muted-foreground text-[14px] leading-relaxed">
+                Projects launched in as little as
+              </p>
             </div>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-yellow-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
-          </motion.div>
-
-          {/* Feature 3 - Conversion */}
-          <motion.div variants={itemVariants} className="bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 rounded-[2.5rem] p-8 md:p-12 flex flex-col justify-center relative overflow-hidden group transition-colors duration-500 shadow-2xl">
-            <div className="relative z-10">
-              <div className="w-14 h-14 rounded-2xl bg-green-500/10 border border-green-500/20 flex items-center justify-center mb-8 text-green-400 shadow-[0_0_30px_-5px_var(--color-green-500)]">
-                <TrendingUp className="w-6 h-6" />
-              </div>
-              <h3 className="text-3xl font-display font-medium mb-3">Increased Sales</h3>
-              <p className="text-muted-foreground text-lg mb-8 font-light">Engineered for maximum conversion rates.</p>
-              <div className="text-7xl font-display font-medium text-green-400 tracking-tighter group-hover:scale-105 origin-left transition-transform duration-500">
-                +40%
-              </div>
-              <p className="text-sm font-medium text-green-400/80 mt-4 tracking-wide uppercase">Revenue Growth</p>
+            <div className="mt-8">
+              <span className="font-display font-black text-primary" style={{ fontSize: "clamp(56px, 6vw, 80px)", lineHeight: 1 }}>3</span>
+              <span className="font-display text-muted-foreground text-2xl ml-2">weeks</span>
             </div>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-green-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+            <div
+              className="absolute bottom-0 right-0 w-32 h-32 bg-[#C97B3A]/5 blur-[60px] rounded-full pointer-events-none"
+            />
           </motion.div>
 
-          {/* Feature 4 - Global Reach */}
-          <motion.div variants={itemVariants} className="lg:col-span-2 bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden group transition-colors duration-500 shadow-2xl">
-            <div className="relative z-10 grid md:grid-cols-2 gap-12 items-center h-full">
+          {/* Results */}
+          <motion.div
+            variants={itemVariants}
+            className="bg-background hover:bg-[#EDD9C0] transition-colors duration-300 p-10 flex flex-col justify-between relative overflow-hidden group"
+          >
+            <div>
+              <div className="w-10 h-10 border border-primary/30 flex items-center justify-center mb-8 text-primary">
+                <TrendingUp className="w-5 h-5" />
+              </div>
+              <h3 className="font-display font-bold text-foreground text-2xl mb-3">Increased Revenue</h3>
+              <p className="text-muted-foreground text-[14px] leading-relaxed">
+                Engineered for maximum conversion and real business impact.
+              </p>
+            </div>
+            <div className="mt-8">
+              <span className="font-display font-black text-primary group-hover:scale-105 inline-block transition-transform duration-300 origin-left" style={{ fontSize: "clamp(56px, 6vw, 80px)", lineHeight: 1 }}>+40%</span>
+              <p className="font-mono text-[10px] text-muted-foreground tracking-widest uppercase mt-2">Avg. revenue growth</p>
+            </div>
+          </motion.div>
+
+          {/* Online Presence — wide */}
+          <motion.div
+            variants={itemVariants}
+            className="lg:col-span-2 bg-background hover:bg-[#EDD9C0] transition-colors duration-300 p-10 group relative overflow-hidden"
+          >
+            <div className="grid md:grid-cols-2 gap-12 items-center h-full">
               <div>
-                <div className="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-8 text-purple-400 shadow-[0_0_30px_-5px_var(--color-purple-500)]">
-                  <Globe className="w-6 h-6" />
+                <div className="w-10 h-10 border border-primary/30 flex items-center justify-center mb-8 text-primary">
+                  <Globe className="w-5 h-5" />
                 </div>
-                <h3 className="text-3xl font-display font-medium mb-4">Stronger Online Presence</h3>
-                <p className="text-muted-foreground text-lg mb-6 leading-relaxed font-light">
-                  Rank higher, get found faster, and dramatically expand your reach with highly optimized digital platforms built for scale.
+                <h3
+                  className="font-display font-bold text-foreground mb-4 leading-tight"
+                  style={{ fontSize: "clamp(26px, 2.2vw, 34px)" }}
+                >
+                  Stronger Online Presence
+                </h3>
+                <p className="text-muted-foreground text-[15px] leading-relaxed">
+                  Rank higher, get found faster, and dramatically expand your reach with highly
+                  optimized digital platforms built for scale.
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              {/* Stats grid */}
+              <div className="grid grid-cols-2 gap-px bg-[#2E1F0F]">
                 {[
                   { value: "+200", label: "Countries" },
                   { value: "1M+", label: "Impressions" },
                   { value: "99%", label: "Uptime" },
-                  { value: "10x", label: "ROI" }
-                ].map((stat, i) => (
-                  <div key={i} className="bg-black/40 backdrop-blur-md p-6 rounded-2xl border border-white/5 group-hover:bg-white/5 transition-colors duration-500">
-                    <div className="text-3xl font-display font-medium text-white mb-2">{stat.value}</div>
-                    <div className="text-sm font-medium text-white/50 uppercase tracking-wider">{stat.label}</div>
+                  { value: "10x", label: "ROI" },
+                ].map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="bg-background group-hover:bg-[#EDD9C0] transition-colors duration-300 p-6 flex flex-col gap-1"
+                  >
+                    <span className="font-display font-black text-primary" style={{ fontSize: "clamp(28px, 3vw, 40px)", lineHeight: 1 }}>
+                      {stat.value}
+                    </span>
+                    <span className="font-mono text-[10px] text-muted-foreground tracking-widest uppercase">
+                      {stat.label}
+                    </span>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="absolute left-0 bottom-0 w-1/2 h-full bg-gradient-to-r from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none filter blur-2xl"></div>
           </motion.div>
-
         </motion.div>
       </div>
     </section>

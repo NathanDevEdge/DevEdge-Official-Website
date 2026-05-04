@@ -1,9 +1,38 @@
 import { Github, Linkedin, Mail } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 export default function Footer() {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const wordmarkY = useTransform(scrollYProgress, [0, 1], ["-4%", "4%"]);
+
   return (
-    <footer className="bg-[#0D0804] border-t border-white/8 pt-20 pb-10">
-      <div className="container">
+    <footer ref={ref} className="relative overflow-hidden bg-[#1A1008] border-t border-[#2E1F0F] pt-20 pb-10">
+      {/* Perspective grid at top of footer — matches hero feel */}
+      <div
+        className="absolute top-0 left-0 right-0 pointer-events-none"
+        style={{ height: "200px", perspective: "500px" }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage:
+              "linear-gradient(to right, rgba(46,31,15,0.8) 1px, transparent 1px), linear-gradient(to bottom, rgba(46,31,15,0.8) 1px, transparent 1px)",
+            backgroundSize: "60px 60px",
+            transform: "rotateX(-55deg)",
+            transformOrigin: "50% 0%",
+            maskImage: "linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 80%)",
+          }}
+        />
+      </div>
+
+      <div className="container relative z-10">
+        {/* Links row */}
         <div className="grid md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-2">
             <a href="/" className="flex items-center gap-2 mb-6">
@@ -18,33 +47,27 @@ export default function Footer() {
               for businesses that need results.
             </p>
             <div className="flex gap-3">
-              <a
-                href="https://www.linkedin.com/company/devedge-solutions"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 border border-white/10 flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors duration-150"
-              >
-                <Linkedin className="w-4 h-4" />
-              </a>
-              <a
-                href="https://github.com/NathanDevEdge"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 border border-white/10 flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors duration-150"
-              >
-                <Github className="w-4 h-4" />
-              </a>
-              <a
-                href="mailto:nathan@devedge.com.au"
-                className="w-9 h-9 border border-white/10 flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors duration-150"
-              >
-                <Mail className="w-4 h-4" />
-              </a>
+              {[
+                { href: "https://www.linkedin.com/company/devedge-solutions", icon: Linkedin, label: "LinkedIn" },
+                { href: "https://github.com/NathanDevEdge", icon: Github, label: "GitHub" },
+                { href: "mailto:nathan@devedge.com.au", icon: Mail, label: "Email" },
+              ].map(({ href, icon: Icon, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith("http") ? "_blank" : undefined}
+                  rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  aria-label={label}
+                  className="w-9 h-9 border border-[#2E1F0F] flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors duration-150"
+                >
+                  <Icon className="w-4 h-4" />
+                </a>
+              ))}
             </div>
           </div>
 
           <div>
-            <h4 className="font-mono text-xs tracking-widest uppercase text-muted-foreground mb-6">Company</h4>
+            <h4 className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground mb-6">Company</h4>
             <ul className="space-y-4">
               {[
                 { label: "About", href: "/#about" },
@@ -53,7 +76,10 @@ export default function Footer() {
                 { label: "Client Portal", href: "/portal/login" },
               ].map((item) => (
                 <li key={item.label}>
-                  <a href={item.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-150">
+                  <a
+                    href={item.href}
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-150"
+                  >
                     {item.label}
                   </a>
                 </li>
@@ -62,7 +88,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-mono text-xs tracking-widest uppercase text-muted-foreground mb-6">Legal</h4>
+            <h4 className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground mb-6">Legal</h4>
             <ul className="space-y-4">
               {["Privacy Policy", "Terms of Service"].map((item) => (
                 <li key={item}>
@@ -75,11 +101,29 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="font-mono text-xs text-muted-foreground">
+        {/* Giant wordmark with parallax */}
+        <div className="relative overflow-hidden border-t border-[#2E1F0F] pt-12 -mx-4 md:-mx-8 lg:-mx-16">
+          <motion.div style={{ y: wordmarkY }}>
+            <span
+              className="font-display font-black select-none block text-center leading-none"
+              style={{
+                fontSize: "clamp(80px, 16vw, 200px)",
+                color: "rgba(46,31,15,0.8)",
+                letterSpacing: "-0.02em",
+              }}
+              aria-hidden
+            >
+              DEVEDGE
+            </span>
+          </motion.div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="font-mono text-[11px] text-muted-foreground">
             © {new Date().getFullYear()} DevEdge · Software & Systems
           </div>
-          <div className="font-mono text-xs text-muted-foreground">
+          <div className="font-mono text-[11px] text-muted-foreground">
             Built by us. Obviously.
           </div>
         </div>

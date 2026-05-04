@@ -1,10 +1,10 @@
 # DevEdge Solutions - Official Website
 
-The official website for **DevEdge Solutions**, a premier Australian software development agency linking ideas to execution.
+The official website for **DevEdge Solutions**, an Australian software development agency linking ideas to execution.
 
-## 🚀 Project Overview
+## 🚀 The Redesign
 
-This project is a high-performance, static landing page built with modern web technologies. It features a custom "Modern Engineering" design aesthetic, fully responsive layout, and comprehensive SEO optimization.
+This project has been completely re-designed from the ground up as an immersive, highly interactive vertical presentation web application. It features a custom premium design system, smooth scroll-snapping mechanics, and dynamic micro-animations.
 
 **Live Site:** [https://devedge.com.au](https://devedge.com.au)
 
@@ -14,8 +14,9 @@ This project is a high-performance, static landing page built with modern web te
 *   **Build Tool:** [Vite](https://vitejs.dev/)
 *   **Styling:** [Tailwind CSS 4](https://tailwindcss.com/)
 *   **Routing:** [Wouter](https://github.com/molefrog/wouter)
+*   **Animations:** [Framer Motion](https://www.framer.com/motion/)
+*   **UI Primitives:** [Radix UI](https://www.radix-ui.com/)
 *   **Icons:** [Lucide React](https://lucide.dev/)
-*   **Animations:** CSS Transitions & Tailwind Animate
 
 ## 📂 Project Structure
 
@@ -24,14 +25,25 @@ devedge-website/
 ├── client/
 │   ├── public/          # Static assets (images, robots.txt, sitemap.xml)
 │   ├── src/
-│   │   ├── components/  # Reusable UI components (Hero, Navigation, etc.)
-│   │   ├── pages/       # Page views (Home, NotFound)
+│   │   ├── components/  # Core UI components
+│   │   │   ├── slides/  # Vertical snap slides (Hero, Problem, Services, etc.)
+│   │   │   └── ui/      # Radix UI implementations
+│   │   ├── contexts/    # React contexts (Theme, Auth)
+│   │   ├── pages/       # Route views (Home, Adminashboard, ClientPortal, etc.)
 │   │   ├── lib/         # Utility functions
-│   │   ├── App.tsx      # Main application entry & routing
+│   │   ├── App.tsx      # Main application router
 │   │   └── index.css    # Global styles & Tailwind configuration
-├── server/              # (Optional) Backend placeholder
+├── server/              # Backend services 
 └── package.json         # Dependencies and scripts
 ```
+
+## ⚡ Key Features
+
+*   **Slide-based Navigation:** Desktop users experience a full-screen, snap-scroll journey across 9 distinct slides outlining the DevEdge philosophy and services.
+*   **Interactive UI Elements:** Mouse-reactive parallax effects, simulated code terminals, smooth modal transitions, and dynamic progress indicators.
+*   **Secure Client Portals:** Dedicated internal sections for authorized client access and admin management.
+*   **Responsive Design:** Flawless adaptation from full presentation mode on Desktop to standard responsive scrolling flow on Mobile.
+*   **SEO & Analytics:** Enhanced meta tags and structured data for optimal search presence.
 
 ## ⚡ Getting Started
 
@@ -58,7 +70,7 @@ devedge-website/
     pnpm dev
     ```
 
-4.  Open [http://localhost:3000](http://localhost:3000) in your browser.
+4.  Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ## 📦 Building for Production
 
@@ -68,23 +80,7 @@ To create a production-ready build:
 pnpm build
 ```
 
-The output files will be in the `dist` directory, ready to be deployed to any static hosting provider (Vercel, Netlify, Cloudflare Pages, etc.).
-
-## 🎨 Design System
-
-*   **Primary Font:** Space Grotesk (Headings)
-*   **Secondary Font:** Inter (Body)
-*   **Colors:**
-    *   Background: `#050505` (Deep Black)
-    *   Text: `#FFFFFF` (White)
-    *   Accent: `#8B5CF6` (Light Purple)
-
-## 🔍 SEO & Analytics
-
-*   **Meta Tags:** Fully optimized for "Custom Software & Web Development Australia".
-*   **Open Graph:** Custom social preview images included.
-*   **Structured Data:** JSON-LD schema for `ProfessionalService`.
-*   **Sitemap:** Auto-generated at `/sitemap.xml`.
+The output files will be in the `dist` directory, ready to be deployed to any static hosting provider.
 
 ## 📄 License
 

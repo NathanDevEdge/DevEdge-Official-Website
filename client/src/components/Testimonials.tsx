@@ -1,60 +1,75 @@
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import { Quote } from "lucide-react";
-
+import { motion } from "framer-motion";
 import testimonials from "@/data/testimonials.json";
+
+const ease = [0.25, 0.1, 0.25, 1.0] as const;
 
 export default function Testimonials() {
   return (
-    <section className="py-24 relative overflow-hidden">
+    <section className="py-32 relative overflow-hidden">
       <div className="container">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-primary font-mono text-sm tracking-wider uppercase mb-2 block">[05 Testimonials]</span>
-          <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
-            Real stories. Real winners. <span className="text-gradient">Straight from our clients.</span>
-          </h2>
+
+        {/* Header */}
+        <div className="mb-20">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease }}
+          >
+            <span className="font-mono text-[11px] text-primary tracking-[0.18em] uppercase inline-flex items-center gap-3 mb-6">
+              <span className="w-8 h-px bg-primary inline-block" />
+              05 Testimonials
+            </span>
+            <h2
+              className="font-display font-black text-foreground leading-[0.9] tracking-tight"
+              style={{ fontSize: "clamp(48px, 5.5vw, 80px)" }}
+            >
+              Real stories.<br />
+              <span className="text-muted-foreground font-normal" style={{ fontSize: "clamp(36px, 4vw, 60px)" }}>
+                Straight from our clients.
+              </span>
+            </h2>
+          </motion.div>
         </div>
 
-        <Carousel
-          opts={{
-            align: "start",
-            loop: true,
-          }}
-          className="w-full max-w-6xl mx-auto"
-        >
-          <CarouselContent className="-ml-4">
-            {testimonials.map((testimonial, index) => (
-              <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
-                <div className="h-full bg-card/30 border border-white/5 p-8 rounded-3xl flex flex-col relative group hover:bg-card/50 transition-colors">
-                  <Quote className="absolute top-8 right-8 w-8 h-8 text-white/5 group-hover:text-primary/20 transition-colors" />
+        {/* Cards — horizontal scroll on mobile, 2-col on desktop */}
+        <div className="grid md:grid-cols-2 gap-px bg-[#2E1F0F]">
+          {testimonials.map((testimonial, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5, delay: (i % 2) * 0.1, ease }}
+              className="bg-background hover:bg-[#EDD9C0] transition-colors duration-200 p-10 flex flex-col gap-6 group"
+            >
+              {/* Opening mark */}
+              <span
+                className="font-display font-black text-[80px] text-primary/10 group-hover:text-primary/20 transition-colors duration-300 leading-none select-none"
+                aria-hidden
+              >
+                "
+              </span>
 
-                  <div className="mb-6 grow">
-                    <p className="text-muted-foreground leading-relaxed">"{testimonial.content}"</p>
-                  </div>
+              {/* Quote */}
+              <p className="text-muted-foreground text-[15px] leading-relaxed flex-1 -mt-6">
+                {testimonial.content}
+              </p>
 
-                  <div className="flex items-center gap-4 pt-6 border-t border-white/5">
-                    <div className="w-10 h-10 rounded-full bg-linear-to-br from-primary to-purple-600 flex items-center justify-center text-white font-bold text-sm">
-                      {testimonial.name[0]}
-                    </div>
-                    <div>
-                      <div className="font-bold text-white">{testimonial.name}</div>
-                      <div className="text-xs text-muted-foreground">{testimonial.role}</div>
-                    </div>
-                  </div>
+              {/* Attribution */}
+              <div className="flex items-center gap-4 pt-6 border-t border-[#2E1F0F]">
+                <div className="w-9 h-9 bg-primary/20 border border-primary/30 flex items-center justify-center font-display font-bold text-xs text-primary">
+                  {testimonial.name[0]}
                 </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <div className="flex justify-center gap-4 mt-8">
-            <CarouselPrevious className="static translate-y-0 bg-card/50 border-white/10 hover:bg-primary hover:text-white" />
-            <CarouselNext className="static translate-y-0 bg-card/50 border-white/10 hover:bg-primary hover:text-white" />
-          </div>
-        </Carousel>
+                <div>
+                  <div className="font-semibold text-foreground text-sm">{testimonial.name}</div>
+                  <div className="font-mono text-[10px] text-muted-foreground tracking-widest uppercase">{testimonial.role}</div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
       </div>
     </section>
   );

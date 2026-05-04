@@ -35,33 +35,33 @@
 }
 
 :root {
-  /* DevEdge Brand Palette */
-  --background: #1A1008;       /* Obsidian — primary background */
-  --foreground: #F5E6D5;       /* Parchment — primary text */
+  /* DevEdge Brand Palette — Light / Parchment Theme */
+  --background: #F5E6D5;       /* Parchment — primary background */
+  --foreground: #1A1008;       /* Obsidian — primary text */
 
-  --card: #2E1F0F;             /* Bark — card surfaces */
-  --card-foreground: #F5E6D5;
+  --card: #FBEFD9;             /* Lighter warm surface */
+  --card-foreground: #1A1008;
 
-  --popover: #2E1F0F;
-  --popover-foreground: #F5E6D5;
+  --popover: #FBEFD9;
+  --popover-foreground: #1A1008;
 
   --primary: #C97B3A;          /* Ember — brand accent */
   --primary-foreground: #1A1008;
 
-  --secondary: #2E1F0F;        /* Bark */
-  --secondary-foreground: #F5E6D5;
+  --secondary: #EDD9C0;        /* Deeper parchment */
+  --secondary-foreground: #1A1008;
 
-  --muted: #2E1F0F;
-  --muted-foreground: #A89070; /* Dust — supporting text */
+  --muted: #EDD9C0;
+  --muted-foreground: #7A5C3A; /* Darkened Dust — AA readable on Parchment */
 
-  --accent: #2E1F0F;
-  --accent-foreground: #F5E6D5;
+  --accent: #EDD9C0;
+  --accent-foreground: #1A1008;
 
-  --destructive: #e05252;
+  --destructive: #c0392b;
   --destructive-foreground: #F5E6D5;
 
-  --border: #2E1F0F;
-  --input: #2E1F0F;
+  --border: #D4B896;           /* Warm soft border */
+  --input: #EDD9C0;
   --ring: #C97B3A;
 
   --radius: 0.25rem;
@@ -134,11 +134,32 @@
   }
 
   .glass-panel {
-    @apply bg-card/50 backdrop-blur-md border border-white/10 shadow-xl;
+    @apply bg-card/80 backdrop-blur-md border border-foreground/10 shadow-xl;
   }
 
   .text-gradient {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(to right, #C97B3A, #F5E6D5);
+    background-image: linear-gradient(to right, #C97B3A, #2E1F0F);
+  }
+
+  /* Hide scrollbar visually while keeping scroll functionality */
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ── Desktop snap scroll ─────────────────────────────────────────────────────
+   Body must NOT scroll on desktop — all scrolling happens inside the
+   #snap-container div so that CSS scroll-snap works correctly.
+   Mobile keeps default scroll behaviour (no overflow: hidden).
+────────────────────────────────────────────────────────────────────────────── */
+@media (min-width: 1024px) {
+  html, body {
+    overflow: hidden;
+    height: 100%;
   }
 }
