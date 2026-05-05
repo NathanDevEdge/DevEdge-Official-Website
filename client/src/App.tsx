@@ -26,15 +26,15 @@ function ScrollToTop() {
 
 const ProtectedRoute = ({ component: Component, role }: { component: any, role?: "admin" | "client" }) => {
   const { user, loading } = useAuth();
-  
+
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-  
+
   if (!user) return <Redirect to="/portal/login" />;
-  
+
   if (role && user.role !== role) {
     return <Redirect to={user.role === 'admin' ? '/admin' : '/portal'} />;
   }
-  
+
   return <Component />;
 };
 
@@ -43,22 +43,22 @@ function Router() {
     <>
       <ScrollToTop />
       <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/projects"} component={ProjectsPage} />
-      <Route path={"/services/:slug"} component={ServicePage} />
-      <Route path={"/blog"} component={BlogPost} />
-      <Route path={"/blog/:slug"} component={BlogPost} />
-      <Route path={"/portal/login"} component={PortalLogin} />
-      <Route path={"/portal"}>
-        {() => <ProtectedRoute component={ClientPortal} role="client" />}
-      </Route>
-      <Route path={"/admin"}>
-        {() => <ProtectedRoute component={AdminDashboard} role="admin" />}
-      </Route>
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
-      <Route component={NotFound} />
-    </Switch>
+        <Route path={"/"} component={Home} />
+        <Route path={"/projects"} component={ProjectsPage} />
+        <Route path={"/services/:slug"} component={ServicePage} />
+        <Route path={"/blog"} component={BlogPost} />
+        <Route path={"/blog/:slug"} component={BlogPost} />
+        <Route path={"/portal/login"} component={PortalLogin} />
+        <Route path={"/portal"}>
+          {() => <ProtectedRoute component={ClientPortal} role="client" />}
+        </Route>
+        <Route path={"/admin"}>
+          {() => <ProtectedRoute component={AdminDashboard} role="admin" />}
+        </Route>
+        <Route path={"/404"} component={NotFound} />
+        {/* Final fallback route */}
+        <Route component={NotFound} />
+      </Switch>
     </>
 
   );

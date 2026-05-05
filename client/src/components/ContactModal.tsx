@@ -72,7 +72,7 @@ export default function ContactModal({
       form.reset();
     } catch {
       toast.error("Failed to send message", {
-        description: "Please try again or email nathan@devedge.com.au",
+        description: "Please try again or email info@devedge.com.au",
       });
     } finally {
       setIsSubmitting(false);
