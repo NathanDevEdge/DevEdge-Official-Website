@@ -3,35 +3,403 @@ import { useAuth } from "../contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { motion } from "framer-motion";
-import { Ticket, Users, UserPlus } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Ticket, Users, Building2, Plus, ChevronDown, ChevronRight, Mail, RotateCcw, X, Send } from "lucide-react";
+import KanbanBoard from "@/components/KanbanBoard";
 
-const statusConfig = {
-  open: { label: "Open", classes: "bg-[#8B6914]/10 text-[#8B6914] border-[#8B6914]/20" },
-  in_progress: { label: "In Progress", classes: "bg-primary/10 text-primary border-primary/30" },
-  resolved: { label: "Resolved", classes: "bg-[#2d6a4f]/10 text-[#2d6a4f] border-[#2d6a4f]/20" },
-};
+// ── Invite user form ──────────────────────────────────────────────────────────
+
+function InviteUserForm({
+  token,
+  isSuperAdmin,
+  orgId,
+  orgName,
+  orgs,
+  onSuccess,
+  onCancel,
+}: {
+  token: string | null;
+  isSuperAdmin: boolean;
+  orgId?: number;
+  orgName?: string;
+  orgs?: any[];
+  onSuccess: () => void;
+  onCancel: () => void;
+}) {
+  const [name, setName]               = useState("");
+  const [email, setEmail]             = useState("");
+  const [role, setRole]               = useState("user");
+  const [selectedOrgId, setSelectedOrgId] = useState(orgId ?? "");
+  const [sending, setSending]         = useState(false);
+  const [error, setError]             = useState("");
+  const [sent, setSent]               = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSending(true);
+    setError("");
+    try {
+      const res = await fetch("/api/invites", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body:    JSON.stringify({
+          action: "create", name, email, role,
+          org_id: isSuperAdmin ? selectedOrgId : undefined,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSent(true);
+        setTimeout(onSuccess, 2200);
+      } else {
+        setError(data.error || "Failed to send invite");
+      }
+    } catch {
+      setError("Something went wrong");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  if (sent) {
+    return (
+      <div className="flex items-center gap-3 py-3">
+        <Send className="w-4 h-4 text-primary shrink-0" />
+        <div>
+          <p className="text-sm text-foreground font-medium">Invite sent to {email}</p>
+          <p className="font-mono text-[10px] text-muted-foreground tracking-wide">They'll receive an email with a 48-hour link.</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {error && (
+        <div className="text-destructive text-xs bg-destructive/10 border border-destructive/20 px-3 py-2 font-mono">
+          {error}
+        </div>
+      )}
+      {isSuperAdmin && orgs && !orgId && (
+        <div>
+          <label className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground mb-2 block">Organisation</label>
+          <select
+            required
+            className="w-full bg-input border border-border rounded-none h-11 px-3 font-mono text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 text-foreground"
+            value={selectedOrgId}
+            onChange={(e) => setSelectedOrgId(e.target.value)}
+          >
+            <option value="">Select organisation...</option>
+            {orgs?.map((o) => <option key={o.id} value={o.id}>{o.name}</option>)}
+          </select>
+        </div>
+      )}
+      {orgName && (
+        <div className="font-mono text-[10px] text-muted-foreground tracking-widest uppercase">
+          Inviting to: <span className="text-primary">{orgName}</span>
+        </div>
+      )}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground mb-2 block">Full Name</label>
+          <Input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Jane Smith"
+            className="bg-input border-border h-11 rounded-none focus-visible:ring-primary/30 text-foreground placeholder:text-muted-foreground" />
+        </div>
+        <div>
+          <label className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground mb-2 block">Email</label>
+          <Input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="jane@company.com"
+            className="bg-input border-border h-11 rounded-none focus-visible:ring-primary/30 text-foreground placeholder:text-muted-foreground" />
+        </div>
+      </div>
+      {isSuperAdmin && (
+        <div>
+          <label className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground mb-2 block">Role</label>
+          <select
+            className="w-full bg-input border border-border rounded-none h-11 px-3 font-mono text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 text-foreground"
+            value={role} onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+      )}
+      <div className="flex gap-3 pt-1">
+        <Button type="submit" disabled={sending}
+          className="rounded-none bg-primary text-primary-foreground hover:bg-primary/90 font-semibold h-11 px-6 transition-colors duration-150 flex items-center gap-2">
+          <Mail className="w-3 h-3" />
+          {sending ? "Sending..." : "Send Invite"}
+        </Button>
+        <Button type="button" variant="outline" onClick={onCancel}
+          className="rounded-none border-border hover:border-primary hover:text-primary h-11 px-6 transition-colors duration-150">
+          Cancel
+        </Button>
+      </div>
+    </form>
+  );
+}
+
+// ── Pending invite row ────────────────────────────────────────────────────────
+
+function PendingInviteRow({
+  invite,
+  token,
+  onRefresh,
+}: {
+  invite: any;
+  token: string | null;
+  onRefresh: () => void;
+}) {
+  const [resending, setResending] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
+
+  const resend = async () => {
+    setResending(true);
+    try {
+      await fetch("/api/invites", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body:    JSON.stringify({ action: "resend", invite_id: invite.id }),
+      });
+      onRefresh();
+    } finally {
+      setResending(false);
+    }
+  };
+
+  const cancel = async () => {
+    setCancelling(true);
+    try {
+      await fetch("/api/invites", {
+        method:  "DELETE",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body:    JSON.stringify({ invite_id: invite.id }),
+      });
+      onRefresh();
+    } finally {
+      setCancelling(false);
+    }
+  };
+
+  const daysLeft = Math.max(0, Math.ceil(
+    (new Date(invite.expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+  ));
+
+  return (
+    <div className="flex items-center justify-between py-2.5 border-b border-border last:border-0 group">
+      <div className="min-w-0">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-foreground font-medium truncate">{invite.name}</span>
+          <span className={`font-mono text-[9px] tracking-widest uppercase px-1.5 py-0.5 border shrink-0 ${
+            invite.role === "admin"
+              ? "bg-primary/10 text-primary border-primary/30"
+              : "bg-foreground/5 text-muted-foreground border-border"
+          }`}>{invite.role}</span>
+        </div>
+        <div className="flex items-center gap-2 mt-0.5">
+          <span className="font-mono text-[10px] text-muted-foreground tracking-wide">{invite.email}</span>
+          <span className="font-mono text-[9px] text-muted-foreground/60">· {daysLeft}d left</span>
+        </div>
+      </div>
+      <div className="flex items-center gap-1 shrink-0 ml-3 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+        <button
+          onClick={resend}
+          disabled={resending}
+          title="Resend invite"
+          className="p-1.5 text-muted-foreground hover:text-primary transition-colors duration-150 disabled:opacity-40"
+        >
+          <RotateCcw className="w-3.5 h-3.5" />
+        </button>
+        <button
+          onClick={cancel}
+          disabled={cancelling}
+          title="Cancel invite"
+          className="p-1.5 text-muted-foreground hover:text-destructive transition-colors duration-150 disabled:opacity-40"
+        >
+          <X className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── Org accordion (super admin only) ─────────────────────────────────────────
+
+function OrgCard({
+  org, users, invites, token, onRefresh, index = 0,
+}: {
+  org: any;
+  users: any[];
+  invites: any[];
+  token: string | null;
+  onRefresh: () => void;
+  index?: number;
+}) {
+  const [expanded, setExpanded]     = useState(false);
+  const [showInvite, setShowInvite] = useState(false);
+  const ease = [0.16, 1, 0.3, 1] as const;
+
+  const orgUsers   = users.filter((u) => u.organisation_id === org.id);
+  const orgInvites = invites.filter((i) => i.organisation_id === org.id);
+
+  const handleRoleChange = async (userId: number, newRole: string) => {
+    await fetch("/api/admin", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body:    JSON.stringify({ action: "update_role", user_id: userId, role: newRole }),
+    });
+    onRefresh();
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.06, ease }}
+      className="bg-card border border-border"
+    >
+      <button
+        className="w-full flex items-center justify-between p-5 text-left hover:bg-foreground/[0.02] transition-colors duration-150"
+        onClick={() => setExpanded(!expanded)}
+      >
+        <div className="flex items-center gap-4">
+          <Building2 className="w-4 h-4 text-primary shrink-0" />
+          <div>
+            <h3 className="font-display font-bold text-base text-foreground">{org.name}</h3>
+            <p className="font-mono text-[10px] text-muted-foreground tracking-wide mt-0.5">
+              {org.user_count} {org.user_count === 1 ? "user" : "users"} · {org.ticket_count} {org.ticket_count === 1 ? "ticket" : "tickets"}
+              {orgInvites.length > 0 && (
+                <span className="text-primary"> · {orgInvites.length} pending invite{orgInvites.length > 1 ? "s" : ""}</span>
+              )}
+            </p>
+          </div>
+        </div>
+        {expanded ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronRight className="w-4 h-4 text-muted-foreground" />}
+      </button>
+
+      <AnimatePresence>
+        {expanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="overflow-hidden border-t border-border"
+          >
+            <div className="p-5 space-y-4">
+
+              {/* Users */}
+              {orgUsers.length === 0 ? (
+                <p className="font-mono text-[10px] text-muted-foreground tracking-widest uppercase">No users yet.</p>
+              ) : (
+                <div>
+                  <p className="font-mono text-[9px] tracking-widest uppercase text-muted-foreground/60 mb-2">Members</p>
+                  {orgUsers.map((u) => (
+                    <div key={u.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+                      <div>
+                        <span className="font-medium text-sm text-foreground">{u.name}</span>
+                        <span className="font-mono text-[10px] text-muted-foreground ml-3 tracking-wide">{u.email}</span>
+                      </div>
+                      <select
+                        value={u.role}
+                        onChange={(e) => handleRoleChange(u.id, e.target.value)}
+                        className="bg-input border border-border rounded-none h-7 px-2 font-mono text-[10px] tracking-widest uppercase focus:outline-none focus:ring-1 focus:ring-primary/50 text-foreground cursor-pointer"
+                      >
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Pending invites */}
+              {orgInvites.length > 0 && (
+                <div>
+                  <p className="font-mono text-[9px] tracking-widest uppercase text-muted-foreground/60 mb-2">Pending Invites</p>
+                  {orgInvites.map((inv) => (
+                    <PendingInviteRow key={inv.id} invite={inv} token={token} onRefresh={onRefresh} />
+                  ))}
+                </div>
+              )}
+
+              {/* Invite form */}
+              <AnimatePresence>
+                {showInvite && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden border-t border-border pt-4"
+                  >
+                    <InviteUserForm
+                      token={token}
+                      isSuperAdmin={true}
+                      orgId={org.id}
+                      orgName={org.name}
+                      onSuccess={() => { setShowInvite(false); onRefresh(); }}
+                      onCancel={() => setShowInvite(false)}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {!showInvite && (
+                <Button
+                  onClick={() => setShowInvite(true)}
+                  variant="outline"
+                  className="rounded-none border-border hover:border-primary hover:text-primary h-8 px-4 text-xs font-mono tracking-wider uppercase transition-colors duration-150 flex items-center gap-2"
+                >
+                  <Mail className="w-3 h-3" /> Invite User
+                </Button>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
+// ── Main component ────────────────────────────────────────────────────────────
 
 export default function AdminDashboard() {
   const { user, token, logout } = useAuth();
-  const [tickets, setTickets] = useState<any[]>([]);
-  const [clients, setClients] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [creating, setCreating] = useState(false);
+  const isSuperAdmin = user?.is_super_admin ?? false;
+
+  const [tickets, setTickets]   = useState<any[]>([]);
+  const [orgs, setOrgs]         = useState<any[]>([]);
+  const [orgUsers, setOrgUsers] = useState<any[]>([]);
+  const [clients, setClients]   = useState<any[]>([]);
+  const [invites, setInvites]   = useState<any[]>([]);
+  const [loading, setLoading]   = useState(true);
+
+  const [filterOrgId, setFilterOrgId] = useState<string>("all");
+
+  const [showAddOrg, setShowAddOrg]   = useState(false);
+  const [showInvite, setShowInvite]   = useState(false);
+  const [newOrgName, setNewOrgName]   = useState("");
+  const [creatingOrg, setCreatingOrg] = useState(false);
 
   const fetchData = async () => {
     try {
-      const [tRes, cRes] = await Promise.all([
+      const [tRes, aRes] = await Promise.all([
         fetch("/api/tickets", { headers: { Authorization: `Bearer ${token}` } }),
-        fetch("/api/admin", { headers: { Authorization: `Bearer ${token}` } }),
+        fetch("/api/admin",   { headers: { Authorization: `Bearer ${token}` } }),
       ]);
       const tData = await tRes.json();
-      const cData = await cRes.json();
+      const aData = await aRes.json();
       if (tData.success) setTickets(tData.tickets);
-      if (cData.success) setClients(cData.clients);
+      if (aData.success) {
+        if (isSuperAdmin) {
+          setOrgs(aData.orgs ?? []);
+          setOrgUsers(aData.users ?? []);
+          setInvites(aData.invites ?? []);
+        } else {
+          setClients(aData.clients ?? []);
+          setInvites(aData.invites ?? []);
+        }
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -39,67 +407,67 @@ export default function AdminDashboard() {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [token]);
+  useEffect(() => { fetchData(); }, [token]);
 
   const handleUpdateStatus = async (id: number, status: string) => {
     try {
       await fetch("/api/tickets", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ id, status }),
+        method:  "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body:    JSON.stringify({ id, status }),
       });
       fetchData();
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) { console.error(e); }
   };
 
-  const handleCreateClient = async (e: React.FormEvent) => {
+  const handleCreateOrg = async (e: React.FormEvent) => {
     e.preventDefault();
-    setCreating(true);
+    setCreatingOrg(true);
     try {
-      const res = await fetch("/api/admin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ name, email, password }),
+      const res  = await fetch("/api/admin", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body:    JSON.stringify({ action: "create_org", name: newOrgName }),
       });
       const data = await res.json();
-      if (data.success) {
-        setName("");
-        setEmail("");
-        setPassword("");
-        fetchData();
-      } else {
-        alert(data.error || "Failed to create client");
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setCreating(false);
-    }
+      if (data.success) { setNewOrgName(""); setShowAddOrg(false); fetchData(); }
+    } catch (e) { console.error(e); } finally { setCreatingOrg(false); }
+  };
+
+  const handleRoleChange = async (userId: number, newRole: string) => {
+    await fetch("/api/admin", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body:    JSON.stringify({ action: "update_role", user_id: userId, role: newRole }),
+    });
+    fetchData();
   };
 
   const ease = [0.16, 1, 0.3, 1] as const;
-  const openCount = tickets.filter((t) => t.status === "open").length;
+
+  const openCount       = tickets.filter((t) => t.status === "open").length;
   const inProgressCount = tickets.filter((t) => t.status === "in_progress").length;
 
-  const stats = [
-    { label: "Open Tickets", value: openCount, icon: Ticket },
-    { label: "In Progress", value: inProgressCount, icon: Ticket },
-    { label: "Total Clients", value: clients.length, icon: Users },
-  ];
+  const filteredTickets = filterOrgId === "all"
+    ? tickets
+    : tickets.filter((t) => String(t.organisation_id) === filterOrgId);
+
+  const stats = isSuperAdmin
+    ? [
+        { label: "Open Tickets",  value: openCount,       icon: Ticket },
+        { label: "In Progress",   value: inProgressCount, icon: Ticket },
+        { label: "Organisations", value: orgs.length,     icon: Building2 },
+        { label: "Total Users",   value: orgUsers.length, icon: Users },
+      ]
+    : [
+        { label: "Open Tickets",  value: openCount,       icon: Ticket },
+        { label: "In Progress",   value: inProgressCount, icon: Ticket },
+        { label: "Team Members",  value: clients.length,  icon: Users },
+      ];
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Admin Header */}
+      {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           <div className="flex items-center gap-5">
@@ -109,18 +477,13 @@ export default function AdminDashboard() {
             </a>
             <div className="hidden sm:block w-px h-4 bg-border" />
             <span className="hidden sm:block font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground">
-              Admin
+              {isSuperAdmin ? "Super Admin" : "Admin"}
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <span className="hidden sm:block font-mono text-[10px] text-muted-foreground tracking-wide">
-              {user?.name}
-            </span>
-            <Button
-              variant="outline"
-              onClick={logout}
-              className="rounded-none border-border hover:border-primary hover:text-primary text-xs h-8 px-4 font-mono tracking-wider uppercase transition-colors duration-150"
-            >
+            <span className="hidden sm:block font-mono text-[10px] text-muted-foreground tracking-wide">{user?.name}</span>
+            <Button variant="outline" onClick={logout}
+              className="rounded-none border-border hover:border-primary hover:text-primary text-xs h-8 px-4 font-mono tracking-wider uppercase transition-colors duration-150">
               Sign Out
             </Button>
           </div>
@@ -128,7 +491,7 @@ export default function AdminDashboard() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Page heading */}
+        {/* Heading */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -143,17 +506,17 @@ export default function AdminDashboard() {
             className="font-display font-black leading-none tracking-tight text-foreground"
             style={{ fontSize: "clamp(42px, 5vw, 68px)" }}
           >
-            Admin<br />
+            {isSuperAdmin ? "Super Admin" : "Admin"}<br />
             <span className="text-primary">Dashboard.</span>
           </h1>
         </motion.div>
 
-        {/* Stats row */}
+        {/* Stats */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1, ease }}
-          className="grid grid-cols-3 gap-4 mb-10"
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10"
         >
           {stats.map(({ label, value, icon: Icon }) => (
             <div key={label} className="bg-card border border-border p-5">
@@ -161,9 +524,7 @@ export default function AdminDashboard() {
               <div className="font-display font-black text-4xl text-foreground leading-none mb-2">
                 {loading ? "—" : value}
               </div>
-              <div className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground">
-                {label}
-              </div>
+              <div className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground">{label}</div>
             </div>
           ))}
         </motion.div>
@@ -171,179 +532,210 @@ export default function AdminDashboard() {
         {/* Tabs */}
         <Tabs defaultValue="tickets" className="w-full">
           <TabsList className="mb-0 bg-transparent border-b border-border w-full justify-start rounded-none h-auto p-0 gap-0">
-            <TabsTrigger
-              value="tickets"
-              className="rounded-none font-mono text-[11px] tracking-widest uppercase px-6 py-3 h-auto border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none text-muted-foreground hover:text-foreground transition-colors duration-150"
-            >
-              All Tickets
+            <TabsTrigger value="tickets"
+              className="rounded-none font-mono text-[11px] tracking-widest uppercase px-6 py-3 h-auto border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none text-muted-foreground hover:text-foreground transition-colors duration-150">
+              Tickets
             </TabsTrigger>
-            <TabsTrigger
-              value="clients"
-              className="rounded-none font-mono text-[11px] tracking-widest uppercase px-6 py-3 h-auto border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none text-muted-foreground hover:text-foreground transition-colors duration-150"
-            >
-              Manage Clients
+            <TabsTrigger value={isSuperAdmin ? "organisations" : "team"}
+              className="rounded-none font-mono text-[11px] tracking-widest uppercase px-6 py-3 h-auto border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none text-muted-foreground hover:text-foreground transition-colors duration-150">
+              {isSuperAdmin ? "Organisations" : "Team"}
             </TabsTrigger>
           </TabsList>
 
-          {/* Tickets Tab */}
-          <TabsContent value="tickets" className="mt-6 space-y-3">
-            {loading ? (
-              <div className="py-20 text-center">
-                <span className="font-mono text-[11px] text-muted-foreground tracking-widest uppercase animate-pulse">
-                  Loading...
+          {/* ── Tickets tab ───────────────────────────────────────────────── */}
+          <TabsContent value="tickets" className="mt-6">
+            {isSuperAdmin && orgs.length > 0 && (
+              <div className="flex items-center gap-4 mb-5">
+                <span className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground shrink-0">Filter by org</span>
+                <select
+                  className="bg-input border border-border rounded-none h-9 px-3 font-mono text-[10px] tracking-widest uppercase focus:outline-none focus:ring-1 focus:ring-primary/50 text-foreground"
+                  value={filterOrgId}
+                  onChange={(e) => setFilterOrgId(e.target.value)}
+                >
+                  <option value="all">All Organisations</option>
+                  {orgs.map((o) => <option key={o.id} value={String(o.id)}>{o.name}</option>)}
+                </select>
+                <span className="font-mono text-[10px] text-muted-foreground ml-auto">
+                  {filteredTickets.length} tickets
                 </span>
               </div>
-            ) : tickets.length === 0 ? (
-              <div className="py-20 border border-dashed border-border text-center">
-                <p className="font-mono text-[11px] text-muted-foreground tracking-widest uppercase">
-                  No tickets found.
-                </p>
+            )}
+            {loading ? (
+              <div className="py-20 text-center">
+                <span className="font-mono text-[11px] text-muted-foreground tracking-widest uppercase animate-pulse">Loading...</span>
               </div>
             ) : (
-              tickets.map((ticket, i) => {
-                const status = statusConfig[ticket.status as keyof typeof statusConfig] ?? statusConfig.open;
-                return (
-                  <motion.div
-                    key={ticket.id}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: i * 0.04, ease }}
-                    className="bg-card border border-border p-6 hover:border-primary/40 transition-colors duration-200 group"
-                  >
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
-                      <div className="flex-1">
-                        <h3 className="font-display font-bold text-lg text-foreground group-hover:text-primary transition-colors duration-150">
-                          {ticket.title}
-                        </h3>
-                        <p className="font-mono text-[10px] text-muted-foreground tracking-wide mt-1">
-                          {ticket.client_name} · {ticket.client_email} ·{" "}
-                          {new Date(ticket.created_at).toLocaleDateString("en-AU")}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-3 shrink-0">
-                        <span className={`font-mono text-[10px] tracking-widest uppercase px-3 py-1 border hidden sm:block ${status.classes}`}>
-                          {status.label}
-                        </span>
-                        <select
-                          className="bg-input border border-border rounded-none py-2 px-3 font-mono text-[10px] tracking-widest uppercase focus:outline-none focus:ring-1 focus:ring-primary/50 text-foreground transition-all cursor-pointer"
-                          value={ticket.status}
-                          onChange={(e) => handleUpdateStatus(ticket.id, e.target.value)}
-                        >
-                          <option value="open">Open</option>
-                          <option value="in_progress">In Progress</option>
-                          <option value="resolved">Resolved</option>
-                        </select>
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed border-t border-border pt-4">
-                      {ticket.description}
-                    </p>
-                  </motion.div>
-                );
-              })
+              <KanbanBoard
+                tickets={filteredTickets}
+                canEditTicket={() => true}
+                showOrg={isSuperAdmin}
+                onStatusChange={handleUpdateStatus}
+              />
             )}
           </TabsContent>
 
-          {/* Clients Tab */}
-          <TabsContent value="clients" className="mt-6">
+          {/* ── Organisations tab (super admin) ───────────────────────────── */}
+          <TabsContent value="organisations" className="mt-6">
+            <div className="flex items-center justify-between mb-5">
+              <span className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground">
+                Client Organisations
+              </span>
+              <div className="flex gap-3">
+                <Button onClick={() => setShowAddOrg(true)}
+                  className="rounded-none bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 text-xs font-mono tracking-wider uppercase transition-colors duration-150 flex items-center gap-2">
+                  <Plus className="w-3 h-3" /> New Organisation
+                </Button>
+              </div>
+            </div>
+
+            {/* New org inline form */}
+            <AnimatePresence>
+              {showAddOrg && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="overflow-hidden mb-4"
+                >
+                  <form onSubmit={handleCreateOrg} className="bg-card border border-border p-6 flex items-end gap-4">
+                    <div className="flex-1">
+                      <label className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground mb-2 block">
+                        Organisation Name
+                      </label>
+                      <Input required value={newOrgName} onChange={(e) => setNewOrgName(e.target.value)}
+                        placeholder="Acme Corp"
+                        className="bg-input border-border h-11 rounded-none focus-visible:ring-primary/30 text-foreground placeholder:text-muted-foreground" />
+                    </div>
+                    <Button type="submit" disabled={creatingOrg}
+                      className="rounded-none bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-6 font-semibold transition-colors duration-150">
+                      {creatingOrg ? "Creating..." : "Create"}
+                    </Button>
+                    <Button type="button" variant="outline" onClick={() => setShowAddOrg(false)}
+                      className="rounded-none border-border hover:border-primary hover:text-primary h-11 px-4 transition-colors duration-150">
+                      Cancel
+                    </Button>
+                  </form>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {orgs.length === 0 ? (
+              <div className="py-20 border border-dashed border-border text-center">
+                <Building2 className="w-8 h-8 text-muted-foreground/30 mx-auto mb-3" />
+                <p className="font-mono text-[11px] text-muted-foreground tracking-widest uppercase">No client organisations yet.</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {orgs.map((org, i) => (
+                  <OrgCard
+                    key={org.id}
+                    org={org}
+                    users={orgUsers}
+                    invites={invites}
+                    token={token}
+                    onRefresh={fetchData}
+                    index={i}
+                  />
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          {/* ── Team tab (regular admin) ──────────────────────────────────── */}
+          <TabsContent value="team" className="mt-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Create Client Form */}
+
+              {/* Invite form */}
               <div className="md:col-span-1">
                 <div className="bg-card border border-border p-8">
                   <div className="flex items-center gap-3 mb-2">
-                    <UserPlus className="w-4 h-4 text-primary" />
-                    <h3 className="font-display font-bold text-xl text-foreground">New Client</h3>
+                    <Mail className="w-4 h-4 text-primary" />
+                    <h3 className="font-display font-bold text-xl text-foreground">Invite User</h3>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-6">
-                    Provision a new portal account for a client.
-                  </p>
-                  <form onSubmit={handleCreateClient} className="space-y-5">
-                    <div>
-                      <label className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground mb-2 block">
-                        Company / Name
-                      </label>
-                      <Input
-                        required
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Acme Corp"
-                        className="bg-input border-border h-11 rounded-none focus-visible:ring-primary/30 text-foreground placeholder:text-muted-foreground"
-                      />
-                    </div>
-                    <div>
-                      <label className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground mb-2 block">
-                        Email
-                      </label>
-                      <Input
-                        required
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="ceo@acme.com"
-                        className="bg-input border-border h-11 rounded-none focus-visible:ring-primary/30 text-foreground placeholder:text-muted-foreground"
-                      />
-                    </div>
-                    <div>
-                      <label className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground mb-2 block">
-                        Password
-                      </label>
-                      <Input
-                        required
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="••••••••"
-                        className="bg-input border-border h-11 rounded-none focus-visible:ring-primary/30 text-foreground placeholder:text-muted-foreground"
-                      />
-                    </div>
-                    <Button
-                      type="submit"
-                      disabled={creating}
-                      className="w-full h-11 rounded-none bg-primary text-primary-foreground hover:bg-primary/90 font-semibold transition-colors duration-150"
-                    >
-                      {creating ? "Provisioning..." : "Provision Client"}
-                    </Button>
-                  </form>
+                  <p className="text-sm text-muted-foreground mb-6">Send an invite link to add a new team member.</p>
+                  <AnimatePresence mode="wait">
+                    {showInvite ? (
+                      <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                        <InviteUserForm
+                          token={token}
+                          isSuperAdmin={false}
+                          onSuccess={() => { setShowInvite(false); fetchData(); }}
+                          onCancel={() => setShowInvite(false)}
+                        />
+                      </motion.div>
+                    ) : (
+                      <motion.div key="button" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                        <Button
+                          onClick={() => setShowInvite(true)}
+                          className="rounded-none bg-primary text-primary-foreground hover:bg-primary/90 font-semibold h-11 px-6 transition-colors duration-150 flex items-center gap-2"
+                        >
+                          <Mail className="w-4 h-4" /> Send Invite
+                        </Button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
 
-              {/* Client List */}
+              {/* Team list */}
               <div className="md:col-span-2">
-                <div className="flex items-center justify-between mb-5">
-                  <span className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground">
-                    Client Directory
-                  </span>
-                  <span className="font-mono text-[10px] text-muted-foreground">
-                    {clients.length} accounts
-                  </span>
+                {/* Active members */}
+                <div className="flex items-center justify-between mb-4">
+                  <span className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground">Team Members</span>
+                  <span className="font-mono text-[10px] text-muted-foreground">{clients.length} active</span>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-2 mb-8">
                   {clients.map((client, i) => (
                     <motion.div
                       key={client.id}
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3, delay: i * 0.05, ease }}
-                      className="bg-card border border-border p-5 flex justify-between items-center group hover:border-primary/40 transition-colors duration-200"
+                      className="bg-card border border-border p-4 flex justify-between items-center group hover:border-primary/40 transition-colors duration-200"
                     >
                       <div>
                         <h3 className="font-display font-bold text-base text-foreground group-hover:text-primary transition-colors duration-150">
                           {client.name}
                         </h3>
-                        <p className="font-mono text-[10px] text-muted-foreground tracking-wide mt-1">
-                          {client.email}
-                        </p>
+                        <p className="font-mono text-[10px] text-muted-foreground tracking-wide mt-0.5">{client.email}</p>
                       </div>
-                      <span className="font-mono text-[10px] text-muted-foreground tracking-widest uppercase shrink-0">
-                        Joined{" "}
-                        {new Date(client.created_at).toLocaleDateString("en-AU", {
-                          month: "short",
-                          year: "numeric",
-                        })}
-                      </span>
+                      <div className="flex items-center gap-3">
+                        <select
+                          value={client.role}
+                          onChange={(e) => handleRoleChange(client.id, e.target.value)}
+                          className="bg-input border border-border rounded-none h-8 px-2 font-mono text-[10px] tracking-widest uppercase focus:outline-none focus:ring-1 focus:ring-primary/50 text-foreground cursor-pointer"
+                        >
+                          <option value="user">User</option>
+                          <option value="admin">Admin</option>
+                        </select>
+                        <span className="font-mono text-[10px] text-muted-foreground tracking-widest uppercase hidden sm:block">
+                          {new Date(client.created_at).toLocaleDateString("en-AU", { month: "short", year: "numeric" })}
+                        </span>
+                      </div>
                     </motion.div>
                   ))}
+                  {clients.length === 0 && (
+                    <div className="py-10 border border-dashed border-border text-center">
+                      <p className="font-mono text-[11px] text-muted-foreground tracking-widest uppercase">No team members yet.</p>
+                    </div>
+                  )}
                 </div>
+
+                {/* Pending invites */}
+                {invites.length > 0 && (
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground">Pending Invites</span>
+                      <span className="font-mono text-[10px] text-muted-foreground">{invites.length}</span>
+                    </div>
+                    <div className="bg-card border border-border px-4">
+                      {invites.map((inv) => (
+                        <PendingInviteRow key={inv.id} invite={inv} token={token} onRefresh={fetchData} />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </TabsContent>

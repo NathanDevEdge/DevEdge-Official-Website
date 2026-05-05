@@ -12,6 +12,8 @@ import BlogPost from "./pages/BlogPost";
 import PortalLogin from "./pages/PortalLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import ClientPortal from "./pages/ClientPortal";
+import AcceptInvite from "./pages/AcceptInvite";
+import ResetPassword from "./pages/ResetPassword";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { Redirect } from "wouter";
 import { useEffect } from "react";
@@ -24,7 +26,7 @@ function ScrollToTop() {
   return null;
 }
 
-const ProtectedRoute = ({ component: Component, role }: { component: any, role?: "admin" | "client" }) => {
+const ProtectedRoute = ({ component: Component, role }: { component: any, role?: "admin" | "user" }) => {
   const { user, loading } = useAuth();
 
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
@@ -49,8 +51,10 @@ function Router() {
         <Route path={"/blog"} component={BlogPost} />
         <Route path={"/blog/:slug"} component={BlogPost} />
         <Route path={"/portal/login"} component={PortalLogin} />
+        <Route path={"/portal/accept-invite"} component={AcceptInvite} />
+        <Route path={"/portal/reset-password"} component={ResetPassword} />
         <Route path={"/portal"}>
-          {() => <ProtectedRoute component={ClientPortal} role="client" />}
+          {() => <ProtectedRoute component={ClientPortal} role="user" />}
         </Route>
         <Route path={"/admin"}>
           {() => <ProtectedRoute component={AdminDashboard} role="admin" />}

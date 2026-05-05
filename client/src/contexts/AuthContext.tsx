@@ -4,7 +4,9 @@ export type User = {
   id: number;
   email: string;
   name: string;
-  role: "admin" | "client";
+  role: "admin" | "user";
+  organisation_id: number;
+  is_super_admin: boolean;
 };
 
 type AuthContextType = {
@@ -26,19 +28,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const storedToken = localStorage.getItem("portal_token");
     if (storedToken) {
       fetch("/api/auth", {
-        headers: { Authorization: `Bearer ${storedToken}` }
+        headers: { Authorization: `Bearer ${storedToken}` },
       })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setToken(storedToken);
-          setUser(data.user);
-        } else {
-          localStorage.removeItem("portal_token");
-        }
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setToken(storedToken);
+            setUser(data.user);
+          } else {
+            localStorage.removeItem("portal_token");
+          }
+        })
+        .catch(console.error)
+        .finally(() => setLoading(false));
     } else {
       setLoading(false);
     }

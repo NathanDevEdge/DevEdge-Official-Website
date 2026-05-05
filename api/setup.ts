@@ -7,51 +7,81 @@ export default async function handler(req: any, res: any) {
     }
 
     try {
-        // Create Users Table
+        // Organisations table
         await sql`
-            CREATE TABLE IF NOT EXISTS users (
-                id SERIAL PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
-                email VARCHAR(255) UNIQUE NOT NULL,
-                password_hash VARCHAR(255) NOT NULL,
-                role VARCHAR(50) NOT NULL CHECK (role IN ('admin', 'client')),
+            CREATE TABLE IF NOT EXISTS organisations (
+                id         SERIAL PRIMARY KEY,
+                name       VARCHAR(255) NOT NULL,
                 created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
             );
         `;
 
-        // Create Tickets Table
+        // Users table — scoped to an organisation
         await sql`
-            CREATE TABLE IF NOT EXISTS tickets (
-                id SERIAL PRIMARY KEY,
-                client_id INTEGER REFERENCES users(id),
-                title VARCHAR(255) NOT NULL,
-                description TEXT NOT NULL,
-                status VARCHAR(50) NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'resolved')),
-                created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+            CREATE TABLE IF NOT EXISTS users (
+                id              SERIAL PRIMARY KEY,
+                organisation_id INTEGER REFERENCES organisations(id),
+                name            VARCHAR(255) NOT NULL,
+                email           VARCHAR(255) UNIQUE NOT NULL,
+                password_hash   VARCHAR(255) NOT NULL,
+                role            VARCHAR(50) NOT NULL CHECK (role IN ('admin', 'user')),
+                created_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
             );
         `;
 
-        // Check if admin exists
-        const { rows } = await sql`SELECT * FROM users WHERE email = 'admin@devedge.com.au'`;
-        if (rows.length === 0) {
-            const defaultPassword = 'AdminPassword123!';
+        // Tickets table — scoped to an organisation, submitted by a user
+        await sql`
+            CREATE TABLE IF NOT EXISTS tickets (
+                id              SERIAL PRIMARY KEY,
+                organisation_id INTEGER REFERENCES organisations(id),
+                client_id       INTEGER REFERENCES users(id),
+                title           VARCHAR(255) NOT NULL,
+                description     TEXT NOT NULL,
+                status          VARCHAR(50) NOT NULL DEFAULT 'open'
+                                    CHECK (status IN ('open', 'confirmed', 'in_progress', 'in_review', 'closed')),
+                created_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                updated_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+            );
+        `;
+
+        // Seed: DevEdge org + admin user
+        const { rows: existingOrgs } = await sql`
+            SELECT id FROM organisations WHERE name = 'DevEdge';
+        `;
+
+        let orgId: number;
+
+        if (existingOrgs.length === 0) {
+            const { rows } = await sql`
+                INSERT INTO organisations (name) VALUES ('DevEdge') RETURNING id;
+            `;
+            orgId = rows[0].id;
+        } else {
+            orgId = existingOrgs[0].id;
+        }
+
+        const { rows: existingAdmin } = await sql`
+            SELECT id FROM users WHERE email = 'admin@devedge.com.au';
+        `;
+
+        if (existingAdmin.length === 0) {
+            const defaultPassword = 'DevEdge2025!';
             const hash = await bcrypt.hash(defaultPassword, 10);
             await sql`
-                INSERT INTO users (name, email, password_hash, role)
-                VALUES ('Admin', 'admin@devedge.com.au', ${hash}, 'admin')
+                INSERT INTO users (organisation_id, name, email, password_hash, role)
+                VALUES (${orgId}, 'Admin', 'admin@devedge.com.au', ${hash}, 'admin');
             `;
-            return res.status(200).json({ 
-                success: true, 
-                message: "Tables created and default admin added.",
-                adminEmail: 'admin@devedge.com.au',
-                adminPassword: defaultPassword
+            return res.status(200).json({
+                success: true,
+                message: 'Schema created and default admin provisioned.',
+                admin: { email: 'admin@devedge.com.au', password: defaultPassword },
             });
         }
 
-        return res.status(200).json({ success: true, message: "Tables verified. Admin already exists." });
+        return res.status(200).json({ success: true, message: 'Schema verified. Admin already exists.' });
+
     } catch (error: any) {
-        console.error("Setup error:", error);
-        return res.status(500).json({ error: "Failed to set up database.", details: error.message });
+        console.error('Setup error:', error);
+        return res.status(500).json({ error: 'Setup failed.', details: error.message });
     }
 }
