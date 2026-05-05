@@ -18,6 +18,7 @@ import { Send } from "lucide-react";
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
   email: z.string().email("Please enter a valid email address."),
+  phone: z.string().optional(),
   service: z.string().min(1, "Please select a service of interest."),
   message: z.string().min(10, "Message must be at least 10 characters."),
 });
@@ -53,7 +54,7 @@ export default function ContactModal({
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", email: "", service: "", message: "" },
+    defaultValues: { name: "", email: "", phone: "", service: "", message: "" },
   });
 
   async function onSubmit(data: FormValues) {
@@ -131,27 +132,53 @@ export default function ContactModal({
                 )}
               />
 
-              {/* Email */}
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-mono text-[11px] text-[#7A5C3A] tracking-widest uppercase">
-                      Email
-                    </FormLabel>
-                    <FormControl>
-                      <input
-                        type="email"
-                        placeholder="john@company.com"
-                        className={fieldClass}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-[#c0392b] text-xs font-mono" />
-                  </FormItem>
-                )}
-              />
+              {/* Email + Phone — side by side */}
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-mono text-[11px] text-[#7A5C3A] tracking-widest uppercase">
+                        Email
+                      </FormLabel>
+                      <FormControl>
+                        <input
+                          type="email"
+                          placeholder="john@company.com"
+                          className={fieldClass}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[#c0392b] text-xs font-mono" />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-mono text-[11px] text-[#7A5C3A] tracking-widest uppercase inline-flex items-center gap-2">
+                        Phone
+                        <span className="text-[#A89070] normal-case tracking-normal font-sans" style={{ fontSize: "10px" }}>
+                          optional
+                        </span>
+                      </FormLabel>
+                      <FormControl>
+                        <input
+                          type="tel"
+                          placeholder="0400 000 000"
+                          className={fieldClass}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[#c0392b] text-xs font-mono" />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               {/* Service */}
               <FormField

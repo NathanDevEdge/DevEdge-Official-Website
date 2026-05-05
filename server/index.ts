@@ -17,7 +17,7 @@ async function startServer() {
   // Must be declared BEFORE the static/wildcard handlers so it isn't swallowed.
   app.post("/api/contact", async (req, res) => {
     try {
-      const { name, email, service, message } = req.body;
+      const { name, email, phone, service, message } = req.body;
 
       if (!name || !email || !service || !message) {
         return res.status(400).json({ error: "Missing required fields" });
@@ -30,6 +30,7 @@ async function startServer() {
         console.log("\n─── New Contact Form Submission ───────────────────");
         console.log(`Name:    ${name}`);
         console.log(`Email:   ${email}`);
+        if (phone) console.log(`Phone:   ${phone}`);
         console.log(`Service: ${service}`);
         console.log(`Message: ${message}`);
         console.log("───────────────────────────────────────────────────\n");
@@ -49,6 +50,7 @@ async function startServer() {
             <table style="width:100%;border-collapse:collapse">
               <tr><td style="padding:8px 0;color:#7A5C3A;width:100px"><strong>Name</strong></td><td>${name}</td></tr>
               <tr><td style="padding:8px 0;color:#7A5C3A"><strong>Email</strong></td><td><a href="mailto:${email}">${email}</a></td></tr>
+              ${phone ? `<tr><td style="padding:8px 0;color:#7A5C3A"><strong>Phone</strong></td><td><a href="tel:${phone}">${phone}</a></td></tr>` : ""}
               <tr><td style="padding:8px 0;color:#7A5C3A"><strong>Service</strong></td><td>${service}</td></tr>
             </table>
             <hr style="border:none;border-top:1px solid #D4B896;margin:16px 0">

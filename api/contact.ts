@@ -6,7 +6,7 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const { name, email, service, message } = req.body || {};
+    const { name, email, phone, service, message } = req.body || {};
 
     if (!name || !email || !service || !message) {
       return res.status(400).json({ error: "Missing required fields" });
@@ -32,6 +32,7 @@ export default async function handler(req: any, res: any) {
           <table style="width:100%;border-collapse:collapse">
             <tr><td style="padding:8px 0;color:#7A5C3A;width:100px"><strong>Name</strong></td><td>${name}</td></tr>
             <tr><td style="padding:8px 0;color:#7A5C3A"><strong>Email</strong></td><td><a href="mailto:${email}">${email}</a></td></tr>
+            ${phone ? `<tr><td style="padding:8px 0;color:#7A5C3A"><strong>Phone</strong></td><td><a href="tel:${phone}">${phone}</a></td></tr>` : ""}
             <tr><td style="padding:8px 0;color:#7A5C3A"><strong>Service</strong></td><td>${service}</td></tr>
           </table>
           <hr style="border:none;border-top:1px solid #D4B896;margin:16px 0">
