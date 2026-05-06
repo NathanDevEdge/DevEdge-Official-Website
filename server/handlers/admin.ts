@@ -9,6 +9,11 @@ export async function handleGetAdmin(req: any, res: any) {
 
   try {
     if (user.is_super_admin) {
+      const { rows: superOrgRows } = await pool.query(
+        `SELECT id, name FROM organisations WHERE is_super_org = TRUE LIMIT 1`
+      );
+      const superOrg = superOrgRows[0] ?? null;
+
       const { rows: orgs } = await pool.query(
         `SELECT o.*,
            COUNT(DISTINCT u.id)::int AS user_count,
@@ -38,7 +43,24 @@ export async function handleGetAdmin(req: any, res: any) {
          ORDER BY i.created_at DESC`
       );
 
-      return res.status(200).json({ success: true, orgs, users, invites });
+      const { rows: devEdgeTeam } = await pool.query(
+        `SELECT u.id, u.name, u.email, u.role, u.organisation_id, u.created_at
+         FROM users u
+         JOIN organisations o ON u.organisation_id = o.id
+         WHERE o.is_super_org = TRUE
+         ORDER BY u.name ASC`
+      );
+
+      const { rows: devEdgeInvites } = await pool.query(
+        `SELECT i.id, i.email, i.name, i.role, i.organisation_id, i.expires_at, i.created_at
+         FROM invites i
+         JOIN organisations o ON i.organisation_id = o.id
+         WHERE i.accepted_at IS NULL AND i.expires_at > NOW()
+           AND o.is_super_org = TRUE
+         ORDER BY i.created_at DESC`
+      );
+
+      return res.status(200).json({ success: true, orgs, users, invites, devEdgeTeam, devEdgeInvites, superOrg });
     } else {
       const { rows: clients } = await pool.query(
         `SELECT id, name, email, role, created_at

@@ -378,12 +378,16 @@ export default function AdminDashboard() {
   const isSuperAdmin = user?.is_super_admin ?? false;
   const search = useSearch();
 
-  const [tickets, setTickets]   = useState<any[]>([]);
-  const [orgs, setOrgs]         = useState<any[]>([]);
-  const [orgUsers, setOrgUsers] = useState<any[]>([]);
-  const [clients, setClients]   = useState<any[]>([]);
-  const [invites, setInvites]   = useState<any[]>([]);
-  const [loading, setLoading]   = useState(true);
+  const [tickets, setTickets]         = useState<any[]>([]);
+  const [orgs, setOrgs]               = useState<any[]>([]);
+  const [orgUsers, setOrgUsers]       = useState<any[]>([]);
+  const [clients, setClients]         = useState<any[]>([]);
+  const [invites, setInvites]         = useState<any[]>([]);
+  const [devEdgeTeam, setDevEdgeTeam] = useState<any[]>([]);
+  const [devEdgeInvites, setDevEdgeInvites] = useState<any[]>([]);
+  const [superOrg, setSuperOrg]       = useState<any>(null);
+  const [loading, setLoading]         = useState(true);
+  const [showDevEdgeInvite, setShowDevEdgeInvite] = useState(false);
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
 
   const selectedTicket = tickets.find((t) => t.id === selectedTicketId) ?? null;
@@ -417,6 +421,9 @@ export default function AdminDashboard() {
           setOrgs(aData.orgs ?? []);
           setOrgUsers(aData.users ?? []);
           setInvites(aData.invites ?? []);
+          setDevEdgeTeam(aData.devEdgeTeam ?? []);
+          setDevEdgeInvites(aData.devEdgeInvites ?? []);
+          setSuperOrg(aData.superOrg ?? null);
         } else {
           setClients(aData.clients ?? []);
           setInvites(aData.invites ?? []);
@@ -630,6 +637,12 @@ export default function AdminDashboard() {
               className="rounded-none font-mono text-[11px] tracking-widest uppercase px-6 py-3 h-auto border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none text-muted-foreground hover:text-foreground transition-colors duration-150">
               {isSuperAdmin ? "Organisations" : "Team"}
             </TabsTrigger>
+            {isSuperAdmin && (
+              <TabsTrigger value="devedge-team"
+                className="rounded-none font-mono text-[11px] tracking-widest uppercase px-6 py-3 h-auto border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none text-muted-foreground hover:text-foreground transition-colors duration-150">
+                DevEdge Team
+              </TabsTrigger>
+            )}
           </TabsList>
 
           {/* ── Tickets tab ───────────────────────────────────────────────── */}
@@ -920,6 +933,103 @@ export default function AdminDashboard() {
               </div>
             </div>
           </TabsContent>
+
+          {/* ── DevEdge Team tab (super admin only) ──────────────────────── */}
+          {isSuperAdmin && (
+            <TabsContent value="devedge-team" className="mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                {/* Invite form */}
+                <div className="md:col-span-1">
+                  <div className="bg-card border border-border p-8">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Mail className="w-4 h-4 text-primary" />
+                      <h3 className="font-display font-bold text-xl text-foreground">Invite to DevEdge</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-6">Add a new member to the DevEdge team.</p>
+                    <AnimatePresence mode="wait">
+                      {showDevEdgeInvite ? (
+                        <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                          <InviteUserForm
+                            token={token}
+                            isSuperAdmin={true}
+                            orgId={superOrg?.id}
+                            orgName={superOrg?.name}
+                            onSuccess={() => { setShowDevEdgeInvite(false); fetchData(); }}
+                            onCancel={() => setShowDevEdgeInvite(false)}
+                          />
+                        </motion.div>
+                      ) : (
+                        <motion.div key="button" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                          <Button
+                            onClick={() => setShowDevEdgeInvite(true)}
+                            className="rounded-none bg-primary text-primary-foreground hover:bg-primary/90 font-semibold h-11 px-6 transition-colors duration-150 flex items-center gap-2"
+                          >
+                            <Mail className="w-4 h-4" /> Send Invite
+                          </Button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
+
+                {/* Team list */}
+                <div className="md:col-span-2">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground">Team Members</span>
+                    <span className="font-mono text-[10px] text-muted-foreground">{devEdgeTeam.length} members</span>
+                  </div>
+                  <div className="space-y-2 mb-8">
+                    {devEdgeTeam.map((member, i) => (
+                      <motion.div
+                        key={member.id}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: i * 0.05, ease }}
+                        className="bg-card border border-border p-4 flex justify-between items-center group hover:border-primary/40 transition-colors duration-200"
+                      >
+                        <div>
+                          <h3 className="font-display font-bold text-base text-foreground group-hover:text-primary transition-colors duration-150">
+                            {member.name}
+                          </h3>
+                          <p className="font-mono text-[10px] text-muted-foreground tracking-wide mt-0.5">{member.email}</p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <select
+                            value={member.role}
+                            onChange={(e) => handleRoleChange(member.id, e.target.value)}
+                            disabled={member.id === user?.id}
+                            className="bg-input border border-border rounded-none h-8 px-2 font-mono text-[10px] tracking-widest uppercase focus:outline-none focus:ring-1 focus:ring-primary/50 text-foreground cursor-pointer disabled:opacity-40 disabled:cursor-default"
+                          >
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                          </select>
+                          <span className="font-mono text-[10px] text-muted-foreground tracking-widest uppercase hidden sm:block">
+                            {new Date(member.created_at).toLocaleDateString("en-AU", { month: "short", year: "numeric" })}
+                          </span>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {/* Pending invites */}
+                  {devEdgeInvites.length > 0 && (
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground">Pending Invites</span>
+                        <span className="font-mono text-[10px] text-muted-foreground">{devEdgeInvites.length}</span>
+                      </div>
+                      <div className="bg-card border border-border px-4">
+                        {devEdgeInvites.map((inv) => (
+                          <PendingInviteRow key={inv.id} invite={inv} token={token} onRefresh={fetchData} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </TabsContent>
+          )}
         </Tabs>
       </div>
     </div>
