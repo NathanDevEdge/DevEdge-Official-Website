@@ -15,6 +15,12 @@ import Slide09Close from "@/components/slides/Slide09Close";
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Lock body scroll on desktop so snap container handles it; restore on unmount
+  useEffect(() => {
+    document.body.classList.add("snap-scroll-active");
+    return () => document.body.classList.remove("snap-scroll-active");
+  }, []);
+
   // Reset snap container scroll position on mount
   useEffect(() => {
     if (containerRef.current) {

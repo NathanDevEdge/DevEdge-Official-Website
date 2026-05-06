@@ -153,12 +153,11 @@
 }
 
 /* ── Desktop snap scroll ─────────────────────────────────────────────────────
-   Body must NOT scroll on desktop — all scrolling happens inside the
-   #snap-container div so that CSS scroll-snap works correctly.
-   Mobile keeps default scroll behaviour (no overflow: hidden).
+   Only lock body scroll when the homepage snap container is active.
+   Portal and other pages scroll normally.
 ────────────────────────────────────────────────────────────────────────────── */
 @media (min-width: 1024px) {
-  html, body {
+  body.snap-scroll-active {
     overflow: hidden;
     height: 100%;
   }
