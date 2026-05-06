@@ -1,14 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, X } from "lucide-react";
+import { Plus, X, Paperclip } from "lucide-react";
 import { useSearch } from "wouter";
 import KanbanBoard from "@/components/KanbanBoard";
 import TicketDetailPanel from "@/components/TicketDetailPanel";
 import { PRIORITY_OPTIONS, PRIORITY_CONFIG } from "@/lib/ticketPriority";
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
+function formatBytes(bytes: number) {
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 export default function ClientPortal() {
   const { user, token, logout } = useAuth();
@@ -22,7 +29,9 @@ export default function ClientPortal() {
   const [title, setTitle]             = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority]       = useState("medium");
+  const [pendingFiles, setPendingFiles] = useState<File[]>([]);
   const [creating, setCreating]       = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const selectedTicket = tickets.find((t) => t.id === selectedTicketId) ?? null;
 
@@ -45,6 +54,18 @@ export default function ClientPortal() {
     finally { setLoading(false); }
   };
 
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    const valid = files.filter((f) => f.size <= MAX_FILE_SIZE);
+    const oversized = files.filter((f) => f.size > MAX_FILE_SIZE);
+    if (oversized.length) alert(`${oversized.map((f) => f.name).join(", ")} exceed the 10 MB limit and were not added.`);
+    setPendingFiles((prev) => {
+      const names = new Set(prev.map((f) => f.name));
+      return [...prev, ...valid.filter((f) => !names.has(f.name))];
+    });
+    e.target.value = "";
+  };
+
   const handleCreateTicket = async (e: React.FormEvent) => {
     e.preventDefault();
     setCreating(true);
@@ -56,7 +77,14 @@ export default function ClientPortal() {
       });
       const data = await res.json();
       if (data.success) {
-        setTitle(""); setDescription(""); setPriority("medium");
+        const ticketId = data.ticket.id;
+        for (const file of pendingFiles) {
+          const fd = new FormData();
+          fd.append("ticket_id", String(ticketId));
+          fd.append("file", file);
+          await fetch("/api/attachments", { method: "POST", headers: { Authorization: `Bearer ${token}` }, body: fd });
+        }
+        setTitle(""); setDescription(""); setPriority("medium"); setPendingFiles([]);
         setShowForm(false);
         fetchTickets();
       }
@@ -220,6 +248,39 @@ export default function ClientPortal() {
                     />
                   </div>
 
+                  {/* Attachments */}
+                  <div>
+                    <label className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground mb-2 block">
+                      Attachments <span className="text-muted-foreground/50 normal-case">(optional · 10 MB max per file)</span>
+                    </label>
+                    <input ref={fileInputRef} type="file" multiple className="hidden" onChange={handleFileSelect} />
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="flex items-center gap-2 border border-dashed border-border hover:border-primary/50 px-4 py-2.5 font-mono text-[10px] tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors duration-150"
+                    >
+                      <Paperclip className="w-3 h-3" /> Add Files
+                    </button>
+                    {pendingFiles.length > 0 && (
+                      <ul className="mt-2 space-y-1">
+                        {pendingFiles.map((f) => (
+                          <li key={f.name} className="flex items-center gap-3 bg-secondary/40 border border-border px-3 py-1.5">
+                            <Paperclip className="w-3 h-3 text-muted-foreground shrink-0" />
+                            <span className="font-mono text-[10px] text-foreground truncate flex-1">{f.name}</span>
+                            <span className="font-mono text-[10px] text-muted-foreground shrink-0">{formatBytes(f.size)}</span>
+                            <button
+                              type="button"
+                              onClick={() => setPendingFiles((prev) => prev.filter((p) => p.name !== f.name))}
+                              className="text-muted-foreground hover:text-destructive transition-colors duration-150 shrink-0"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+
                   <div className="flex gap-3 pt-1">
                     <Button
                       type="submit"
@@ -231,7 +292,7 @@ export default function ClientPortal() {
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => setShowForm(false)}
+                      onClick={() => { setShowForm(false); setPendingFiles([]); }}
                       className="rounded-none border-border hover:border-primary hover:text-primary h-11 px-6 transition-colors duration-150"
                     >
                       Cancel

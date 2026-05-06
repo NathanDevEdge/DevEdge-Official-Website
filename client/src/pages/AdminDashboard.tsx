@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearch } from "wouter";
 import { useAuth } from "../contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -6,9 +6,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
-import { Ticket, Users, Building2, Plus, ChevronDown, ChevronRight, Mail, RotateCcw, X, Send } from "lucide-react";
+import { Ticket, Users, Building2, Plus, ChevronDown, ChevronRight, Mail, RotateCcw, X, Send, Paperclip } from "lucide-react";
 import KanbanBoard from "@/components/KanbanBoard";
 import TicketDetailPanel from "@/components/TicketDetailPanel";
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
+function formatBytes(bytes: number) {
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 // ── Invite user form ──────────────────────────────────────────────────────────
 
@@ -392,7 +399,9 @@ export default function AdminDashboard() {
   const [ticketTitle, setTicketTitle]       = useState("");
   const [ticketDesc, setTicketDesc]         = useState("");
   const [ticketPriority, setTicketPriority] = useState("medium");
+  const [ticketFiles, setTicketFiles]       = useState<File[]>([]);
   const [creatingTicket, setCreatingTicket] = useState(false);
+  const ticketFileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchData = async () => {
     try {
@@ -465,6 +474,18 @@ export default function AdminDashboard() {
     } catch (e) { console.error(e); } finally { setCreatingOrg(false); }
   };
 
+  const handleTicketFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    const valid = files.filter((f) => f.size <= MAX_FILE_SIZE);
+    const oversized = files.filter((f) => f.size > MAX_FILE_SIZE);
+    if (oversized.length) alert(`${oversized.map((f) => f.name).join(", ")} exceed the 10 MB limit and were not added.`);
+    setTicketFiles((prev) => {
+      const names = new Set(prev.map((f) => f.name));
+      return [...prev, ...valid.filter((f) => !names.has(f.name))];
+    });
+    e.target.value = "";
+  };
+
   const handleCreateTicket = async (e: React.FormEvent) => {
     e.preventDefault();
     setCreatingTicket(true);
@@ -476,7 +497,14 @@ export default function AdminDashboard() {
       });
       const data = await res.json();
       if (data.success) {
-        setTicketTitle(""); setTicketDesc(""); setTicketPriority("medium");
+        const ticketId = data.ticket.id;
+        for (const file of ticketFiles) {
+          const fd = new FormData();
+          fd.append("ticket_id", String(ticketId));
+          fd.append("file", file);
+          await fetch("/api/attachments", { method: "POST", headers: { Authorization: `Bearer ${token}` }, body: fd });
+        }
+        setTicketTitle(""); setTicketDesc(""); setTicketPriority("medium"); setTicketFiles([]);
         setShowTicketForm(false);
         fetchData();
       }
@@ -624,7 +652,7 @@ export default function AdminDashboard() {
                 {filteredTickets.length} tickets
               </span>
               <Button
-                onClick={() => setShowTicketForm(!showTicketForm)}
+                onClick={() => { setShowTicketForm(!showTicketForm); if (showTicketForm) setTicketFiles([]); }}
                 className="rounded-none bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 text-xs font-mono tracking-wider uppercase transition-colors duration-150 flex items-center gap-2 shrink-0"
               >
                 {showTicketForm ? <X className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
@@ -667,6 +695,40 @@ export default function AdminDashboard() {
                       <option value="high">High Priority</option>
                       <option value="critical">Critical</option>
                     </select>
+
+                    {/* Attachments */}
+                    <div>
+                      <label className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground mb-2 block">
+                        Attachments <span className="text-muted-foreground/50 normal-case">(optional · 10 MB max)</span>
+                      </label>
+                      <input ref={ticketFileInputRef} type="file" multiple className="hidden" onChange={handleTicketFileSelect} />
+                      <button
+                        type="button"
+                        onClick={() => ticketFileInputRef.current?.click()}
+                        className="flex items-center gap-2 border border-dashed border-border hover:border-primary/50 px-4 py-2.5 font-mono text-[10px] tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors duration-150"
+                      >
+                        <Paperclip className="w-3 h-3" /> Add Files
+                      </button>
+                      {ticketFiles.length > 0 && (
+                        <ul className="mt-2 space-y-1">
+                          {ticketFiles.map((f) => (
+                            <li key={f.name} className="flex items-center gap-3 bg-secondary/40 border border-border px-3 py-1.5">
+                              <Paperclip className="w-3 h-3 text-muted-foreground shrink-0" />
+                              <span className="font-mono text-[10px] text-foreground truncate flex-1">{f.name}</span>
+                              <span className="font-mono text-[10px] text-muted-foreground shrink-0">{formatBytes(f.size)}</span>
+                              <button
+                                type="button"
+                                onClick={() => setTicketFiles((prev) => prev.filter((p) => p.name !== f.name))}
+                                className="text-muted-foreground hover:text-destructive transition-colors duration-150 shrink-0"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+
                     <Button
                       type="submit"
                       disabled={creatingTicket}
