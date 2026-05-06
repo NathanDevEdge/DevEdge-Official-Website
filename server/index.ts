@@ -1,3 +1,8 @@
+import { config } from "dotenv";
+import { resolve, dirname } from "path";
+import { fileURLToPath as _fileURLToPath } from "url";
+config({ path: resolve(dirname(_fileURLToPath(import.meta.url)), "../.env") });
+
 import express from "express";
 import { createServer } from "http";
 import path from "path";
