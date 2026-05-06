@@ -3,6 +3,7 @@ module.exports = {
     {
       name: 'devedge',
       script: './dist/index.js',
+      node_args: '--env-file=.env',
       instances: 1,
       exec_mode: 'fork',
       env_production: {
