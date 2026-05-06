@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
 import { Ticket, Users, Building2, Plus, ChevronDown, ChevronRight, Mail, RotateCcw, X, Send } from "lucide-react";
@@ -381,6 +382,12 @@ export default function AdminDashboard() {
   const [newOrgName, setNewOrgName]   = useState("");
   const [creatingOrg, setCreatingOrg] = useState(false);
 
+  const [showTicketForm, setShowTicketForm] = useState(false);
+  const [ticketTitle, setTicketTitle]       = useState("");
+  const [ticketDesc, setTicketDesc]         = useState("");
+  const [ticketPriority, setTicketPriority] = useState("medium");
+  const [creatingTicket, setCreatingTicket] = useState(false);
+
   const fetchData = async () => {
     try {
       const [tRes, aRes] = await Promise.all([
@@ -432,6 +439,24 @@ export default function AdminDashboard() {
       const data = await res.json();
       if (data.success) { setNewOrgName(""); setShowAddOrg(false); fetchData(); }
     } catch (e) { console.error(e); } finally { setCreatingOrg(false); }
+  };
+
+  const handleCreateTicket = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCreatingTicket(true);
+    try {
+      const res  = await fetch("/api/tickets", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body:    JSON.stringify({ title: ticketTitle, description: ticketDesc, priority: ticketPriority }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setTicketTitle(""); setTicketDesc(""); setTicketPriority("medium");
+        setShowTicketForm(false);
+        fetchData();
+      }
+    } catch (e) { console.error(e); } finally { setCreatingTicket(false); }
   };
 
   const handleRoleChange = async (userId: number, newRole: string) => {
@@ -544,22 +569,78 @@ export default function AdminDashboard() {
 
           {/* ── Tickets tab ───────────────────────────────────────────────── */}
           <TabsContent value="tickets" className="mt-6">
-            {isSuperAdmin && orgs.length > 0 && (
-              <div className="flex items-center gap-4 mb-5">
-                <span className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground shrink-0">Filter by org</span>
-                <select
-                  className="bg-input border border-border rounded-none h-9 px-3 font-mono text-[10px] tracking-widest uppercase focus:outline-none focus:ring-1 focus:ring-primary/50 text-foreground"
-                  value={filterOrgId}
-                  onChange={(e) => setFilterOrgId(e.target.value)}
+            <div className="flex items-center gap-4 mb-5">
+              {isSuperAdmin && orgs.length > 0 && (
+                <>
+                  <span className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground shrink-0">Filter by org</span>
+                  <select
+                    className="bg-input border border-border rounded-none h-9 px-3 font-mono text-[10px] tracking-widest uppercase focus:outline-none focus:ring-1 focus:ring-primary/50 text-foreground"
+                    value={filterOrgId}
+                    onChange={(e) => setFilterOrgId(e.target.value)}
+                  >
+                    <option value="all">All Organisations</option>
+                    {orgs.map((o) => <option key={o.id} value={String(o.id)}>{o.name}</option>)}
+                  </select>
+                </>
+              )}
+              <span className="font-mono text-[10px] text-muted-foreground ml-auto">
+                {filteredTickets.length} tickets
+              </span>
+              <Button
+                onClick={() => setShowTicketForm(!showTicketForm)}
+                className="rounded-none bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 text-xs font-mono tracking-wider uppercase transition-colors duration-150 flex items-center gap-2 shrink-0"
+              >
+                {showTicketForm ? <X className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
+                {showTicketForm ? "Cancel" : "New Ticket"}
+              </Button>
+            </div>
+
+            <AnimatePresence>
+              {showTicketForm && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="overflow-hidden mb-6"
                 >
-                  <option value="all">All Organisations</option>
-                  {orgs.map((o) => <option key={o.id} value={String(o.id)}>{o.name}</option>)}
-                </select>
-                <span className="font-mono text-[10px] text-muted-foreground ml-auto">
-                  {filteredTickets.length} tickets
-                </span>
-              </div>
-            )}
+                  <form onSubmit={handleCreateTicket} className="bg-card border border-border p-6 flex flex-col gap-4">
+                    <span className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground">New Ticket</span>
+                    <Input
+                      required
+                      placeholder="Title"
+                      value={ticketTitle}
+                      onChange={(e) => setTicketTitle(e.target.value)}
+                      className="rounded-none border-border bg-input h-11"
+                    />
+                    <Textarea
+                      required
+                      placeholder="Describe the issue or request..."
+                      value={ticketDesc}
+                      onChange={(e) => setTicketDesc(e.target.value)}
+                      className="rounded-none border-border bg-input min-h-[100px] resize-none"
+                    />
+                    <select
+                      value={ticketPriority}
+                      onChange={(e) => setTicketPriority(e.target.value)}
+                      className="bg-input border border-border rounded-none h-11 px-3 font-mono text-[11px] tracking-widest uppercase focus:outline-none focus:ring-1 focus:ring-primary/50 text-foreground"
+                    >
+                      <option value="low">Low Priority</option>
+                      <option value="medium">Medium Priority</option>
+                      <option value="high">High Priority</option>
+                      <option value="critical">Critical</option>
+                    </select>
+                    <Button
+                      type="submit"
+                      disabled={creatingTicket}
+                      className="rounded-none bg-primary text-primary-foreground hover:bg-primary/90 h-11 font-semibold text-sm self-start px-8"
+                    >
+                      {creatingTicket ? "Submitting..." : "Submit Ticket"}
+                    </Button>
+                  </form>
+                </motion.div>
+              )}
+            </AnimatePresence>
             {loading ? (
               <div className="py-20 text-center">
                 <span className="font-mono text-[11px] text-muted-foreground tracking-widest uppercase animate-pulse">Loading...</span>
