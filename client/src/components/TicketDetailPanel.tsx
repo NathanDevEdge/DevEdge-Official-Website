@@ -224,7 +224,7 @@ export default function TicketDetailPanel({ ticket, token, currentUserId, isAdmi
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/40 z-40 backdrop-blur-[2px]"
+        className="fixed inset-0 bg-black/40 z-[60] backdrop-blur-[2px]"
         onClick={onClose}
       />
 
@@ -234,7 +234,7 @@ export default function TicketDetailPanel({ ticket, token, currentUserId, isAdmi
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
         transition={{ type: "spring", stiffness: 320, damping: 36 }}
-        className="fixed right-0 top-0 h-full w-full max-w-[640px] bg-background border-l border-border z-50 flex flex-col overflow-hidden"
+        className="fixed right-0 top-0 h-full w-full max-w-[640px] bg-background border-l border-border z-[70] flex flex-col overflow-hidden"
       >
         {/* Header */}
         <div className="flex items-start justify-between px-6 pt-5 pb-4 border-b border-border shrink-0">
