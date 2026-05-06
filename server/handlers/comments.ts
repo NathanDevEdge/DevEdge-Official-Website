@@ -23,6 +23,20 @@ export async function handleGetComments(req: any, res: any) {
       return res.status(403).json({ error: 'Forbidden' });
     }
 
+    const orgId = tRows[0].organisation_id;
+
+    // Return mentionable users when requested
+    if (req.query?.mentionables === '1') {
+      const { rows } = await pool.query(
+        `SELECT u.id, u.name FROM users u
+         JOIN organisations o ON u.organisation_id = o.id
+         WHERE u.organisation_id = $1 OR o.is_super_org = TRUE
+         ORDER BY u.name`,
+        [orgId]
+      );
+      return res.status(200).json({ success: true, users: rows });
+    }
+
     const { rows } = await pool.query(
       `SELECT c.id, c.content, c.created_at, u.name AS author_name, u.id AS author_id
        FROM ticket_comments c

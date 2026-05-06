@@ -63,10 +63,16 @@ export default function TicketDetailPanel({ ticket, token, currentUserId, isAdmi
   const [saving, setSaving]           = useState(false);
 
   // Comments
-  const [comments, setComments]       = useState<Comment[]>([]);
-  const [commentText, setCommentText] = useState("");
+  const [comments, setComments]           = useState<Comment[]>([]);
+  const [commentText, setCommentText]     = useState("");
   const [postingComment, setPostingComment] = useState(false);
   const commentsEndRef = useRef<HTMLDivElement>(null);
+  const commentInputRef = useRef<HTMLTextAreaElement>(null);
+
+  // @mention autocomplete
+  const [mentionableUsers, setMentionableUsers] = useState<{id: number; name: string}[]>([]);
+  const [mentionQuery, setMentionQuery]         = useState<string | null>(null);
+  const [mentionIndex, setMentionIndex]         = useState(0);
 
   // Attachments
   const [attachments, setAttachments] = useState<Attachment[]>([]);
@@ -88,8 +94,10 @@ export default function TicketDetailPanel({ ticket, token, currentUserId, isAdmi
     setPriority(ticket.priority ?? "medium");
     setIsDirty(false);
     setConfirmDelete(false);
+    setMentionQuery(null);
     fetchComments();
     fetchAttachments();
+    fetchMentionableUsers();
   }, [ticketId]);
 
   // Dirty tracking
@@ -106,6 +114,15 @@ export default function TicketDetailPanel({ ticket, token, currentUserId, isAdmi
   useEffect(() => {
     commentsEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [comments]);
+
+  const fetchMentionableUsers = useCallback(async () => {
+    if (!ticketId) return;
+    try {
+      const res = await fetch(`/api/comments?mentionables=1&ticket_id=${ticketId}`, { headers: { Authorization: `Bearer ${token}` } });
+      const data = await res.json();
+      if (data.success) setMentionableUsers(data.users);
+    } catch (e) { console.error(e); }
+  }, [ticketId, token]);
 
   const fetchComments = useCallback(async () => {
     if (!ticketId) return;
@@ -195,6 +212,25 @@ export default function TicketDetailPanel({ ticket, token, currentUserId, isAdmi
       await fetch(`/api/attachments/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${token}` } });
       setAttachments(prev => prev.filter(a => a.id !== id));
     } catch (e) { console.error(e); }
+  };
+
+  const insertMention = (user: {id: number; name: string}) => {
+    const textarea = commentInputRef.current;
+    if (!textarea) return;
+    const cursor = textarea.selectionStart ?? commentText.length;
+    const before = commentText.slice(0, cursor);
+    const after  = commentText.slice(cursor);
+    const match  = before.match(/@([A-Za-z][A-Za-z0-9_-]*)$/);
+    if (!match) return;
+    const insertAt = cursor - match[0].length;
+    const newText  = commentText.slice(0, insertAt) + `@${user.name} ` + after;
+    setCommentText(newText);
+    setMentionQuery(null);
+    setTimeout(() => {
+      textarea.focus();
+      const pos = insertAt + user.name.length + 2;
+      textarea.setSelectionRange(pos, pos);
+    }, 0);
   };
 
   const handleDeleteTicket = async () => {
@@ -454,13 +490,65 @@ export default function TicketDetailPanel({ ticket, token, currentUserId, isAdmi
 
               {/* Comment input */}
               <div className="space-y-2">
-                <Textarea
-                  value={commentText}
-                  onChange={e => setCommentText(e.target.value)}
-                  onKeyDown={e => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handlePostComment(); }}
-                  placeholder={"Add a comment… Use @Name to notify someone"}
-                  className="rounded-none border-border bg-input min-h-[80px] resize-none text-sm"
-                />
+                <div className="relative">
+                  {/* @mention dropdown */}
+                  {mentionQuery !== null && (() => {
+                    const filtered = mentionableUsers.filter(u => {
+                      const q = mentionQuery.toLowerCase();
+                      return u.name.toLowerCase().startsWith(q) ||
+                        u.name.toLowerCase().split(" ").some(p => p.startsWith(q));
+                    });
+                    if (filtered.length === 0) return null;
+                    return (
+                      <div className="absolute bottom-full left-0 right-0 mb-1 bg-card border border-border shadow-lg z-10 max-h-48 overflow-y-auto">
+                        {filtered.map((u, i) => (
+                          <button
+                            key={u.id}
+                            type="button"
+                            onMouseDown={e => { e.preventDefault(); insertMention(u); }}
+                            className={`w-full text-left px-3 py-2 flex items-center gap-2 transition-colors duration-100 ${i === mentionIndex ? "bg-primary/10 text-primary" : "hover:bg-secondary/60 text-foreground"}`}
+                          >
+                            <span className="w-5 h-5 bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                              <span className="font-mono text-[8px] text-primary font-bold uppercase">{u.name.charAt(0)}</span>
+                            </span>
+                            <span className="text-sm font-medium">{u.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    );
+                  })()}
+                  <Textarea
+                    ref={commentInputRef}
+                    value={commentText}
+                    onChange={e => {
+                      const val = e.target.value;
+                      setCommentText(val);
+                      const cursor = e.target.selectionStart ?? val.length;
+                      const before = val.slice(0, cursor);
+                      const match = before.match(/@([A-Za-z][A-Za-z0-9_-]*)$/);
+                      if (match) { setMentionQuery(match[1]); setMentionIndex(0); }
+                      else setMentionQuery(null);
+                    }}
+                    onKeyDown={e => {
+                      const filtered = mentionQuery !== null
+                        ? mentionableUsers.filter(u => {
+                            const q = mentionQuery.toLowerCase();
+                            return u.name.toLowerCase().startsWith(q) ||
+                              u.name.toLowerCase().split(" ").some(p => p.startsWith(q));
+                          })
+                        : [];
+                      if (filtered.length > 0) {
+                        if (e.key === "ArrowDown") { e.preventDefault(); setMentionIndex(i => Math.min(i + 1, filtered.length - 1)); return; }
+                        if (e.key === "ArrowUp")   { e.preventDefault(); setMentionIndex(i => Math.max(i - 1, 0)); return; }
+                        if (e.key === "Enter" || e.key === "Tab") { e.preventDefault(); insertMention(filtered[mentionIndex]); return; }
+                        if (e.key === "Escape") { setMentionQuery(null); return; }
+                      }
+                      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handlePostComment();
+                    }}
+                    placeholder="Add a comment… Use @Name to notify someone"
+                    className="rounded-none border-border bg-input min-h-[80px] resize-none text-sm"
+                  />
+                </div>
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-[9px] text-muted-foreground/50 tracking-wide">⌘↵ to post</span>
                   <Button
