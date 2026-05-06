@@ -184,21 +184,24 @@ export async function handleUpdateTicket(req: any, res: any) {
 export async function handleDeleteTicket(req: any, res: any) {
   const user = verifyToken(req.headers.authorization);
   if (!user) return res.status(401).json({ error: 'Unauthorized' });
-  if (user.role === 'user') return res.status(403).json({ error: 'Forbidden' });
 
   const { id } = req.body || {};
   if (!id) return res.status(400).json({ error: 'Missing ticket id' });
 
   try {
     const { rows } = await pool.query(
-      `SELECT organisation_id FROM tickets WHERE id = $1`,
+      `SELECT organisation_id, client_id FROM tickets WHERE id = $1`,
       [id]
     );
     if (rows.length === 0) return res.status(404).json({ error: 'Ticket not found' });
+    const ticket = rows[0];
 
-    if (!user.is_super_admin && rows[0].organisation_id !== user.organisation_id) {
-      return res.status(403).json({ error: 'Forbidden' });
-    }
+    const canDelete =
+      user.is_super_admin ||
+      (user.role === 'admin' && ticket.organisation_id === user.organisation_id) ||
+      (user.role === 'user' && ticket.client_id === user.id);
+
+    if (!canDelete) return res.status(403).json({ error: 'Forbidden' });
 
     await pool.query(`DELETE FROM tickets WHERE id = $1`, [id]);
     return res.status(200).json({ success: true, message: 'Ticket deleted' });

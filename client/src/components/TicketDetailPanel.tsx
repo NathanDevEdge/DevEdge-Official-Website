@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Paperclip, Send, Trash2, Download, ChevronDown } from "lucide-react";
+import { X, Paperclip, Send, Trash2, Download, ChevronDown, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -73,6 +73,10 @@ export default function TicketDetailPanel({ ticket, token, currentUserId, isAdmi
   const [uploading, setUploading]     = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Delete ticket
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting]           = useState(false);
+
   const ticketId = ticket?.id;
 
   // Seed state when ticket changes
@@ -83,6 +87,7 @@ export default function TicketDetailPanel({ ticket, token, currentUserId, isAdmi
     setStatus(ticket.status ?? "open");
     setPriority(ticket.priority ?? "medium");
     setIsDirty(false);
+    setConfirmDelete(false);
     fetchComments();
     fetchAttachments();
   }, [ticketId]);
@@ -192,11 +197,25 @@ export default function TicketDetailPanel({ ticket, token, currentUserId, isAdmi
     } catch (e) { console.error(e); }
   };
 
+  const handleDeleteTicket = async () => {
+    setDeleting(true);
+    try {
+      const res = await fetch("/api/tickets", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ id: ticketId }),
+      });
+      const data = await res.json();
+      if (data.success) { onClose(); onTicketUpdated(); }
+    } catch (e) { console.error(e); } finally { setDeleting(false); }
+  };
+
   if (!ticket) return null;
 
   const priority_ = PRIORITY_CONFIG[priority];
   const status_ = STATUS_CONFIG[status];
   const canEdit = isAdmin || ticket.client_id === currentUserId;
+  const canDelete = isAdmin || ticket.client_id === currentUserId;
 
   return (
     <>
@@ -232,9 +251,51 @@ export default function TicketDetailPanel({ ticket, token, currentUserId, isAdmi
               </span>
             </div>
           </div>
-          <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors p-1 shrink-0">
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2 shrink-0">
+            {canDelete && (
+              <AnimatePresence mode="wait">
+                {confirmDelete ? (
+                  <motion.div
+                    key="confirm"
+                    initial={{ opacity: 0, x: 8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 8 }}
+                    className="flex items-center gap-2"
+                  >
+                    <span className="font-mono text-[9px] tracking-widest uppercase text-destructive">Delete ticket?</span>
+                    <button
+                      onClick={handleDeleteTicket}
+                      disabled={deleting}
+                      className="font-mono text-[9px] tracking-widest uppercase bg-destructive text-white px-2.5 py-1 hover:bg-destructive/90 transition-colors disabled:opacity-50"
+                    >
+                      {deleting ? "Deleting…" : "Confirm"}
+                    </button>
+                    <button
+                      onClick={() => setConfirmDelete(false)}
+                      className="font-mono text-[9px] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors px-2 py-1 border border-border"
+                    >
+                      Cancel
+                    </button>
+                  </motion.div>
+                ) : (
+                  <motion.button
+                    key="trash"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={() => setConfirmDelete(true)}
+                    className="text-muted-foreground hover:text-destructive transition-colors p-1"
+                    title="Delete ticket"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </motion.button>
+                )}
+              </AnimatePresence>
+            )}
+            <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors p-1">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Scrollable body */}
