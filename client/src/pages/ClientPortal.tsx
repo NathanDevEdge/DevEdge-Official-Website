@@ -5,21 +5,36 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, X } from "lucide-react";
+import { useSearch } from "wouter";
 import KanbanBoard from "@/components/KanbanBoard";
+import TicketDetailPanel from "@/components/TicketDetailPanel";
 import { PRIORITY_OPTIONS, PRIORITY_CONFIG } from "@/lib/ticketPriority";
 
 export default function ClientPortal() {
   const { user, token, logout } = useAuth();
-  const [tickets, setTickets]   = useState<any[]>([]);
-  const [loading, setLoading]   = useState(true);
-  const [showForm, setShowForm] = useState(false);
+  const search = useSearch();
+
+  const [tickets, setTickets]           = useState<any[]>([]);
+  const [loading, setLoading]           = useState(true);
+  const [showForm, setShowForm]         = useState(false);
+  const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
 
   const [title, setTitle]             = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority]       = useState("medium");
   const [creating, setCreating]       = useState(false);
 
+  const selectedTicket = tickets.find((t) => t.id === selectedTicketId) ?? null;
+
   useEffect(() => { fetchTickets(); }, [token]);
+
+  // Deep-link: open ticket from ?ticket=123 once tickets are loaded
+  useEffect(() => {
+    if (tickets.length === 0) return;
+    const params = new URLSearchParams(search);
+    const id = parseInt(params.get("ticket") || "");
+    if (id && !selectedTicketId) setSelectedTicketId(id);
+  }, [tickets, search]);
 
   const fetchTickets = async () => {
     try {
@@ -49,6 +64,16 @@ export default function ClientPortal() {
     finally { setCreating(false); }
   };
 
+  const openTicket = (ticket: any) => {
+    setSelectedTicketId(ticket.id);
+    window.history.replaceState({}, "", `?ticket=${ticket.id}`);
+  };
+
+  const closeTicket = () => {
+    setSelectedTicketId(null);
+    window.history.replaceState({}, "", window.location.pathname);
+  };
+
   const handleStatusChange = async (id: number, status: string) => {
     try {
       await fetch("/api/tickets", {
@@ -64,6 +89,19 @@ export default function ClientPortal() {
 
   return (
     <div className="min-h-screen bg-background">
+      <AnimatePresence>
+        {selectedTicket && (
+          <TicketDetailPanel
+            key={selectedTicket.id}
+            ticket={selectedTicket}
+            token={token!}
+            currentUserId={user?.id ?? 0}
+            isAdmin={false}
+            onClose={closeTicket}
+            onTicketUpdated={fetchTickets}
+          />
+        )}
+      </AnimatePresence>
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
@@ -227,6 +265,7 @@ export default function ClientPortal() {
               tickets={tickets}
               canEditTicket={(ticket) => ticket.client_id === user?.id}
               onStatusChange={handleStatusChange}
+              onTicketClick={openTicket}
             />
           )}
         </div>

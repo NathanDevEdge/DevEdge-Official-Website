@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSearch } from "wouter";
 import { useAuth } from "../contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
 import { Ticket, Users, Building2, Plus, ChevronDown, ChevronRight, Mail, RotateCcw, X, Send } from "lucide-react";
 import KanbanBoard from "@/components/KanbanBoard";
+import TicketDetailPanel from "@/components/TicketDetailPanel";
 
 // ── Invite user form ──────────────────────────────────────────────────────────
 
@@ -367,6 +369,7 @@ function OrgCard({
 export default function AdminDashboard() {
   const { user, token, logout } = useAuth();
   const isSuperAdmin = user?.is_super_admin ?? false;
+  const search = useSearch();
 
   const [tickets, setTickets]   = useState<any[]>([]);
   const [orgs, setOrgs]         = useState<any[]>([]);
@@ -374,6 +377,9 @@ export default function AdminDashboard() {
   const [clients, setClients]   = useState<any[]>([]);
   const [invites, setInvites]   = useState<any[]>([]);
   const [loading, setLoading]   = useState(true);
+  const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
+
+  const selectedTicket = tickets.find((t) => t.id === selectedTicketId) ?? null;
 
   const [filterOrgId, setFilterOrgId] = useState<string>("all");
 
@@ -415,6 +421,24 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => { fetchData(); }, [token]);
+
+  // Deep-link: open ticket from ?ticket=123 once tickets are loaded
+  useEffect(() => {
+    if (tickets.length === 0) return;
+    const params = new URLSearchParams(search);
+    const id = parseInt(params.get("ticket") || "");
+    if (id && !selectedTicketId) setSelectedTicketId(id);
+  }, [tickets, search]);
+
+  const openTicket = (ticket: any) => {
+    setSelectedTicketId(ticket.id);
+    window.history.replaceState({}, "", `?ticket=${ticket.id}`);
+  };
+
+  const closeTicket = () => {
+    setSelectedTicketId(null);
+    window.history.replaceState({}, "", window.location.pathname);
+  };
 
   const handleUpdateStatus = async (id: number, status: string) => {
     try {
@@ -492,6 +516,19 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
+      <AnimatePresence>
+        {selectedTicket && (
+          <TicketDetailPanel
+            key={selectedTicket.id}
+            ticket={selectedTicket}
+            token={token!}
+            currentUserId={user?.id ?? 0}
+            isAdmin={true}
+            onClose={closeTicket}
+            onTicketUpdated={fetchData}
+          />
+        )}
+      </AnimatePresence>
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
@@ -651,6 +688,7 @@ export default function AdminDashboard() {
                 canEditTicket={() => true}
                 showOrg={isSuperAdmin}
                 onStatusChange={handleUpdateStatus}
+                onTicketClick={openTicket}
               />
             )}
           </TabsContent>

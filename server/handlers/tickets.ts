@@ -104,12 +104,20 @@ export async function handleUpdateTicket(req: any, res: any) {
   const user = verifyToken(req.headers.authorization);
   if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
-  const { id, status } = req.body || {};
-  if (!id || !status) return res.status(400).json({ error: 'Missing id or status' });
+  const { id, status, title, description, priority } = req.body || {};
+  if (!id) return res.status(400).json({ error: 'Missing id' });
 
   const validStatuses = ['open', 'confirmed', 'in_progress', 'in_review', 'closed'];
-  if (!validStatuses.includes(status)) {
+  const validPriorities = ['low', 'medium', 'high', 'critical'];
+
+  if (status && !validStatuses.includes(status)) {
     return res.status(400).json({ error: 'Invalid status value' });
+  }
+  if (priority && !validPriorities.includes(priority)) {
+    return res.status(400).json({ error: 'Invalid priority value' });
+  }
+  if (!status && !title && !description && !priority) {
+    return res.status(400).json({ error: 'No fields to update' });
   }
 
   try {
@@ -129,13 +137,23 @@ export async function handleUpdateTicket(req: any, res: any) {
       }
     }
 
+    // Build dynamic update query
+    const setClauses: string[] = ['updated_at = CURRENT_TIMESTAMP'];
+    const values: any[] = [];
+    if (status)      { values.push(status);      setClauses.push(`status = $${values.length}`); }
+    if (title)       { values.push(title);        setClauses.push(`title = $${values.length}`); }
+    if (description) { values.push(description);  setClauses.push(`description = $${values.length}`); }
+    if (priority)    { values.push(priority);     setClauses.push(`priority = $${values.length}`); }
+    values.push(id);
+
     const { rows } = await pool.query(
-      `UPDATE tickets SET status = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2 RETURNING *`,
-      [status, id]
+      `UPDATE tickets SET ${setClauses.join(', ')} WHERE id = $${values.length} RETURNING *`,
+      values
     );
     const updated = rows[0];
 
-    if (RESEND_API_KEY) {
+    // Only email the client on status changes (not field edits)
+    if (status && RESEND_API_KEY) {
       try {
         const resend = new Resend(RESEND_API_KEY);
         const { rows: clientRows } = await pool.query(
@@ -148,12 +166,7 @@ export async function handleUpdateTicket(req: any, res: any) {
             from: 'Portal Notifications <noreply@devedge.com.au>',
             to: [client.email],
             subject: `Ticket Update: ${updated.title}`,
-            html: `
-              <p>Hi ${client.name},</p>
-              <p>Your ticket "<strong>${updated.title}</strong>" has been updated to:
-              <strong>${status.replace(/_/g, ' ').toUpperCase()}</strong>.</p>
-              <p>Thank you!</p>
-            `,
+            html: `<p>Hi ${client.name},</p><p>Your ticket "<strong>${updated.title}</strong>" has been updated to: <strong>${status.replace(/_/g, ' ').toUpperCase()}</strong>.</p>`,
           });
         }
       } catch (e) {

@@ -10,12 +10,14 @@ function KanbanCard({
   canEdit,
   showOrg,
   onStatusChange,
+  onTicketClick,
   index,
 }: {
   ticket: any;
   canEdit: boolean;
   showOrg: boolean;
   onStatusChange: (id: number, status: string) => void;
+  onTicketClick?: (ticket: any) => void;
   index: number;
 }) {
   const priority = PRIORITY_CONFIG[ticket.priority as TicketPriority] ?? PRIORITY_CONFIG.medium;
@@ -34,7 +36,8 @@ function KanbanCard({
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, delay: index * 0.03, ease }}
-      className={`bg-card border border-border border-t-2 ${priority.borderClass} hover:border-primary/30 transition-colors duration-200 group`}
+      onClick={() => onTicketClick?.(ticket)}
+      className={`bg-card border border-border border-t-2 ${priority.borderClass} hover:border-primary/30 transition-colors duration-200 group ${onTicketClick ? "cursor-pointer" : ""}`}
     >
       <div className="p-4">
         {/* Top row: priority + date */}
@@ -71,7 +74,7 @@ function KanbanCard({
         {canEdit && (
           <div className="flex items-center gap-2 pt-3 border-t border-border">
             <button
-              onClick={movePrev}
+              onClick={(e) => { e.stopPropagation(); movePrev(); }}
               disabled={currentStatusIndex === 0}
               className="flex items-center gap-1 font-mono text-[9px] tracking-widest uppercase text-muted-foreground hover:text-primary disabled:opacity-25 disabled:cursor-not-allowed transition-colors duration-150"
             >
@@ -80,7 +83,7 @@ function KanbanCard({
             </button>
             <div className="flex-1" />
             <button
-              onClick={moveNext}
+              onClick={(e) => { e.stopPropagation(); moveNext(); }}
               disabled={currentStatusIndex === STATUS_OPTIONS.length - 1}
               className="flex items-center gap-1 font-mono text-[9px] tracking-widest uppercase text-muted-foreground hover:text-primary disabled:opacity-25 disabled:cursor-not-allowed transition-colors duration-150"
             >
@@ -111,11 +114,13 @@ export default function KanbanBoard({
   canEditTicket,
   showOrg = false,
   onStatusChange,
+  onTicketClick,
 }: {
   tickets: any[];
   canEditTicket: (ticket: any) => boolean;
   showOrg?: boolean;
   onStatusChange: (id: number, status: string) => void;
+  onTicketClick?: (ticket: any) => void;
 }) {
   return (
     <div className="flex gap-4 overflow-x-auto pb-6 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
@@ -152,6 +157,7 @@ export default function KanbanBoard({
                     canEdit={canEditTicket(ticket)}
                     showOrg={showOrg}
                     onStatusChange={onStatusChange}
+                    onTicketClick={onTicketClick}
                     index={i}
                   />
                 ))

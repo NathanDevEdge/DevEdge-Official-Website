@@ -29,6 +29,14 @@ import {
   handleValidateResetToken,
   handleResetPassword,
 } from "./handlers/passwordReset.js";
+import { handleGetComments, handleCreateComment } from "./handlers/comments.js";
+import {
+  upload,
+  handleGetAttachments,
+  handleUploadAttachment,
+  handleServeAttachment,
+  handleDeleteAttachment,
+} from "./handlers/attachments.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -79,6 +87,16 @@ async function startServer() {
     if (action === "reset")  return handleResetPassword(req, res);
     return res.status(400).json({ error: "Missing or invalid action" });
   });
+
+  // ── Comments ─────────────────────────────────────────────────────────────────
+  app.get("/api/comments", handleGetComments);
+  app.post("/api/comments", handleCreateComment);
+
+  // ── Attachments ───────────────────────────────────────────────────────────────
+  app.get("/api/attachments", handleGetAttachments);
+  app.post("/api/attachments", upload.single("file"), handleUploadAttachment);
+  app.get("/api/attachments/file/:id", handleServeAttachment);
+  app.delete("/api/attachments/:id", handleDeleteAttachment);
 
   // ── Contact ──────────────────────────────────────────────────────────────────
   app.post("/api/contact", async (req, res) => {
