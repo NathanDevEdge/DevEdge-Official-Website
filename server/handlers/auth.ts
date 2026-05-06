@@ -1,4 +1,4 @@
-import { sql } from '@vercel/postgres';
+import { pool } from '../db.js';
 import bcrypt from 'bcryptjs';
 import { verifyToken, signToken } from '../middleware/auth.js';
 
@@ -9,12 +9,13 @@ export async function handleLogin(req: any, res: any) {
   }
 
   try {
-    const { rows } = await sql`
-      SELECT u.*, o.is_super_org
-      FROM users u
-      JOIN organisations o ON u.organisation_id = o.id
-      WHERE u.email = ${email}
-    `;
+    const { rows } = await pool.query(
+      `SELECT u.*, o.is_super_org
+       FROM users u
+       JOIN organisations o ON u.organisation_id = o.id
+       WHERE u.email = $1`,
+      [email]
+    );
     const user = rows[0];
 
     if (!user) return res.status(401).json({ error: 'Invalid credentials' });
