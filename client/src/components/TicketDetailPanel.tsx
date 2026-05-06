@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Paperclip, Send, Trash2, Download, ChevronDown, AlertTriangle } from "lucide-react";
+import { X, Paperclip, Send, Trash2, Download, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -252,45 +252,32 @@ export default function TicketDetailPanel({ ticket, token, currentUserId, isAdmi
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            {canDelete && (
-              <AnimatePresence mode="wait">
-                {confirmDelete ? (
-                  <motion.div
-                    key="confirm"
-                    initial={{ opacity: 0, x: 8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 8 }}
-                    className="flex items-center gap-2"
-                  >
-                    <span className="font-mono text-[9px] tracking-widest uppercase text-destructive">Delete ticket?</span>
-                    <button
-                      onClick={handleDeleteTicket}
-                      disabled={deleting}
-                      className="font-mono text-[9px] tracking-widest uppercase bg-destructive text-white px-2.5 py-1 hover:bg-destructive/90 transition-colors disabled:opacity-50"
-                    >
-                      {deleting ? "Deleting…" : "Confirm"}
-                    </button>
-                    <button
-                      onClick={() => setConfirmDelete(false)}
-                      className="font-mono text-[9px] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors px-2 py-1 border border-border"
-                    >
-                      Cancel
-                    </button>
-                  </motion.div>
-                ) : (
-                  <motion.button
-                    key="trash"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    onClick={() => setConfirmDelete(true)}
-                    className="text-muted-foreground hover:text-destructive transition-colors p-1"
-                    title="Delete ticket"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </motion.button>
-                )}
-              </AnimatePresence>
+            {canDelete && !confirmDelete && (
+              <button
+                onClick={() => setConfirmDelete(true)}
+                className="text-muted-foreground hover:text-destructive transition-colors p-1"
+                title="Delete ticket"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            )}
+            {canDelete && confirmDelete && (
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-[9px] tracking-widest uppercase text-destructive">Delete?</span>
+                <button
+                  onClick={handleDeleteTicket}
+                  disabled={deleting}
+                  className="font-mono text-[9px] tracking-widest uppercase bg-destructive text-white px-2.5 py-1 hover:bg-destructive/90 transition-colors disabled:opacity-50"
+                >
+                  {deleting ? "Deleting…" : "Yes, delete"}
+                </button>
+                <button
+                  onClick={() => setConfirmDelete(false)}
+                  className="font-mono text-[9px] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors px-2 py-1 border border-border"
+                >
+                  Cancel
+                </button>
+              </div>
             )}
             <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors p-1">
               <X className="w-5 h-5" />
