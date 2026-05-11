@@ -21,10 +21,31 @@ export default function Home() {
     return () => document.body.classList.remove("snap-scroll-active");
   }, []);
 
-  // Reset snap container scroll position on mount
+  // Reset snap container scroll position on mount, then handle any incoming hash
   useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.scrollTop = 0;
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Map semantic nav hashes → existing slide IDs
+    const hashToSlide: Record<string, string> = {
+      "#services": "slide-04",
+      "#about":    "slide-05",
+      "#faq":      "slide-08",
+    };
+
+    const hash = window.location.hash;
+    const slideId = hash ? (hashToSlide[hash] ?? hash.slice(1)) : null;
+
+    if (slideId) {
+      // Small delay to let React finish rendering before scrolling
+      setTimeout(() => {
+        const target = document.getElementById(slideId);
+        if (target) {
+          container.scrollTo({ top: target.offsetTop, behavior: "smooth" });
+        }
+      }, 150);
+    } else {
+      container.scrollTop = 0;
     }
   }, []);
 
