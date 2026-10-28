@@ -262,7 +262,7 @@ Nathan wants the site to feel high-end and technical ("fancy, 3D"), as befits a 
 ### P0 — Foundations
 - [ ] _(On hold: $0 ad budget for now.)_ Run DevEdge's own Meta and Google Ads once there's budget. It brings leads, gives Grow a live case study and shows DevEdge uses what it sells. Build the `/lp/` template first so it's ready.
 - [ ] Analytics and conversion tracking (shared with SEO P0), plus **UTM links** on every social, email and bio link so each channel's leads are measurable.
-- [x] **Email signature in the new brand** _(Done: `DevEdge Assets/Email Signature/`)_ for Nathan and team: DE mark, name, title, phone and site link. The old signature images were removed.
+- [x] **Email signature in the new brand** _(Done: Nathan uses his professionally made signature)_ for Nathan and team: DE mark, name, title, phone and site link. The old signature images were removed.
 - [ ] **Canva templates (free plan)** with the palette, fonts, logos and templates for LinkedIn posts, carousels, Instagram posts and stories, all matching the guidelines.
 - [ ] **Unified profiles:** update Instagram, Facebook and GBP (LinkedIn later) with the new logo, cover image, "We build things that actually work." and the same description and link. Fix the LinkedIn slug if it's still `devedge-solutions`.
 
