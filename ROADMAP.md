@@ -8,6 +8,26 @@ Every visual task follows `devedge-brand-guidelines-v2.pdf`. Only use the new br
 
 ---
 
+## Services (decided 28 Oct 2026)
+
+**Positioning:** *Websites, apps and business systems for Australian businesses that have outgrown spreadsheets and off-the-shelf tools.*
+**Audience:** any Australian SMB. Most proof comes from trade, building and supply businesses, so case studies naturally lean that way.
+
+| # | Service | What it covers | Proof |
+|---|---|---|---|
+| 1 | **Websites** | Fast, premium business websites built to turn visitors into enquiries (Next.js / WordPress), with SEO from day one. | Kim Hilton Studio, Lockd75, NLB Built, WoodEvo, Lumeboard, Woodhouse |
+| 2 | **Web & Mobile Apps** | Custom software for how a business actually works: calculators, ordering and quoting systems, client portals, SaaS products, MVPs. | DeckMate, Tennantly, Tradeflow |
+| 3 | **CRM & ERP Systems** | Setting up, cleaning up, customising, integrating and automating the systems a business runs on: CRM, inventory, quoting, purchasing, accounting (Zoho, Xero, HubSpot and others), or a custom-built system when off-the-shelf doesn't fit. Includes internal tools such as approval and file portals. | DeckMate (Zoho CRM), TPD Timber (Zoho Inventory), WoodEvo (file portal), Tradeflow (an ERP DevEdge built) |
+| 4 | **Care & Hosting** | Ongoing hosting, security updates, backups, fixes and small changes after launch. | ~5 client sites already hosted |
+
+**Product:** **Tradeflow** is shown as a DevEdge product ("Built by DevEdge"): quoting, purchase orders and supplier management for small businesses.
+
+**Retired:** Cloud Migration and standalone UI/UX Design (design is part of every build).
+
+**Pricing rule:** **no fixed prices or price ranges anywhere on the site or blog.** Projects vary too much. Everything is quoted per project after a scoping conversation. Content about cost explains *what drives cost*, not dollar figures.
+
+---
+
 ## What the audit found
 
 1. **Most pages can't be reached from the home page.** It has no header nav and no footer. The 9-slide snap-scroll links only to the contact modal. Projects, the 6 service pages, the blog and the portal are effectively orphaned. Visitors can't find them, and neither can Google, because no links point to them.
@@ -28,17 +48,18 @@ Every visual task follows `devedge-brand-guidelines-v2.pdf`. Only use the new br
 
 ### Keyword strategy (Australia-wide)
 
-Lead with the niches where DevEdge has real proof. They have less competition and better-qualified leads than generic "software development" terms.
+Built around the four services. **CRM & ERP Systems** is the main niche to own: there's high buying intent, fewer specialist competitors than "web design", and real proof behind it (Zoho work plus Tradeflow, an ERP DevEdge built).
 
 | Cluster | Primary keywords | Landing page |
 |---|---|---|
-| **Custom software (core)** | custom software development australia · bespoke software developer · custom web application development · web app developer australia | Home + `/services/custom-development` |
-| **Zoho** (proven: DeckMate) | zoho developer australia · zoho crm integration · zoho consultant australia · zoho creator developer · zoho automation | New `/services/zoho-integration` |
-| **Trade & building businesses** (proven: Tradeflow, DeckMate, TPD, Woodhouse) | software for trade businesses · quoting software for tradies · building supplies quoting system · custom CRM for builders · deck / product calculator for website | New industry page `/industries/trade-and-construction` |
-| **Automation** | business process automation australia · workflow automation for small business · automate quotes and invoices | `/services/process-automation` |
-| **Integrations** | xero integration developer · api integration services australia · connect crm to website | `/services/system-integration` |
-| **Commercial intent / cost** | how much does custom software cost australia · custom web app cost · MVP development cost · custom software vs off the shelf | Blog pillar posts + cost estimator |
-| **SaaS builds** (proven: Tennantly, Tradeflow) | saas development australia · build a saas mvp · saas developer for startups | `/services/web-platform` |
+| **CRM & ERP (lead niche)** | crm implementation australia · crm consultant australia · erp for small business australia · custom crm development · custom erp software · crm integration services | `/services/crm-erp-systems` |
+| **CRM & ERP: platform-specific** (pages or posts) | zoho crm consultant · zoho inventory setup · zoho integration · hubspot crm setup · xero integration developer · odoo implementation australia | Sub-sections / posts linked from the CRM & ERP page |
+| **CRM & ERP: automation** | business process automation australia · workflow automation small business · automate quotes and purchase orders · connect crm to website | `/services/crm-erp-systems` + posts |
+| **Web & Mobile Apps** | custom software development australia · custom web app developer · saas development australia · mvp development · custom mobile app development | `/services/web-and-mobile-apps` |
+| **Websites** | website design australia small business · next.js web developer · business website that converts · wordpress developer australia | `/services/websites` |
+| **Care & Hosting** | website maintenance australia · website care plan · managed website hosting australia | `/services/care-and-hosting` |
+| **Tradeflow (product)** | quoting software small business · purchase order software australia · supplier price list software · erp for tradies | Tradeflow's own site + `/products/tradeflow` on DevEdge |
+| **Decision / cost-intent** (no prices) | custom software vs off the shelf · crm vs spreadsheets · what affects software development cost · when to replace your crm · erp vs separate apps | Blog pillars |
 
 Map one primary keyword to each page. Use it in the title, H1, URL, first paragraph and meta description. Two pages should never compete for the same keyword.
 
@@ -69,27 +90,29 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
 **Rules:** posts are credited to **Nathan Anniss** with a short bio and photo (this builds E-E-A-T: experience, expertise, authority and trust). Each post is 1,200–2,000 words, uses real numbers from real projects, targets one keyword, and ends with one CTA. Publish **2 posts a month**.
 
 - [ ] **Fix the existing posts:**
-  - Expand "Custom vs Off-the-Shelf" and "Mobile App Cost" into proper pillar posts.
-  - Rework the healthcare and logistics posts toward trade and building, or delete them and 301-redirect their URLs.
+  - **Remove every dollar figure.** The mobile-app post currently lists "$20k–$50k / $50k–$120k / $150k+" brackets, and the custom-vs-off-the-shelf post says "under $20k". Rewrite them around what drives cost.
+  - Expand "Custom vs Off-the-Shelf" into a proper pillar post.
+  - Rework the healthcare and logistics posts toward CRM/ERP and real client work, or delete them and 301-redirect their URLs.
   - Make read times accurate.
   - Replace the team bylines with Nathan.
-- [ ] **Pillar posts** (long, linked from service pages):
-  1. How Much Does Custom Software Cost in Australia? (2026 Pricing Guide)
+- [ ] **Pillar posts** (long, linked from service pages, no prices):
+  1. CRM vs ERP vs Spreadsheets: What Your Business Actually Needs
   2. Custom Software vs Off-the-Shelf: An Honest Guide for Australian Businesses
-  3. Zoho CRM Integration: What's Possible and What It Costs
+  3. What Actually Drives the Cost of a Software Project (and How to Keep It Under Control)
 - [ ] **Cluster posts** (each links back to a pillar):
-  - Quoting Software for Trade Businesses: Spreadsheets vs Custom vs SaaS
-  - How DeckMate Automated Its Sales Pipeline with Zoho (case-study post)
   - 7 Signs Your Business Has Outgrown Spreadsheets
-  - Building a Product Calculator for Your Website: Costs, Options, Examples
-  - Xero + Your Website: Automating Quotes, Invoices and Orders
-  - What an MVP Actually Is (and What Yours Should Cost)
+  - How to Choose a CRM for a Small Business in Australia
+  - Zoho vs HubSpot vs a Custom CRM: An Honest Comparison
+  - Cleaning Up a Messy CRM or Inventory System: What's Involved (TPD Timber case study)
+  - How DeckMate Connected Its Website, Calculator and Zoho CRM (case-study post)
+  - Connecting Your CRM to Xero, Your Website and Your Inbox
+  - Quoting and Purchase Orders: When to Move Off Spreadsheets (ties to Tradeflow)
+  - When to Build a Custom ERP Instead of Bending an Off-the-Shelf One
+  - What an MVP Actually Is (and How to Scope One)
   - How to Brief a Developer So You Get What You Actually Need
-  - Zoho Creator vs Custom Build: When to Switch
-  - Supplier Price List Management for Building Supply Businesses (ties to Tradeflow)
-  - Fixed-Price vs Hourly Software Projects: What Australian SMBs Should Know
+  - Website Care Plans: What Happens After Launch
 - [ ] Move blog content out of `BlogPost.tsx` into Markdown/MDX files so new posts don't require code changes.
-- [ ] Add a blog index with categories (Software · Zoho · Automation · Industry) and an email signup.
+- [ ] Add a blog index with categories (CRM & ERP · Apps & Software · Websites · Automation) and an email signup.
 
 ### P1 — Off-site & local
 - [ ] **Google Business Profile** (set up as a service-area business, Australia):
@@ -100,6 +123,7 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
 - [ ] **Backlinks from client sites:** add "Built by DevEdge" footer links on DeckMate, Tradeflow, Kim Hilton Studio, Lockd75 and NLB Built (all on your own server). This is the quickest backlink win available.
 - [ ] Listings on Clutch, GoodFirms, DesignRush, TrueLocal, Hotfrog and Yellow Pages, plus the Zoho Partner directory if eligible. Keep the name, phone and URL identical everywhere.
 - [ ] Ask testimonial clients for permission to publish named case studies and link back.
+- [ ] Partner and certification listings for the CRM/ERP platforms you implement (Zoho Partner, HubSpot Solutions Directory, Xero App Partner / advisor directories) where eligible. They bring high-intent backlinks and referrals.
 
 ---
 
@@ -114,23 +138,30 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
 - [ ] **Rebuild Home as a long-scroll page** following the guidelines' content architecture:
   1. **Hero:** headline, subhead, primary CTA and the animated code block (keep).
   2. **Position:** one paragraph on what makes DevEdge different.
-  3. **What we build:** 3–4 service tiles linking to the service pages.
+  3. **What we build:** 4 service tiles (Websites · Web & Mobile Apps · CRM & ERP Systems · Care & Hosting) linking to the service pages, plus a Tradeflow product strip.
   4. **Selected work:** 2–3 outcome-first case study cards linking to case studies. **This fixes "can't find the projects".**
   5. **Testimonials**, 6. **How we work** (3 steps), 7. **FAQ**, 8. **Close CTA**.
   - Drop desktop snap-scroll and the dot navigation, and use standard scrolling with fade-up on enter (300ms, ease-out).
+- [ ] **Replace the 6 old service pages with the 4 new ones**, and 301-redirect the old URLs:
+  - `/services/websites` ← web-platform
+  - `/services/web-and-mobile-apps` ← custom-development, mobile-apps
+  - `/services/crm-erp-systems` ← system-integration, process-automation
+  - `/services/care-and-hosting` (new)
+  - cloud-migration → `/services`
+- [ ] **Make the service list consistent everywhere:** home tiles, nav dropdown, footer, contact-form dropdown (currently 5 different options), FAQ and structured data.
 - [ ] **New pages:**
   - `/about`: the real story, how DevEdge works, Nathan, the 4 values (from the guidelines' content architecture)
   - `/services` index
   - `/contact`, a real page in addition to the modal (better for SEO and sharing)
-  - `/industries/trade-and-construction`
-  - `/services/zoho-integration`
+  - `/products/tradeflow`: what it is, who it's for, a link to Tradeflow, "Built by DevEdge"
+- [ ] **Pricing wording:** remove any figures, and rewrite the FAQ "How does pricing work?" around per-project quotes after a free scoping call.
 - [ ] **Case study pages** `/work/<slug>`, using the guidelines' outcome-first format (Problem → What we built → **Outcome with a number**):
   - DeckMate and Tradeflow (have screenshots)
   - Tennantly, Woodhouse, TPD Timber (need client sign-off)
   - Kim Hilton Studio, Lockd75, NLB Built (check whether they belong in the portfolio)
 
 ### P1 — "More advanced" (interactive, not decorative)
-- [ ] **Project cost estimator:** a few questions (type, integrations, users, timeline) that return a price range and capture the email. It doubles as a lead magnet and supports the "cost" keyword cluster.
+- [ ] **Project scoping tool** (replaces the cost-estimator idea, with no prices): a few questions (what you need, current tools, users, timeline) that produce a short "project brief" summary the visitor can send straight to DevEdge. It qualifies leads and makes the first call faster.
 - [ ] **Live work showcase:** real UI screenshots or short screen recordings of Tradeflow and the DeckMate calculator, shown in a device frame.
 - [ ] **"How your system fits together" diagram:** an interactive diagram showing website → CRM → accounting → automation, with hover states naming the tools (Zoho, Xero, etc.).
 - [ ] Result metrics strip with real numbers once case studies supply them (hours saved, quote turnaround).
@@ -156,7 +187,7 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
   - **Build in public:** Tradeflow features and decisions, behind the scenes on client builds.
   - **Proof:** before/after, "this took X hours a week, now it takes 0".
   - **Honest takes** (brand voice): "When you *shouldn't* build custom software".
-  - **Zoho and automation tips:** short, practical posts that rank in LinkedIn search.
+  - **CRM, ERP and automation tips:** short, practical posts on fixing messy systems (Zoho, HubSpot, Xero and spreadsheets) that rank in LinkedIn search.
 - [ ] Turn each blog post into a LinkedIn carousel, an Instagram carousel and a GBP post (one piece of writing becomes 4 assets).
 - [ ] Short screen-recorded demos (30–60s) of real builds, such as the DeckMate calculator and Tradeflow quoting.
 
@@ -168,15 +199,15 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
 - [ ] **Client referral offer**, e.g. a credit or discount for each referred project. Email current and past clients.
 - [ ] **Review drive:** Google reviews from every client, then reused on the site.
 - [ ] **Partners:**
-  - Zoho Partner program, if eligible
+  - CRM/ERP platform partner programs (Zoho, HubSpot, Xero) where eligible
   - Accountants and bookkeepers (Xero advisors see the automation pain first)
   - Web designers who need a dev and back-end partner
   - Trade and building industry groups (HIA, Master Builders, supplier networks)
 - [ ] **Tradeflow cross-promotion:** "Built by DevEdge" in the Tradeflow app and on its site. Tradeflow users are exactly DevEdge's ideal custom-build clients.
 
 ### P2 — Growth experiments
-- [ ] Monthly email newsletter: one useful post, one project, one offer. Signups come from the blog and the cost estimator.
-- [ ] **Google Ads test** (small budget) on high-intent, low-competition terms like "zoho developer australia" and "quoting software for builders", once dedicated landing pages exist.
+- [ ] Monthly email newsletter: one useful post, one project, one offer. Signups come from the blog and the scoping tool.
+- [ ] **Google Ads test** (small budget) on high-intent, low-competition terms like "crm implementation australia" and "custom erp software", once dedicated landing pages exist.
 - [ ] Lead magnet PDF: "Custom vs Off-the-Shelf: a 10-question checklist" (gated download).
 - [ ] Speaking or webinars for trade associations: "Automating quotes and orders".
 
@@ -207,12 +238,14 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
 |---|---|---|
 | **1 — Fix the foundations** | 1–2 | Analytics · Client Login link · shared header and footer on Home · robots/noindex · sitemap fix · email signature · profile refresh |
 | **2 — Rebuild for search** | 3–5 | Pre-rendering + per-page meta + real 404s · Home long-scroll rebuild · About, Services index, Contact pages · case study pages · structured data |
-| **3 — Content engine** | 6+ (ongoing) | 2 posts a month (pillars first) · LinkedIn 3×/week · GBP weekly · reviews and backlinks · Zoho and trade landing pages |
-| **4 — Advanced & growth** | 8+ | Cost estimator · interactive system diagram · newsletter · Ads test · partnerships |
+| **3 — Content engine** | 6+ (ongoing) | 2 posts a month (pillars first) · LinkedIn 3×/week · GBP weekly · reviews and backlinks · CRM & ERP content cluster |
+| **4 — Advanced & growth** | 8+ | Scoping tool · interactive system diagram · newsletter · Ads test · partnerships |
 
 ## Open questions for Nathan
 - [ ] Which clients approve **named** case studies and logos? (Tennantly, Woodhouse, TPD Timber, Kim Hilton Studio, Lockd75, NLB Built)
-- [ ] Is DevEdge a Zoho Partner, or eligible to become one?
+- [ ] Which CRM/ERP platforms do you want to be known for (Zoho, HubSpot, Odoo, Xero, NetSuite…)? Are you a partner with any, or eligible?
+- [ ] Care & Hosting: what does the plan include (hosting, updates, backups, hours of changes, SEO reporting)? Shown on the site without prices.
+- [ ] Mobile apps: what tech do you build with, and is any past project mobile (Tennantly?)
 - [ ] What's the exact LinkedIn company page URL?
 - [ ] Will you write the posts yourself, or should Claude draft them in your voice for you to edit?
 - [ ] Is there a monthly budget for ads or paid tools?
