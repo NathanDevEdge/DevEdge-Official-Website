@@ -19,15 +19,15 @@ DevEdge is **one brand and one team**. The services are designed to complement e
 ### Build it
 | # | Service | What it covers | Proof |
 |---|---|---|---|
-| 1 | **Websites** | Fast, premium business websites built to turn visitors into enquiries (Next.js / WordPress), with SEO from day one. | Kim Hilton Studio, Lockd75, NLB Built, WoodEvo, Lumeboard, Woodhouse |
-| 2 | **Web & Mobile Apps** | Custom software for how a business actually works: calculators, ordering and quoting systems, client portals, SaaS products, MVPs. | DeckMate, Tennantly, Tradeflow |
-| 3 | **CRM & ERP Systems** | Setting up, cleaning up, customising, integrating and automating the systems a business runs on: CRM, inventory, quoting, purchasing, accounting (Zoho, Xero, HubSpot and others), or a custom-built system when off-the-shelf doesn't fit. Includes internal tools such as approval and file portals. | DeckMate (Zoho CRM), TPD Timber (Zoho Inventory), WoodEvo (file portal), Tradeflow (an ERP DevEdge built) |
-| 4 | **Care & Hosting** | Ongoing hosting, security updates, backups, fixes and small changes after launch. | ~5 client sites already hosted |
+| 1 | **Websites** | Fast, premium business websites built to turn visitors into enquiries, on whatever tech fits, with SEO from day one. | Kim Hilton Studio, Lockd75, NLB Built, WoodEvo, Lumeboard, Woodhouse |
+| 2 | **Web & Mobile Apps** | Custom software for how a business actually works: calculators, ordering and quoting systems, client portals, SaaS products, MVPs, on web or mobile, in whatever tech the job needs. | DeckMate, Tennantly, Tradeflow |
+| 3 | **CRM & ERP Systems** | Setting up, cleaning up, customising, integrating and automating the systems a business runs on: CRM, inventory, quoting, purchasing, accounting on **Zoho, HubSpot, Xero and NetSuite**, or a custom-built system when off-the-shelf doesn't fit. Includes internal tools such as approval and file portals. | DeckMate (Zoho CRM), TPD Timber (Zoho Inventory), WoodEvo (file portal), Tradeflow (an ERP DevEdge built) |
+| 4 | **Care & Hosting** | Hosting, security updates, backups, a set number of hours of changes each month, and SEO reporting. Quoted privately. | ~5 client sites already hosted |
 
 ### Grow it
 | # | Service | What it covers | Proof |
 |---|---|---|---|
-| 5 | **Paid Media Management** | Full management of Meta (Facebook / Instagram) and Google Ads: strategy, audiences, budgets, **ad creative production**, testing and ongoing optimisation. | WoodEvo Meta ads (strong results; can be named publicly **after December 2026**) |
+| 5 | **Paid Media Management** | Full management of Meta (Facebook / Instagram) and Google Ads: strategy, audiences, budgets, **ad creative production**, **landing pages**, testing and ongoing optimisation. Quoted privately. | WoodEvo Meta ads (strong results; can be named publicly **after December 2026**) |
 | 6 | **SEO** | Ongoing SEO for clients: technical fixes, keyword strategy, content, local / Google Business Profile, reporting. | DevEdge's own site once it ranks (use it as the live case study) |
 | 7 | **Tracking & Reporting** | Meta Pixel + Conversions API, GA4, Google Ads conversion tracking, CRM attribution, dashboards and monthly performance reports. It connects Build and Grow. | WoodEvo; any Build client with CRM integration |
 
@@ -51,7 +51,7 @@ DevEdge is **one brand and one team**. The services are designed to complement e
 8. **There's no About page**, even though the guidelines' content architecture requires one ("The Person — Nathan"). `/#about` jumps to a slide.
 9. **The work page has only 2 projects**, while testimonials name 4 clients (DeckMate, Tennantly, Woodhouse, TPD Timber). Several other client sites run on the same server (Kim Hilton Studio, Lockd75, NLB Built).
 10. **Performance:** the JavaScript bundle is 788KB, and every visitor downloads all the portal and admin code.
-11. **The LinkedIn link uses the old name** (`/company/devedge-solutions`) in the structured data.
+11. **The LinkedIn link uses the old name** (`/company/devedge-solutions`) in the structured data. LinkedIn is on hold for now, so remove it until it's set up properly.
 
 ---
 
@@ -64,7 +64,7 @@ Built around the four services. **CRM & ERP Systems** is the main niche to own: 
 | Cluster | Primary keywords | Landing page |
 |---|---|---|
 | **CRM & ERP (lead niche)** | crm implementation australia · crm consultant australia · erp for small business australia · custom crm development · custom erp software · crm integration services | `/services/crm-erp-systems` |
-| **CRM & ERP: platform-specific** (pages or posts) | zoho crm consultant · zoho inventory setup · zoho integration · hubspot crm setup · xero integration developer · odoo implementation australia | Sub-sections / posts linked from the CRM & ERP page |
+| **CRM & ERP: platform-specific** (pages or posts) | zoho crm consultant · zoho inventory setup · zoho integration · hubspot crm setup · xero integration developer · netsuite implementation australia · netsuite consultant | Sub-sections / posts linked from the CRM & ERP page |
 | **CRM & ERP: automation** | business process automation australia · workflow automation small business · automate quotes and purchase orders · connect crm to website | `/services/crm-erp-systems` + posts |
 | **Web & Mobile Apps** | custom software development australia · custom web app developer · saas development australia · mvp development · custom mobile app development | `/services/web-and-mobile-apps` |
 | **Websites** | website design australia small business · next.js web developer · business website that converts · wordpress developer australia | `/services/websites` |
@@ -78,10 +78,11 @@ Built around the four services. **CRM & ERP Systems** is the main niche to own: 
 Map one primary keyword to each page. Use it in the title, H1, URL, first paragraph and meta description. Two pages should never compete for the same keyword.
 
 ### P0 — Technical foundations
+- [ ] **Trust & legal pages:** Privacy Policy (the contact form, portal and analytics all collect personal data, and Meta / Google ads require one), Terms of Service, and the **ABN in the footer**.
 - [ ] **Pre-render every marketing route to static HTML at build time** (Home, Services ×N, Projects, case studies, About, Blog, posts). Use `vite-react-ssg` or a headless-Chrome prerender step, and have Express serve the pre-rendered file before the SPA fallback. This is the biggest single SEO fix.
 - [ ] **Give each URL its own `<title>`, meta description, canonical and OG tags in the served HTML**, and remove the hard-coded homepage canonical from `index.html`.
 - [ ] **Return a real 404 status for unknown routes.** Express should check paths against the known route list.
-- [ ] **Add analytics:** GA4 (or Plausible for privacy and simplicity) with conversion events for contact-form submit, phone and email clicks, and "Start a project" clicks. Link GA4 to Search Console.
+- [ ] **Add analytics:** GA4 (free) with conversion events for contact-form submit, phone and email clicks, and "Start a project" clicks. Link GA4 to Search Console.
 - [ ] **Sitemap:** generate it from the route list at build time with accurate `lastmod`. Add `/projects` and every new page. Resubmit in Search Console.
 - [ ] **robots.txt:** `Disallow: /admin`, `/portal`, `/api`. Add `noindex` to the portal and admin pages.
 - [ ] **Search Console:** after the above ships, review the Page indexing report, request indexing for key pages and fix any "Duplicate without user-selected canonical" errors.
@@ -90,7 +91,7 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
 - [ ] Rewrite titles and meta descriptions per page from the keyword map, with titles around 60 characters and descriptions around 155.
 - [ ] Use exactly one H1 per page and a logical H2/H3 structure.
 - [ ] **Structured data:**
-  - `Organization` + `ProfessionalService` with `areaServed: AU`, the logo and the corrected LinkedIn URL
+  - `Organization` + `ProfessionalService` with `areaServed: AU`, and the logo (add LinkedIn to `sameAs` only once the page is active)
   - `Service` on each service page
   - `BlogPosting` with Nathan as a `Person` author on posts
   - `BreadcrumbList` sitewide
@@ -117,6 +118,7 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
   - 7 Signs Your Business Has Outgrown Spreadsheets
   - How to Choose a CRM for a Small Business in Australia
   - Zoho vs HubSpot vs a Custom CRM: An Honest Comparison
+  - NetSuite vs Zoho vs Xero: Which Does a Growing Australian Business Need?
   - Cleaning Up a Messy CRM or Inventory System: What's Involved (TPD Timber case study)
   - How DeckMate Connected Its Website, Calculator and Zoho CRM (case-study post)
   - Connecting Your CRM to Xero, Your Website and Your Inbox
@@ -143,8 +145,8 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
   - **Ask every past client for a Google review.**
 - [ ] **Backlinks from client sites:** add "Built by DevEdge" footer links on DeckMate, Tradeflow, Kim Hilton Studio, Lockd75 and NLB Built (all on your own server). This is the quickest backlink win available.
 - [ ] Listings on Clutch, GoodFirms, DesignRush, TrueLocal, Hotfrog and Yellow Pages, plus the Zoho Partner directory if eligible. Keep the name, phone and URL identical everywhere.
-- [ ] Ask testimonial clients for permission to publish named case studies and link back.
-- [ ] Partner and certification listings for the CRM/ERP platforms you implement (Zoho Partner, HubSpot Solutions Directory, Xero App Partner / advisor directories) where eligible. They bring high-intent backlinks and referrals.
+- [ ] Ask the approved clients (DeckMate, Tennantly, Woodhouse, TPD Timber, WoodEvo) for a link back to their case study, and for a Google review.
+- [ ] Partner / directory listings for **Zoho, HubSpot, Xero and NetSuite** where eligible (Zoho Partner, HubSpot Solutions Directory, Xero advisor directory, NetSuite partner). They bring high-intent backlinks and referrals.
 
 ---
 
@@ -182,8 +184,9 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
 - [ ] **Pricing wording:** remove any figures, and rewrite the FAQ "How does pricing work?" around per-project quotes after a free scoping call.
 - [ ] **Case study pages** `/work/<slug>`, using the guidelines' outcome-first format (Problem → What we built → **Outcome with a number**):
   - DeckMate and Tradeflow (have screenshots)
-  - Tennantly, Woodhouse, TPD Timber (need client sign-off)
-  - Kim Hilton Studio, Lockd75, NLB Built (check whether they belong in the portfolio)
+  - **Approved to name:** DeckMate, Tennantly, Woodhouse, TPD Timber, WoodEvo (website / systems work)
+  - **WoodEvo marketing results:** can be named from **December 2026**
+  - Kim Hilton Studio, Lockd75, NLB Built: not yet approved, so don't name them
 
 ### P0 — Site structure: homepage & landing pages
 
@@ -255,22 +258,22 @@ Nathan wants the site to feel high-end and technical ("fancy, 3D"), as befits a 
 ## 3. Marketing
 
 ### P0 — Foundations
-- [ ] **Run DevEdge's own Meta and Google Ads** (small budget) with full tracking. This is lead generation, a live Grow case study, and proof you use what you sell.
+- [ ] _(On hold: $0 ad budget for now.)_ Run DevEdge's own Meta and Google Ads once there's budget. It brings leads, gives Grow a live case study and shows DevEdge uses what it sells. Build the `/lp/` template first so it's ready.
 - [ ] Analytics and conversion tracking (shared with SEO P0), plus **UTM links** on every social, email and bio link so each channel's leads are measurable.
 - [ ] **Email signature in the new brand** for Nathan and team: DE mark, name, title, phone and site link. The old signature images were removed.
-- [ ] **Canva brand kit** with the palette, fonts, logos and templates for LinkedIn posts, carousels, Instagram posts and stories, all matching the guidelines.
-- [ ] **Unified profiles:** update the LinkedIn company page, Instagram, Facebook and GBP with the new logo, cover image, "We build things that actually work." and the same description and link. Fix the LinkedIn slug if it's still `devedge-solutions`.
+- [ ] **Canva templates (free plan)** with the palette, fonts, logos and templates for LinkedIn posts, carousels, Instagram posts and stories, all matching the guidelines.
+- [ ] **Unified profiles:** update Instagram, Facebook and GBP (LinkedIn later) with the new logo, cover image, "We build things that actually work." and the same description and link. Fix the LinkedIn slug if it's still `devedge-solutions`.
 
-### P1 — LinkedIn (primary channel: B2B buyers are there)
+### P2 — LinkedIn _(on hold: Nathan doesn't want to start LinkedIn yet)_
 - [ ] **Founder-led posting** from Nathan's personal profile, 3 times a week, with the company page resharing. Content pillars:
   - **Build in public:** Tradeflow features and decisions, behind the scenes on client builds.
   - **Proof:** before/after, "this took X hours a week, now it takes 0".
   - **Honest takes** (brand voice): "When you *shouldn't* build custom software".
   - **CRM, ERP and automation tips:** short, practical posts on fixing messy systems (Zoho, HubSpot, Xero and spreadsheets) that rank in LinkedIn search.
-- [ ] Turn each blog post into a LinkedIn carousel, an Instagram carousel and a GBP post (one piece of writing becomes 4 assets).
+- [ ] Turn each blog post into an Instagram / Facebook carousel and a GBP post now, and add a LinkedIn version once LinkedIn starts.
 - [ ] Short screen-recorded demos (30–60s) of real builds, such as the DeckMate calculator and Tradeflow quoting.
 
-### P1 — Instagram / Facebook (secondary: visual proof and trust)
+### P1 — Instagram / Facebook (main social channels for now)
 - [ ] Post weekly: project reveals, workspace and process, client wins, carousels from blog posts.
 - [ ] Pin 3 posts to the profile: Who we are · Selected work · How to start a project.
 
@@ -286,7 +289,7 @@ Nathan wants the site to feel high-end and technical ("fancy, 3D"), as befits a 
 
 ### P2 — Growth experiments
 - [ ] Monthly email newsletter: one useful post, one project, one offer. Signups come from the blog and the scoping tool.
-- [ ] **Google Ads test** (small budget) on high-intent, low-competition terms like "crm implementation australia" and "custom erp software", once dedicated landing pages exist.
+- [ ] _(On hold: $0 budget.)_ **Google Ads test** on high-intent, low-competition terms like "crm implementation australia" and "custom erp software", once dedicated landing pages exist.
 - [ ] Lead magnet PDF: "Custom vs Off-the-Shelf: a 10-question checklist" (gated download).
 - [ ] Speaking or webinars for trade associations: "Automating quotes and orders".
 
@@ -320,18 +323,22 @@ Nathan wants the site to feel high-end and technical ("fancy, 3D"), as befits a 
 |---|---|---|
 | **1 — Fix the foundations** | 1–2 | Analytics · Client Login link · shared header and footer on Home · robots/noindex · sitemap fix · email signature · profile refresh |
 | **2 — Rebuild for search** | 3–5 | Pre-rendering + per-page meta + real 404s · Home long-scroll rebuild · About, Services index, Contact pages · case study pages · structured data |
-| **3 — Content engine** | 6+ (ongoing) | 2 posts a month (pillars first) · LinkedIn 3×/week · GBP weekly · reviews and backlinks · CRM & ERP content cluster |
+| **3 — Content engine** | 6+ (ongoing) | 2 posts a month (pillars first) · Instagram / Facebook weekly · GBP weekly · reviews and backlinks · CRM & ERP content cluster |
 | **4 — Advanced & growth** | 8+ | Scoping tool · interactive system diagram · newsletter · Ads test · partnerships |
 
-## Open questions for Nathan
-- [ ] Which clients approve **named** case studies and logos? (Tennantly, Woodhouse, TPD Timber, Kim Hilton Studio, Lockd75, NLB Built)
-- [ ] Homepage hero headline: keep "We build things that actually work." or broaden it to cover marketing (e.g. "Websites, systems and marketing that actually work.")?
-- [ ] WoodEvo: confirm in December 2026 that results can be published, and collect the numbers (cost per lead / purchase, ROAS, spend, period).
-- [ ] Grow scope: does Paid Media include landing pages, and which platforms beyond Meta and Google (TikTok, LinkedIn)?
-- [ ] Which CRM/ERP platforms do you want to be known for (Zoho, HubSpot, Odoo, Xero, NetSuite…)? Are you a partner with any, or eligible?
-- [ ] Care & Hosting: what does the plan include (hosting, updates, backups, hours of changes, SEO reporting)? Shown on the site without prices.
-- [ ] Mobile apps: what tech do you build with, and is any past project mobile (Tennantly?)
-- [ ] What's the exact LinkedIn company page URL?
-- [ ] Will you write the posts yourself, or should Claude draft them in your voice for you to edit?
-- [ ] Is there a monthly budget for ads or paid tools?
-- [ ] Do you want an ABN, privacy policy and terms pages? (They build trust and are needed for Ads.)
+## Decisions (28 Oct 2026)
+- **Named case studies approved:** DeckMate, Tennantly, Woodhouse, TPD Timber, WoodEvo (website / systems). WoodEvo **marketing** results can be named from **December 2026**.
+- **Hero headline stays:** "We build things that actually work."
+- **Paid Media** includes landing pages. Every service is **quoted privately**, with no prices on the site.
+- **CRM & ERP platforms:** Zoho, HubSpot, Xero, NetSuite.
+- **Care & Hosting includes:** hosting, updates, backups, hours of changes, SEO reporting.
+- **Tech:** DevEdge works with any tech, for both web and mobile.
+- **LinkedIn:** on hold for now.
+- **Content:** Claude drafts blog posts and social content in Nathan's voice, using a dedicated content skill Nathan is setting up. Nathan edits and approves.
+- **Budget:** $0 for paid ads and paid tools for now. Everything in Phases 1–3 uses free tools (GA4, Search Console, GBP, free directory listings, Canva free).
+- **Legal:** privacy policy, terms and ABN in the footer are needed.
+
+## Still open
+- [ ] Are you a partner with, or eligible for, Zoho, HubSpot, Xero or NetSuite programs?
+- [ ] Kim Hilton Studio, Lockd75, NLB Built: can they be named later?
+- [ ] Paid Media platforms beyond Meta and Google (TikTok, LinkedIn Ads)?
