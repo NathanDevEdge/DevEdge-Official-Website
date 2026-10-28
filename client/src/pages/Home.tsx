@@ -1,5 +1,8 @@
 import { useEffect, useRef } from "react";
 import SEO from "@/components/SEO";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import { HOME_SECTIONS } from "@/lib/site";
 import MobileCTA from "@/components/MobileCTA";
 import SlideProgress from "@/components/SlideProgress";
 import Slide01Hero from "@/components/slides/Slide01Hero";
@@ -26,22 +29,15 @@ export default function Home() {
     const container = containerRef.current;
     if (!container) return;
 
-    // Map semantic nav hashes → existing slide IDs
-    const hashToSlide: Record<string, string> = {
-      "#services": "slide-04",
-      "#about":    "slide-05",
-      "#faq":      "slide-08",
-    };
-
     const hash = window.location.hash;
-    const slideId = hash ? (hashToSlide[hash] ?? hash.slice(1)) : null;
+    const slideId = hash ? (HOME_SECTIONS[hash] ?? hash.slice(1)) : null;
 
     if (slideId) {
       // Small delay to let React finish rendering before scrolling
       setTimeout(() => {
         const target = document.getElementById(slideId);
         if (target) {
-          container.scrollTo({ top: target.offsetTop, behavior: "smooth" });
+          container.scrollTop = target.offsetTop;
         }
       }, 150);
     } else {
@@ -72,6 +68,7 @@ export default function Home() {
   return (
     <div className="bg-background text-foreground font-sans selection:bg-primary/20">
       <SEO />
+      <Navigation />
 
       {/*
         Snap scroll container.
@@ -94,6 +91,7 @@ export default function Home() {
         <Slide07Workflow />
         <Slide08FAQ />
         <Slide09Close />
+        <Footer className="lg:snap-end" />
       </div>
 
       {/* Fixed bottom CTA — mobile only */}

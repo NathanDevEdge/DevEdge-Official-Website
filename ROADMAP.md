@@ -78,13 +78,13 @@ Built around the four services. **CRM & ERP Systems** is the main niche to own: 
 Map one primary keyword to each page. Use it in the title, H1, URL, first paragraph and meta description. Two pages should never compete for the same keyword.
 
 ### P0 — Technical foundations
-- [ ] **Trust & legal pages:** Privacy Policy (the contact form, portal and analytics all collect personal data, and Meta / Google ads require one), Terms of Service, and the **ABN in the footer**.
+- [x] **Trust & legal pages:** _(Done: `/privacy` and `/terms`. ABN shows once `VITE_BUSINESS_ABN` is set.)_ Privacy Policy (the contact form, portal and analytics all collect personal data, and Meta / Google ads require one), Terms of Service, and the **ABN in the footer**.
 - [ ] **Pre-render every marketing route to static HTML at build time** (Home, Services ×N, Projects, case studies, About, Blog, posts). Use `vite-react-ssg` or a headless-Chrome prerender step, and have Express serve the pre-rendered file before the SPA fallback. This is the biggest single SEO fix.
 - [ ] **Give each URL its own `<title>`, meta description, canonical and OG tags in the served HTML**, and remove the hard-coded homepage canonical from `index.html`.
 - [ ] **Return a real 404 status for unknown routes.** Express should check paths against the known route list.
-- [ ] **Add analytics:** GA4 (free) with conversion events for contact-form submit, phone and email clicks, and "Start a project" clicks. Link GA4 to Search Console.
-- [ ] **Sitemap:** generate it from the route list at build time with accurate `lastmod`. Add `/projects` and every new page. Resubmit in Search Console.
-- [ ] **robots.txt:** `Disallow: /admin`, `/portal`, `/api`. Add `noindex` to the portal and admin pages.
+- [x] **Add analytics:** GA4 (free) with conversion events for contact-form submit, phone and email clicks, and "Start a project" clicks. Link GA4 to Search Console.
+- [ ] **Sitemap:** _(Partly done 28 Oct: `/projects` and legal pages added by hand.)_ Generate it from the route list at build time with accurate `lastmod`. Add `/projects` and every new page. Resubmit in Search Console.
+- [x] **robots.txt:** _(Done: `/api` disallowed. Portal/admin use `noindex` via header + meta instead of robots, so Google can see the noindex.)_ `Disallow: /admin`, `/portal`, `/api`. Add `noindex` to the portal and admin pages.
 - [ ] **Search Console:** after the above ships, review the Page indexing report, request indexing for key pages and fix any "Duplicate without user-selected canonical" errors.
 
 ### P1 — On-page & structured data
@@ -174,7 +174,7 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
   - `/services/care-and-hosting` (new)
   - cloud-migration → `/services`
 - [ ] **Contact form:** replace the dropdown with "What do you need help with?", a multi-select of the 7 services plus "Not sure yet". Leads are tagged by service without forcing a Build / Grow choice.
-- [ ] **Remove "Software & Systems"** from the home hero eyebrow (`Slide01Hero.tsx`), the footer, and the eyebrow on `og-image.jpg`, since it no longer describes DevEdge. Re-render the OG image.
+- [x] **Remove "Software & Systems"** from the home hero eyebrow (`Slide01Hero.tsx`), the footer, and the eyebrow on `og-image.jpg`, since it no longer describes DevEdge. Re-render the OG image.
 - [ ] **Make the service list consistent everywhere:** home tiles, nav dropdown, footer, contact-form dropdown (currently 5 different options), FAQ and structured data.
 - [ ] **New pages:**
   - `/about`: the real story, how DevEdge works, Nathan, the 4 values (from the guidelines' content architecture)
@@ -262,7 +262,7 @@ Nathan wants the site to feel high-end and technical ("fancy, 3D"), as befits a 
 ### P0 — Foundations
 - [ ] _(On hold: $0 ad budget for now.)_ Run DevEdge's own Meta and Google Ads once there's budget. It brings leads, gives Grow a live case study and shows DevEdge uses what it sells. Build the `/lp/` template first so it's ready.
 - [ ] Analytics and conversion tracking (shared with SEO P0), plus **UTM links** on every social, email and bio link so each channel's leads are measurable.
-- [ ] **Email signature in the new brand** for Nathan and team: DE mark, name, title, phone and site link. The old signature images were removed.
+- [x] **Email signature in the new brand** _(Done: `DevEdge Assets/Email Signature/`)_ for Nathan and team: DE mark, name, title, phone and site link. The old signature images were removed.
 - [ ] **Canva templates (free plan)** with the palette, fonts, logos and templates for LinkedIn posts, carousels, Instagram posts and stories, all matching the guidelines.
 - [ ] **Unified profiles:** update Instagram, Facebook and GBP (LinkedIn later) with the new logo, cover image, "We build things that actually work." and the same description and link. Fix the LinkedIn slug if it's still `devedge-solutions`.
 
@@ -309,9 +309,9 @@ Nathan wants the site to feel high-end and technical ("fancy, 3D"), as befits a 
 ## 4. Portal Access
 
 ### P0
-- [ ] **"Client Login" in the header** on every page (subtle text link, top-right) and **"Client Portal" in the footer**.
-- [ ] **Short URLs:** `/login` and `/portal` redirect to `/portal/login` when logged out. Optionally set up `portal.devedge.com.au` (Lets Encrypt cert, nginx server block) for a cleaner URL to hand clients.
-- [ ] **Hide the portal from search:** `noindex` on portal and admin pages, plus robots `Disallow`.
+- [x] **"Client Login" in the header** on every page (subtle text link, top-right) and **"Client Portal" in the footer**.
+- [x] **Short URLs:** _(`/login` done; `/portal` already redirects when logged out. Subdomain not done.)_ `/login` and `/portal` redirect to `/portal/login` when logged out. Optionally set up `portal.devedge.com.au` (Lets Encrypt cert, nginx server block) for a cleaner URL to hand clients.
+- [x] **Hide the portal from search:** `noindex` on portal and admin pages, plus robots `Disallow`.
 
 ### P1
 - [ ] **Client onboarding:** put the portal link and a short "How to raise a ticket" guide in the kickoff email and handover doc. Invite emails already link to it.

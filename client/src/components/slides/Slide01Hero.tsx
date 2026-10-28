@@ -174,7 +174,7 @@ export default function Slide01Hero() {
             >
               <span className="font-mono text-[11px] text-primary tracking-[0.18em] uppercase inline-flex items-center gap-3">
                 <span className="w-8 h-px bg-primary inline-block" />
-                DevEdge · Software & Systems
+                Websites · Apps · Systems · Growth
               </span>
             </motion.div>
 

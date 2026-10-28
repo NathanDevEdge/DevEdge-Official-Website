@@ -185,6 +185,15 @@ async function startServer() {
   // ── Static (production only) ──────────────────────────────────────────────────
   if (process.env.NODE_ENV === "production") {
     const staticPath = path.resolve(__dirname, "public");
+
+    // Keep the client portal and admin out of search results
+    app.use((req, res, next) => {
+      if (/^\/(portal|admin|login)(\/|$)/.test(req.path)) {
+        res.setHeader("X-Robots-Tag", "noindex, nofollow");
+      }
+      next();
+    });
+
     app.use(express.static(staticPath));
     app.get("*", (_req, res) => {
       res.sendFile(path.join(staticPath, "index.html"));

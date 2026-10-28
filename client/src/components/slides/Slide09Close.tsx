@@ -16,7 +16,7 @@ export default function Slide09Close() {
     <section
       ref={sectionRef}
       id="slide-09"
-      className="relative min-h-screen lg:h-screen lg:snap-start flex flex-col justify-between overflow-hidden bg-[#1A1008]"
+      className="relative min-h-screen lg:h-screen lg:snap-start lg:pt-24 flex flex-col justify-between overflow-hidden bg-[#1A1008]"
     >
       {/* ── Background ───────────────────────────────────────── */}
       <div className="absolute inset-0 pointer-events-none">

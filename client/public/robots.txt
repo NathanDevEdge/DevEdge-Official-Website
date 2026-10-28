@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+
+# /portal and /admin are excluded from search with noindex (X-Robots-Tag + meta),
+# so they are deliberately not blocked here — crawlers must be able to see the noindex.
 
 Sitemap: https://devedge.com.au/sitemap.xml

@@ -20,7 +20,7 @@ export default function Slide02Problem() {
     <section
       ref={sectionRef}
       id="slide-02"
-      className="relative min-h-screen lg:h-screen lg:snap-start flex flex-col items-center justify-center overflow-hidden bg-background"
+      className="relative min-h-screen lg:h-screen lg:snap-start lg:pt-24 flex flex-col items-center justify-center overflow-hidden bg-background"
     >
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">

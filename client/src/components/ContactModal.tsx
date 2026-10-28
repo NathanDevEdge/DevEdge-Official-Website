@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/analytics";
 import { Send } from "lucide-react";
 
 const formSchema = z.object({
@@ -66,6 +67,7 @@ export default function ContactModal({
         body: JSON.stringify(data),
       });
       if (!response.ok) throw new Error("Failed to send message");
+      trackEvent("generate_lead", { form: "contact", service: data.service });
       toast.success("Message sent!", {
         description: "We'll get back to you within 24 hours.",
       });

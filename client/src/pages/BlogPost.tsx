@@ -1,6 +1,7 @@
 import { useRoute, Link } from "wouter";
 import SEO from "@/components/SEO";
 import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 import ContactModal from "@/components/ContactModal";
 import { motion } from "framer-motion";
 
@@ -292,21 +293,6 @@ function BgDecorations() {
     );
 }
 
-function FooterStrip() {
-    return (
-        <footer className="border-t border-[#D4B896] py-8">
-            <div className="container flex flex-col sm:flex-row items-center justify-between gap-3">
-                <Link href="/" className="font-display font-black text-foreground text-lg tracking-tight">
-                    DevEdge
-                </Link>
-                <p className="font-mono text-[11px] text-muted-foreground tracking-wider">
-                    © 2026 DevEdge. All rights reserved.
-                </p>
-            </div>
-        </footer>
-    );
-}
-
 // ── Blog Index ────────────────────────────────────────────────────────────────
 function BlogIndex() {
     return (
@@ -409,7 +395,7 @@ function BlogIndex() {
                 </div>
             </section>
 
-            <FooterStrip />
+            <Footer />
         </div>
     );
 }
@@ -538,7 +524,7 @@ export default function BlogPost() {
                 </motion.div>
             </div>
 
-            <FooterStrip />
+            <Footer />
         </div>
     );
 }

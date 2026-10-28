@@ -4,7 +4,10 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import { HelmetProvider } from "react-helmet-async";
+import { Helmet, HelmetProvider } from "react-helmet-async";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfUse from "./pages/TermsOfUse";
+import Analytics from "./components/Analytics";
 import Home from "./pages/Home";
 import ProjectsPage from "./pages/ProjectsPage";
 import ServicePage from "./pages/ServicePage";
@@ -40,16 +43,34 @@ const ProtectedRoute = ({ component: Component, role }: { component: any, role?:
   return <Component />;
 };
 
+// Portal and admin pages should never appear in search results
+function PrivateNoIndex() {
+  const [location] = useLocation();
+  if (!/^\/(portal|admin|login)(\/|$)/.test(location)) return null;
+  return (
+    <Helmet>
+      <meta name="robots" content="noindex, nofollow" />
+    </Helmet>
+  );
+}
+
 function Router() {
   return (
     <>
       <ScrollToTop />
+      <PrivateNoIndex />
+      <Analytics />
       <Switch>
         <Route path={"/"} component={Home} />
         <Route path={"/projects"} component={ProjectsPage} />
         <Route path={"/services/:slug"} component={ServicePage} />
         <Route path={"/blog"} component={BlogPost} />
         <Route path={"/blog/:slug"} component={BlogPost} />
+        <Route path={"/privacy"} component={PrivacyPolicy} />
+        <Route path={"/terms"} component={TermsOfUse} />
+        <Route path={"/login"}>
+          <Redirect to="/portal/login" />
+        </Route>
         <Route path={"/portal/login"} component={PortalLogin} />
         <Route path={"/portal/accept-invite"} component={AcceptInvite} />
         <Route path={"/portal/reset-password"} component={ResetPassword} />

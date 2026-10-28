@@ -85,7 +85,7 @@ export default function Slide06Testimonials() {
   return (
     <section
       id="slide-06"
-      className="relative min-h-screen lg:h-screen lg:snap-start flex flex-col overflow-hidden"
+      className="relative min-h-screen lg:h-screen lg:snap-start lg:pt-24 flex flex-col overflow-hidden"
       style={{ background: "#EDD9C0" }}
     >
       {/* Background */}

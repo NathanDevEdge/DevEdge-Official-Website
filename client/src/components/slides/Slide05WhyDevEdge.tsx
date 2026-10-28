@@ -107,7 +107,7 @@ export default function Slide05WhyDevEdge() {
     <section
       ref={sectionRef}
       id="slide-05"
-      className="relative min-h-screen lg:h-screen lg:snap-start flex flex-col justify-center overflow-hidden bg-background"
+      className="relative min-h-screen lg:h-screen lg:snap-start lg:pt-24 flex flex-col justify-center overflow-hidden bg-background"
     >
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">

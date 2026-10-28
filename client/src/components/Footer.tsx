@@ -1,131 +1,86 @@
-import { Github, Linkedin, Mail } from "lucide-react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { Link } from "wouter";
 import BrandLogo from "@/components/BrandLogo";
+import { NAV_LINKS, PORTAL_LOGIN_HREF, SITE } from "@/lib/site";
+import { cn } from "@/lib/utils";
 
-export default function Footer() {
-  const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const wordmarkY = useTransform(scrollYProgress, [0, 1], ["-4%", "4%"]);
+const columns = [
+  {
+    heading: "Company",
+    links: [...NAV_LINKS, { name: "Client Portal", href: PORTAL_LOGIN_HREF }],
+  },
+  {
+    heading: "Legal",
+    links: [
+      { name: "Privacy Policy", href: "/privacy" },
+      { name: "Terms of Use", href: "/terms" },
+    ],
+  },
+];
+
+export default function Footer({ className }: { className?: string }) {
+  const year = new Date().getFullYear();
 
   return (
-    <footer ref={ref} className="relative overflow-hidden bg-[#1A1008] border-t border-[#2E1F0F] pt-20 pb-10">
-      {/* Perspective grid at top of footer — matches hero feel */}
-      <div
-        className="absolute top-0 left-0 right-0 pointer-events-none"
-        style={{ height: "200px", perspective: "500px" }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage:
-              "linear-gradient(to right, rgba(46,31,15,0.8) 1px, transparent 1px), linear-gradient(to bottom, rgba(46,31,15,0.8) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-            transform: "rotateX(-55deg)",
-            transformOrigin: "50% 0%",
-            maskImage: "linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 80%)",
-          }}
-        />
-      </div>
-
+    <footer className={cn("relative overflow-hidden bg-[#1A1008] border-t border-[#2E1F0F] pt-20 pb-10 text-[#F5E6D5]", className)}>
       <div className="container relative z-10">
-        {/* Links row */}
         <div className="grid md:grid-cols-4 gap-12 mb-16">
-          <div className="col-span-2">
-            <a href="/" className="flex items-center mb-6">
+          <div className="md:col-span-2">
+            <Link href="/" className="inline-flex mb-6" aria-label="DevEdge home">
               <BrandLogo size="lg" variant="light" />
-            </a>
-            <p className="text-muted-foreground text-sm max-w-sm mb-2 leading-relaxed">
+            </Link>
+            <p className="text-[#F5E6D5] text-sm max-w-sm mb-2 leading-relaxed">
               We build things that actually work.
             </p>
-            <p className="text-muted-foreground text-sm max-w-sm mb-8 leading-relaxed">
-              Custom software, web platforms, and backend systems
-              for businesses that need results.
+            <p className="text-[#A89070] text-sm max-w-sm mb-8 leading-relaxed">
+              Websites, apps, business systems and marketing for Australian
+              businesses that need results.
             </p>
-            <div className="flex gap-3">
-              {[
-                { href: "https://www.linkedin.com/company/devedge-solutions", icon: Linkedin, label: "LinkedIn" },
-                { href: "https://github.com/NathanDevEdge", icon: Github, label: "GitHub" },
-                { href: "mailto:nathan@devedge.com.au", icon: Mail, label: "Email" },
-              ].map(({ href, icon: Icon, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target={href.startsWith("http") ? "_blank" : undefined}
-                  rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  aria-label={label}
-                  className="w-9 h-9 border border-[#2E1F0F] flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors duration-150"
-                >
-                  <Icon className="w-4 h-4" />
-                </a>
-              ))}
+            <div className="flex flex-col gap-2 font-mono text-[12px] tracking-wider">
+              <a href={`mailto:${SITE.email}`} className="text-[#A89070] hover:text-primary transition-colors duration-150">
+                {SITE.email}
+              </a>
+              <a href={SITE.phoneHref} className="text-[#A89070] hover:text-primary transition-colors duration-150">
+                {SITE.phone}
+              </a>
             </div>
           </div>
 
-          <div>
-            <h4 className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground mb-6">Company</h4>
-            <ul className="space-y-4">
-              {[
-                { label: "About", href: "/#about" },
-                { label: "Services", href: "/#services" },
-                { label: "Work", href: "/projects" },
-                { label: "Client Portal", href: "/portal/login" },
-              ].map((item) => (
-                <li key={item.label}>
-                  <a
-                    href={item.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-150"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground mb-6">Legal</h4>
-            <ul className="space-y-4">
-              {["Privacy Policy", "Terms of Service"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-150">
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {columns.map((col) => (
+            <div key={col.heading}>
+              <h2 className="font-mono text-[10px] tracking-widest uppercase text-[#A89070] mb-6">{col.heading}</h2>
+              <ul className="space-y-4">
+                {col.links.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.href}
+                      className="text-sm text-[#A89070] hover:text-[#F5E6D5] transition-colors duration-150"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        {/* Giant wordmark with parallax */}
-        <div className="relative overflow-hidden border-t border-[#2E1F0F] pt-12 -mx-4 md:-mx-8 lg:-mx-16">
-          <motion.div style={{ y: wordmarkY }}>
-            <span
-              className="font-display font-black select-none block text-center leading-none"
-              style={{
-                fontSize: "clamp(80px, 16vw, 200px)",
-                color: "rgba(46,31,15,0.8)",
-                letterSpacing: "-0.02em",
-              }}
-              aria-hidden
-            >
-              DEVEDGE
-            </span>
-          </motion.div>
+        {/* Giant wordmark */}
+        <div className="relative overflow-hidden border-t border-[#2E1F0F] pt-12">
+          <span
+            className="font-display font-black select-none block text-center leading-none"
+            style={{ fontSize: "clamp(80px, 16vw, 200px)", color: "rgba(46,31,15,0.8)", letterSpacing: "-0.02em" }}
+            aria-hidden
+          >
+            DEVEDGE
+          </span>
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="font-mono text-[11px] text-muted-foreground">
-            © {new Date().getFullYear()} DevEdge · Software & Systems
+        <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4 font-mono text-[11px] text-[#A89070]">
+          <div>
+            © {year} DevEdge{SITE.abn && <> · ABN {SITE.abn}</>}
           </div>
-          <div className="font-mono text-[11px] text-muted-foreground">
-            Built by us. Obviously.
-          </div>
+          <div>Built by us. Obviously.</div>
         </div>
       </div>
     </footer>

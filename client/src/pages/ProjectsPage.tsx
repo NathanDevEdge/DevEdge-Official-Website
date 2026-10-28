@@ -1,5 +1,6 @@
 import SEO from "@/components/SEO";
 import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 import ContactModal from "@/components/ContactModal";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
@@ -217,18 +218,7 @@ export default function ProjectsPage() {
                     </motion.div>
                 </div>
             </section>
-
-            {/* Footer */}
-            <footer className="bg-[#1A1008] border-t border-[#2E1F0F] py-8">
-                <div className="container flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <Link href="/" className="font-display font-black text-[#F5E6D5] text-lg tracking-tight">
-                        DevEdge
-                    </Link>
-                    <p className="font-mono text-[11px] text-[#664422] tracking-wider">
-                        © 2026 DevEdge. All rights reserved.
-                    </p>
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 }
