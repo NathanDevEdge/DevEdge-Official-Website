@@ -19,10 +19,10 @@ DevEdge is **one brand and one team**. The services are designed to complement e
 ### Build it
 | # | Service | What it covers | Proof |
 |---|---|---|---|
-| 1 | **Websites** | Fast, premium business websites built to turn visitors into enquiries, on whatever tech fits, with SEO from day one. | Kim Hilton Studio, Lockd75, NLB Built, WoodEvo, Lumeboard, Woodhouse |
+| 1 | **Websites** | Fast, premium business websites built to turn visitors into enquiries, on whatever tech fits, with SEO from day one. | WoodEvo, Woodhouse, DeckMate |
 | 2 | **Web & Mobile Apps** | Custom software for how a business actually works: calculators, ordering and quoting systems, client portals, SaaS products, MVPs, on web or mobile, in whatever tech the job needs. | DeckMate, Tennantly, Tradeflow |
 | 3 | **CRM & ERP Systems** | Setting up, cleaning up, customising, integrating and automating the systems a business runs on: CRM, inventory, quoting, purchasing, accounting on **Zoho, HubSpot, Xero and NetSuite**, or a custom-built system when off-the-shelf doesn't fit. Includes internal tools such as approval and file portals. | DeckMate (Zoho CRM), TPD Timber (Zoho Inventory), WoodEvo (file portal), Tradeflow (an ERP DevEdge built) |
-| 4 | **Care & Hosting** | Hosting, security updates, backups, a set number of hours of changes each month, and SEO reporting. Quoted privately. | ~5 client sites already hosted |
+| 4 | **Care & Hosting** | Hosting, security updates, backups, a set number of hours of changes each month, and SEO reporting. Quoted privately. | DevEdge client sites already hosted |
 
 ### Grow it
 | # | Service | What it covers | Proof |
@@ -49,7 +49,7 @@ DevEdge is **one brand and one team**. The services are designed to complement e
 6. **The sitemap is missing `/projects`**, and `robots.txt` doesn't block `/admin` or `/portal`.
 7. **The portal can only be reached by typing `/portal/login`.** Its one link is in a footer that no page renders.
 8. **There's no About page**, even though the guidelines' content architecture requires one ("The Person — Nathan"). `/#about` jumps to a slide.
-9. **The work page has only 2 projects**, while testimonials name 4 clients (DeckMate, Tennantly, Woodhouse, TPD Timber). Several other client sites run on the same server (Kim Hilton Studio, Lockd75, NLB Built).
+9. **The work page has only 2 projects**, while testimonials name 4 clients (DeckMate, Tennantly, Woodhouse, TPD Timber). WoodEvo (approved) has no case study yet.
 10. **Performance:** the JavaScript bundle is 788KB, and every visitor downloads all the portal and admin code.
 11. **The LinkedIn link uses the old name** (`/company/devedge-solutions`) in the structured data. LinkedIn is on hold for now, so remove it until it's set up properly.
 
@@ -143,10 +143,10 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
   - Add photos in the new branding.
   - Post weekly (repurpose blog and LinkedIn posts).
   - **Ask every past client for a Google review.**
-- [ ] **Backlinks from client sites:** add "Built by DevEdge" footer links on DeckMate, Tradeflow, Kim Hilton Studio, Lockd75 and NLB Built (all on your own server). This is the quickest backlink win available.
-- [ ] Listings on Clutch, GoodFirms, DesignRush, TrueLocal, Hotfrog and Yellow Pages, plus the Zoho Partner directory if eligible. Keep the name, phone and URL identical everywhere.
+- [ ] **Backlinks from client sites:** add "Built by DevEdge" footer links on the approved DevEdge client sites (DeckMate, Tennantly, Woodhouse, TPD Timber, WoodEvo) and Tradeflow. This is the quickest backlink win available.
+- [ ] Listings on Clutch, GoodFirms, DesignRush, TrueLocal, Hotfrog and Yellow Pages. Keep the name, phone and URL identical everywhere.
 - [ ] Ask the approved clients (DeckMate, Tennantly, Woodhouse, TPD Timber, WoodEvo) for a link back to their case study, and for a Google review.
-- [ ] Partner / directory listings for **Zoho, HubSpot, Xero and NetSuite** where eligible (Zoho Partner, HubSpot Solutions Directory, Xero advisor directory, NetSuite partner). They bring high-intent backlinks and referrals.
+- [ ] **Zoho relationship:** DevEdge isn't a formal partner with any platform, but works closely with Zoho's development team. Use that (accurately worded) as a trust point on the CRM & ERP page, and consider applying to the Zoho Partner program later, since the relationship already exists.
 
 ---
 
@@ -186,7 +186,7 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
   - DeckMate and Tradeflow (have screenshots)
   - **Approved to name:** DeckMate, Tennantly, Woodhouse, TPD Timber, WoodEvo (website / systems work)
   - **WoodEvo marketing results:** can be named from **December 2026**
-  - Kim Hilton Studio, Lockd75, NLB Built: not yet approved, so don't name them
+  - **Not DevEdge work:** Kim Hilton Studio, Lockd75 and NLB Built are Nathan's personal passion projects. Never show them or link them as DevEdge work.
 
 ### P0 — Site structure: homepage & landing pages
 
@@ -257,6 +257,8 @@ Nathan wants the site to feel high-end and technical ("fancy, 3D"), as befits a 
 
 ## 3. Marketing
 
+**Current approach: organic only.** DevEdge's own growth runs on organic social, content, SEO, Google Business Profile, reviews and referrals, with $0 ad spend. Paid media remains a *client* service. Running paid ads for DevEdge itself is on hold.
+
 ### P0 — Foundations
 - [ ] _(On hold: $0 ad budget for now.)_ Run DevEdge's own Meta and Google Ads once there's budget. It brings leads, gives Grow a live case study and shows DevEdge uses what it sells. Build the `/lp/` template first so it's ready.
 - [ ] Analytics and conversion tracking (shared with SEO P0), plus **UTM links** on every social, email and bio link so each channel's leads are measurable.
@@ -273,15 +275,24 @@ Nathan wants the site to feel high-end and technical ("fancy, 3D"), as befits a 
 - [ ] Turn each blog post into an Instagram / Facebook carousel and a GBP post now, and add a LinkedIn version once LinkedIn starts.
 - [ ] Short screen-recorded demos (30–60s) of real builds, such as the DeckMate calculator and Tradeflow quoting.
 
-### P1 — Instagram / Facebook (main social channels for now)
-- [ ] Post weekly: project reveals, workspace and process, client wins, carousels from blog posts.
+### P0 — Organic social: Instagram / Facebook (main channels for now)
+- [ ] **Posting rhythm:** 3 posts a week, plus stories as you work.
+- [ ] **Content pillars:**
+  - **Proof:** approved client work, before/after, the outcome in one sentence
+  - **Behind the build:** screen recordings of real work in progress, Tradeflow features
+  - **Fix-it tips:** CRM / spreadsheet / tracking problems and how to fix them
+  - **Honest takes** in brand voice: "When you shouldn't build custom software"
+  - **Results:** organic Grow wins now, WoodEvo ad results from December 2026
+- [ ] **Short-form video (Reels)** is the biggest organic reach lever: 30–60s screen recordings, e.g. "I built a deck calculator in…" or "This CRM was costing them 10 hours a week".
+- [ ] Engage daily for 15 minutes: reply to comments and comment on local business and trade accounts. Organic reach depends on it.
+- [ ] Track what works: monthly review of reach, saves, profile visits and enquiries (all free in Meta Business Suite).
 - [ ] Pin 3 posts to the profile: Who we are · Selected work · How to start a project.
 
 ### P1 — Referrals & partnerships
 - [ ] **Client referral offer**, e.g. a credit or discount for each referred project. Email current and past clients.
 - [ ] **Review drive:** Google reviews from every client, then reused on the site.
 - [ ] **Partners:**
-  - CRM/ERP platform partner programs (Zoho, HubSpot, Xero) where eligible
+  - Zoho Partner program (later, building on the existing relationship with Zoho's dev team)
   - Accountants and bookkeepers (Xero advisors see the automation pain first)
   - Web designers who need a dev and back-end partner
   - Trade and building industry groups (HIA, Master Builders, supplier networks)
@@ -337,8 +348,9 @@ Nathan wants the site to feel high-end and technical ("fancy, 3D"), as befits a 
 - **Content:** Claude drafts blog posts and social content in Nathan's voice, using a dedicated content skill Nathan is setting up. Nathan edits and approves.
 - **Budget:** $0 for paid ads and paid tools for now. Everything in Phases 1–3 uses free tools (GA4, Search Console, GBP, free directory listings, Canva free).
 - **Legal:** privacy policy, terms and ABN in the footer are needed.
+- **Partners:** none formal. DevEdge works closely with Zoho's development team.
+- **Passion projects:** Kim Hilton Studio, Lockd75 and NLB Built are Nathan's personal projects, not DevEdge work. They're never shown as DevEdge work.
+- **DevEdge's own marketing:** organic only for now (social, content, SEO, GBP, referrals).
 
 ## Still open
-- [ ] Are you a partner with, or eligible for, Zoho, HubSpot, Xero or NetSuite programs?
-- [ ] Kim Hilton Studio, Lockd75, NLB Built: can they be named later?
-- [ ] Paid Media platforms beyond Meta and Google (TikTok, LinkedIn Ads)?
+- [ ] Paid Media platforms beyond Meta and Google (TikTok, LinkedIn Ads): undecided, revisit when there's demand.
