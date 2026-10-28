@@ -9,7 +9,7 @@ const ease = [0.25, 0.1, 0.25, 1.0] as const;
 
 // Copy: COPY_PLAN.md § 6.3 – 6.6
 // Testimonials 2 & 3 are pending real quotes — placeholder shown gracefully.
-const testimonials = [
+const allTestimonials = [
   {
     quote:
       "Working with Nathan and his team was an amazing experience. I had nothing but an idea and a rough guideline of what I wanted. With his help, we got an amazing website built with an intricate Deck Calculator providing our customers with an accurate way to measure their deck out and get the fastest quotes. Not only did he build something for us, he did it the best way possible. DevEdge went out of their way to give honest and great recommendations with other external solutions as well as where to get a reliable server to host off of.",
@@ -50,6 +50,9 @@ const testimonials = [
   },
 ];
 
+// Only show testimonials with a real quote
+const testimonials = allTestimonials.filter((t) => !t.pending);
+
 const variants = {
   enter: (dir: number) => ({
     x: dir > 0 ? 60 : -60,
@@ -65,7 +68,7 @@ const variants = {
   }),
 };
 
-export default function Slide06Testimonials() {
+export default function Testimonials() {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
 
@@ -84,8 +87,8 @@ export default function Slide06Testimonials() {
 
   return (
     <section
-      id="slide-06"
-      className="relative min-h-screen lg:h-screen lg:snap-start lg:pt-24 flex flex-col overflow-hidden"
+      id="testimonials"
+      className="relative scroll-mt-24 py-24 flex flex-col overflow-hidden"
       style={{ background: "#EDD9C0" }}
     >
       {/* Background */}
@@ -106,7 +109,7 @@ export default function Slide06Testimonials() {
           {/* Eyebrow — Copy: COPY_PLAN.md § 6.1 */}
           <span className="font-mono text-[11px] text-primary tracking-[0.18em] uppercase inline-flex items-center gap-3 mb-5">
             <span className="w-8 h-px bg-primary inline-block" />
-            06 Clients
+            Clients
           </span>
           {/* Heading — Copy: COPY_PLAN.md § 6.2 */}
           <h2
@@ -122,7 +125,7 @@ export default function Slide06Testimonials() {
 
           {/* Quote area */}
           <div className="relative flex-1 flex items-center">
-            <AnimatePresence mode="wait" custom={direction}>
+            <AnimatePresence mode="wait" custom={direction} initial={false}>
               <motion.div
                 key={index}
                 custom={direction}
@@ -176,7 +179,7 @@ export default function Slide06Testimonials() {
           <div className="flex items-end justify-between gap-6 pt-8 border-t border-[#D4B896] mt-8">
 
             {/* Client identity */}
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={`meta-${index}`}
                 initial={{ opacity: 0, y: 8 }}

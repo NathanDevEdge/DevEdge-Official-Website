@@ -9,7 +9,7 @@ import ContactModal from "@/components/ContactModal";
 const ease = [0.25, 0.1, 0.25, 1.0] as const;
 
 // Copy: COPY_PLAN.md § 8.3 – 8.8 — [USE SUGGESTED COPY]
-const faqs = [
+export const faqs = [
   {
     q: "How long does a project take?",
     a: "It depends on scope, but most projects land between 2 and 8 weeks. A focused landing page or automation can be live in under 2 weeks. A full platform build typically takes 6–10 weeks. We'll give you a real timeline in the first conversation — not a vague 'it depends.'",
@@ -17,6 +17,10 @@ const faqs = [
   {
     q: "How does pricing work?",
     a: "Every project is scoped and quoted individually — we don't do fixed packages because every brief is different. You'll get a clear quote before anything starts. No hourly surprises, no scope creep without a conversation first.",
+  },
+  {
+    q: "Do you do marketing as well as building?",
+    a: "Yes. Paid media (Meta and Google Ads), SEO and tracking are done by the same team that builds your website and systems. That's the point: nothing gets lost between the people who build it and the people who market it.",
   },
   {
     q: "Do you work with small businesses?",
@@ -32,7 +36,7 @@ const faqs = [
   },
   {
     q: "Can you work with our existing tech stack?",
-    a: "Usually yes. We'll assess what you have in the Discovery phase and tell you honestly whether it makes sense to build on top of it or start fresh. We won't recommend a rewrite just to bill more hours.",
+    a: "Usually yes. We'll look at what you have first and tell you honestly whether it makes sense to build on top of it or start fresh. We won't recommend a rewrite just to bill more hours.",
   },
 ];
 
@@ -98,15 +102,15 @@ function AccordionItem({
   );
 }
 
-export default function Slide08FAQ() {
+export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0); // first open by default
 
   const toggle = (i: number) => setOpenIndex(openIndex === i ? null : i);
 
   return (
     <section
-      id="slide-08"
-      className="relative min-h-screen lg:h-screen lg:snap-start lg:pt-24 flex flex-col justify-center overflow-hidden bg-background"
+      id="faq"
+      className="relative scroll-mt-24 py-24 flex flex-col justify-center overflow-hidden bg-background"
     >
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
@@ -128,7 +132,7 @@ export default function Slide08FAQ() {
             {/* Eyebrow — Copy: COPY_PLAN.md § 8.1 */}
             <span className="font-mono text-[11px] text-primary tracking-[0.18em] uppercase inline-flex items-center gap-3 mb-6">
               <span className="w-8 h-px bg-primary inline-block" />
-              08 FAQ
+              FAQ
             </span>
             {/* Heading — Copy: COPY_PLAN.md § 8.2 */}
             <h2

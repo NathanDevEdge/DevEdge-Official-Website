@@ -1,6 +1,7 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
 import { createServer } from "http";
+import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -32,6 +33,7 @@ import {
 } from "./handlers/passwordReset.js";
 import { handleGetComments, handleCreateComment } from "./handlers/comments.js";
 import { escapeHtml, escapeHtmlMultiline } from "./lib/escapeHtml.js";
+import { LEGACY_SERVICE_REDIRECTS } from "../client/src/data/services.js";
 import {
   upload,
   requireAuth,
@@ -186,6 +188,13 @@ async function startServer() {
   if (process.env.NODE_ENV === "production") {
     const staticPath = path.resolve(__dirname, "public");
 
+    // Old service URLs → new ones (permanent, so search rankings carry over)
+    app.get("/services/:slug", (req, res, next) => {
+      const target = LEGACY_SERVICE_REDIRECTS[req.params.slug];
+      if (target) return res.redirect(301, target);
+      next();
+    });
+
     // Keep the client portal and admin out of search results
     app.use((req, res, next) => {
       if (/^\/(portal|admin|login)(\/|$)/.test(req.path)) {
@@ -194,9 +203,35 @@ async function startServer() {
       next();
     });
 
-    app.use(express.static(staticPath));
-    app.get("*", (_req, res) => {
-      res.sendFile(path.join(staticPath, "index.html"));
+    // Pre-rendered public pages (scripts/prerender.mjs): one file per route
+    const pagesDir = path.join(staticPath, "__pages");
+    const prerendered = new Set(
+      fs.existsSync(pagesDir) ? fs.readdirSync(pagesDir).map((f) => f.replace(/\.html$/, "")) : [],
+    );
+    const isAppOnly = (p: string) => /^\/(portal|admin|login)(\/|$)/.test(p);
+
+    app.use((req, res, next) => (req.path.startsWith("/__pages") ? res.status(404).end() : next()));
+    app.use(express.static(staticPath, { index: false }));
+
+    app.get("*", (req, res) => {
+      // One canonical URL per page: drop trailing slashes
+      if (req.path.length > 1 && req.path.endsWith("/")) {
+        const query = req.originalUrl.slice(req.path.length);
+        return res.redirect(301, req.path.replace(/\/+$/, "") + query);
+      }
+
+      const key = req.path === "/" ? "index" : req.path.slice(1).replace(/\//g, "__");
+      if (prerendered.has(key) && key !== "404") {
+        return res.sendFile(path.join(pagesDir, `${key}.html`));
+      }
+
+      // Portal / admin are client-side only
+      if (isAppOnly(req.path) || prerendered.size === 0) {
+        return res.sendFile(path.join(staticPath, "index.html"));
+      }
+
+      // Everything else is a real 404
+      res.status(404).sendFile(path.join(pagesDir, "404.html"));
     });
   }
 

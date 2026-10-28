@@ -1,4 +1,4 @@
-import { createRoot } from "react-dom/client";
+import { createRoot, hydrateRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 
@@ -7,4 +7,11 @@ if ("scrollRestoration" in window.history) {
 }
 window.scrollTo(0, 0);
 
-createRoot(document.getElementById("root")!).render(<App />);
+const root = document.getElementById("root")!;
+
+// Public pages arrive pre-rendered (scripts/prerender.mjs); the portal does not
+if (root.firstElementChild) {
+  hydrateRoot(root, <App />);
+} else {
+  createRoot(root).render(<App />);
+}

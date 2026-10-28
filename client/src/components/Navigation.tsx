@@ -12,18 +12,11 @@ export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [location] = useLocation();
 
-  // The home page scrolls inside #snap-container on desktop; other pages scroll the window
   useEffect(() => {
-    const container = document.getElementById("snap-container");
-    const handleScroll = () =>
-      setIsScrolled(window.scrollY > 40 || (container?.scrollTop ?? 0) > 40);
+    const handleScroll = () => setIsScrolled(window.scrollY > 40);
     window.addEventListener("scroll", handleScroll, { passive: true });
-    container?.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      container?.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [location]);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -33,6 +26,7 @@ export default function Navigation() {
       const hash = href.substring(1);
       const element = document.getElementById(HOME_SECTIONS[hash] ?? hash.slice(1));
       element?.scrollIntoView({ behavior: "smooth" });
+      history.replaceState(null, "", href);
     }
   };
 

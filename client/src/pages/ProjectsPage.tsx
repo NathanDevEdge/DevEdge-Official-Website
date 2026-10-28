@@ -1,4 +1,5 @@
 import SEO from "@/components/SEO";
+import { breadcrumbSchema } from "@/lib/schema";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ContactModal from "@/components/ContactModal";
@@ -41,9 +42,10 @@ export default function ProjectsPage() {
     return (
         <div className="min-h-screen bg-background text-foreground font-sans">
             <SEO
-                title="Projects | DevEdge"
-                description="Real projects. Real outcomes. See how DevEdge has helped Australian businesses build custom software, platforms, and automation that actually works."
+                title="Our Work: Websites, Apps & Business Systems | DevEdge"
+                description="Real projects for Australian businesses: websites, custom apps, CRM and ERP systems, and the product we built ourselves."
                 url="https://devedge.com.au/projects"
+                jsonLd={breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Work", path: "/projects" }])}
             />
             <Navigation />
 

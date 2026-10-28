@@ -79,27 +79,27 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
 
 ### P0 — Technical foundations
 - [x] **Trust & legal pages:** _(Done: `/privacy` and `/terms`. ABN shows once `VITE_BUSINESS_ABN` is set.)_ Privacy Policy (the contact form, portal and analytics all collect personal data, and Meta / Google ads require one), Terms of Service, and the **ABN in the footer**.
-- [ ] **Pre-render every marketing route to static HTML at build time** (Home, Services ×N, Projects, case studies, About, Blog, posts). Use `vite-react-ssg` or a headless-Chrome prerender step, and have Express serve the pre-rendered file before the SPA fallback. This is the biggest single SEO fix.
-- [ ] **Give each URL its own `<title>`, meta description, canonical and OG tags in the served HTML**, and remove the hard-coded homepage canonical from `index.html`.
-- [ ] **Return a real 404 status for unknown routes.** Express should check paths against the known route list.
+- [x] **Pre-render every marketing route to static HTML at build time** (Home, Services ×N, Projects, case studies, About, Blog, posts). Use `vite-react-ssg` or a headless-Chrome prerender step, and have Express serve the pre-rendered file before the SPA fallback. This is the biggest single SEO fix.
+- [x] **Give each URL its own `<title>`, meta description, canonical and OG tags in the served HTML**, and remove the hard-coded homepage canonical from `index.html`.
+- [x] **Return a real 404 status for unknown routes.** Express should check paths against the known route list.
 - [x] **Add analytics:** GA4 (free) with conversion events for contact-form submit, phone and email clicks, and "Start a project" clicks. Link GA4 to Search Console.
-- [ ] **Sitemap:** _(Partly done 28 Oct: `/projects` and legal pages added by hand.)_ Generate it from the route list at build time with accurate `lastmod`. Add `/projects` and every new page. Resubmit in Search Console.
+- [x] **Sitemap:** _(Done: generated at build time from the pre-render route list.)_ Generate it from the route list at build time with accurate `lastmod`. Add `/projects` and every new page. Resubmit in Search Console.
 - [x] **robots.txt:** _(Done: `/api` disallowed. Portal/admin use `noindex` via header + meta instead of robots, so Google can see the noindex.)_ `Disallow: /admin`, `/portal`, `/api`. Add `noindex` to the portal and admin pages.
 - [ ] **Search Console:** after the above ships, review the Page indexing report, request indexing for key pages and fix any "Duplicate without user-selected canonical" errors.
 
 ### P1 — On-page & structured data
 - [ ] Rewrite titles and meta descriptions per page from the keyword map, with titles around 60 characters and descriptions around 155.
 - [ ] Use exactly one H1 per page and a logical H2/H3 structure.
-- [ ] **Structured data:**
+- [x] **Structured data:**
   - `Organization` + `ProfessionalService` with `areaServed: AU`, and the logo (add LinkedIn to `sameAs` only once the page is active)
   - `Service` on each service page
   - `BlogPosting` with Nathan as a `Person` author on posts
   - `BreadcrumbList` sitewide
   - `FAQPage` for the FAQ section
 - [ ] **Internal linking:** home → services, home → case studies, services ↔ related case studies ↔ related posts. Every post links to a service page and a CTA.
-- [ ] Remove the `meta keywords` tag (search engines ignore it) and `maximum-scale=1` from the viewport tag (accessibility).
-- [ ] **Performance:** lazy-load the portal and admin routes, aim for under 250KB of JavaScript on marketing pages, self-host or `preload` fonts, and check Core Web Vitals in PageSpeed Insights (target LCP < 2.5s, CLS < 0.1).
-- [ ] Add `llms.txt` and a plain-language "About DevEdge" summary so AI answer engines (ChatGPT, Perplexity, Google AI Overviews) describe DevEdge correctly.
+- [x] Remove the `meta keywords` tag (search engines ignore it) and `maximum-scale=1` from the viewport tag (accessibility).
+- [ ] **Performance:** _(Portal/admin now lazy-loaded; pages pre-rendered so content shows before JS. Main bundle still ~708KB, so trim framer-motion / Radix usage in the design phase.)_ lazy-load the portal and admin routes, aim for under 250KB of JavaScript on marketing pages, self-host or `preload` fonts, and check Core Web Vitals in PageSpeed Insights (target LCP < 2.5s, CLS < 0.1).
+- [x] Add `llms.txt` and a plain-language "About DevEdge" summary so AI answer engines (ChatGPT, Perplexity, Google AI Overviews) describe DevEdge correctly.
 
 ### P1 — Blog plan
 **Rules:** posts are credited to **Nathan Anniss** with a short bio and photo (this builds E-E-A-T: experience, expertise, authority and trust). Each post is 1,200–2,000 words, uses real numbers from real projects, targets one keyword, and ends with one CTA. Publish **2 posts a month**.
@@ -165,17 +165,17 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
   4. **Selected work:** 2–3 outcome-first case study cards linking to case studies. **This fixes "can't find the projects".**
   5. **Testimonials**, 6. **How we work** (3 steps), 7. **FAQ**, 8. **Close CTA**.
   - Drop desktop snap-scroll and the dot navigation, and use standard scrolling with fade-up on enter (300ms, ease-out).
-- [ ] **`/services` overview page:** all 7 services on one page in the same journey order, with a short "how they work together" section. No separate Build / Grow hub pages.
+- [x] **`/services` overview page:** all 7 services on one page in the same journey order, with a short "how they work together" section. No separate Build / Grow hub pages.
 - [ ] **Grow service pages:** `/services/paid-media`, `/services/seo`, `/services/tracking-and-reporting`.
-- [ ] **Replace the 6 old service pages with the 4 new Build ones**, and 301-redirect the old URLs:
+- [x] **Replace the 6 old service pages with the 4 new Build ones**, and 301-redirect the old URLs:
   - `/services/websites` ← web-platform
   - `/services/web-and-mobile-apps` ← custom-development, mobile-apps
   - `/services/crm-erp-systems` ← system-integration, process-automation
   - `/services/care-and-hosting` (new)
   - cloud-migration → `/services`
-- [ ] **Contact form:** replace the dropdown with "What do you need help with?", a multi-select of the 7 services plus "Not sure yet". Leads are tagged by service without forcing a Build / Grow choice.
+- [x] **Contact form:** replace the dropdown with "What do you need help with?", a multi-select of the 7 services plus "Not sure yet". Leads are tagged by service without forcing a Build / Grow choice.
 - [x] **Remove "Software & Systems"** from the home hero eyebrow (`Slide01Hero.tsx`), the footer, and the eyebrow on `og-image.jpg`, since it no longer describes DevEdge. Re-render the OG image.
-- [ ] **Make the service list consistent everywhere:** home tiles, nav dropdown, footer, contact-form dropdown (currently 5 different options), FAQ and structured data.
+- [x] **Make the service list consistent everywhere:** home tiles, nav dropdown, footer, contact-form dropdown (currently 5 different options), FAQ and structured data.
 - [ ] **New pages:**
   - `/about`: the real story, how DevEdge works, Nathan, the 4 values (from the guidelines' content architecture)
   - `/services` index

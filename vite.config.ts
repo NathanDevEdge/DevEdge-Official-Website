@@ -17,6 +17,10 @@ export default defineConfig({
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
   },
+  // The pre-render build (entry-server.tsx) bundles its dependencies so it runs in plain Node
+  ssr: {
+    noExternal: true,
+  },
   server: {
     port: 3000,
     strictPort: false,

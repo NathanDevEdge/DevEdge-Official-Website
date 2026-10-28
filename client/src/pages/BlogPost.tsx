@@ -1,5 +1,6 @@
 import { useRoute, Link } from "wouter";
 import SEO from "@/components/SEO";
+import { breadcrumbSchema } from "@/lib/schema";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ContactModal from "@/components/ContactModal";
@@ -293,13 +294,15 @@ function BgDecorations() {
     );
 }
 
+export const BLOG_SLUGS = Object.keys(blogData);
+
 // ── Blog Index ────────────────────────────────────────────────────────────────
 function BlogIndex() {
     return (
         <div className="min-h-screen bg-background text-foreground">
             <SEO
-                title="Blog — Software Insights & Strategy | DevEdge"
-                description="Practical articles on custom software development, cloud migration, process automation, and building digital products for Australian businesses."
+                title="Insights: Websites, CRM & ERP, Apps and Marketing | DevEdge"
+                description="Practical, honest articles for Australian businesses on websites, custom software, CRM and ERP systems, automation and marketing that works."
                 url="https://devedge.com.au/blog"
                 type="website"
             />
@@ -419,6 +422,25 @@ export default function BlogPost() {
                 url={`https://devedge.com.au/blog/${params.slug}`}
                 type="article"
                 publishedTime={post.isoDate}
+                jsonLd={[
+                    {
+                        "@context": "https://schema.org",
+                        "@type": "BlogPosting",
+                        headline: post.title,
+                        description: post.excerpt,
+                        datePublished: post.isoDate,
+                        url: `https://devedge.com.au/blog/${params.slug}`,
+                        mainEntityOfPage: `https://devedge.com.au/blog/${params.slug}`,
+                        image: "https://devedge.com.au/og-image.jpg",
+                        author: { "@type": "Organization", name: "DevEdge", url: "https://devedge.com.au" },
+                        publisher: { "@id": "https://devedge.com.au/#organization" },
+                    },
+                    breadcrumbSchema([
+                        { name: "Home", path: "/" },
+                        { name: "Insights", path: "/blog" },
+                        { name: post.title, path: `/blog/${params.slug}` },
+                    ]),
+                ]}
             />
             <Navigation />
 

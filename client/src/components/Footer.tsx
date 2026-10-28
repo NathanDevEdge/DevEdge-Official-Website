@@ -2,11 +2,16 @@ import { Link } from "wouter";
 import BrandLogo from "@/components/BrandLogo";
 import { NAV_LINKS, PORTAL_LOGIN_HREF, SITE } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { SERVICES } from "@/data/services";
 
 const columns = [
   {
+    heading: "Services",
+    links: SERVICES.map((s) => ({ name: s.name, href: `/services/${s.slug}` })),
+  },
+  {
     heading: "Company",
-    links: [...NAV_LINKS, { name: "Client Portal", href: PORTAL_LOGIN_HREF }],
+    links: [...NAV_LINKS.filter((l) => l.name !== "Services"), { name: "Tradeflow", href: "/products/tradeflow" }, { name: "Contact", href: "/contact" }, { name: "Client Portal", href: PORTAL_LOGIN_HREF }],
   },
   {
     heading: "Legal",
@@ -23,7 +28,7 @@ export default function Footer({ className }: { className?: string }) {
   return (
     <footer className={cn("relative overflow-hidden bg-[#1A1008] border-t border-[#2E1F0F] pt-20 pb-10 text-[#F5E6D5]", className)}>
       <div className="container relative z-10">
-        <div className="grid md:grid-cols-4 gap-12 mb-16">
+        <div className="grid sm:grid-cols-2 md:grid-cols-5 gap-12 mb-16">
           <div className="md:col-span-2">
             <Link href="/" className="inline-flex mb-6" aria-label="DevEdge home">
               <BrandLogo size="lg" variant="light" />

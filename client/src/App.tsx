@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch, useLocation } from "wouter";
+import { Route, Router as WouterRouter, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { Helmet, HelmetProvider } from "react-helmet-async";
@@ -11,15 +11,21 @@ import Analytics from "./components/Analytics";
 import Home from "./pages/Home";
 import ProjectsPage from "./pages/ProjectsPage";
 import ServicePage from "./pages/ServicePage";
+import ServicesPage from "./pages/ServicesPage";
+import ContactPage from "./pages/ContactPage";
+import TradeflowPage from "./pages/TradeflowPage";
 import BlogPost from "./pages/BlogPost";
-import PortalLogin from "./pages/PortalLogin";
-import AdminDashboard from "./pages/AdminDashboard";
-import ClientPortal from "./pages/ClientPortal";
-import AcceptInvite from "./pages/AcceptInvite";
-import ResetPassword from "./pages/ResetPassword";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { Redirect } from "wouter";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
+import { AnimatePresence } from "framer-motion";
+
+// Portal pages load on demand so marketing visitors don't download them
+const PortalLogin = lazy(() => import("./pages/PortalLogin"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const ClientPortal = lazy(() => import("./pages/ClientPortal"));
+const AcceptInvite = lazy(() => import("./pages/AcceptInvite"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -55,17 +61,29 @@ function PrivateNoIndex() {
 }
 
 function Router() {
+  const [location] = useLocation();
   return (
     <>
       <ScrollToTop />
       <PrivateNoIndex />
       <Analytics />
+      {/*
+        initial={false}: the first page shows its content immediately (it arrives
+        pre-rendered), so entrance animations only play on later page changes.
+        Keyed by path so each new page mounts fresh and animates in.
+      */}
+      <AnimatePresence initial={false} mode="wait">
+      <div key={location}>
+      <Suspense fallback={<div className="min-h-screen" />}>
       <Switch>
         <Route path={"/"} component={Home} />
         <Route path={"/projects"} component={ProjectsPage} />
+        <Route path={"/services"} component={ServicesPage} />
         <Route path={"/services/:slug"} component={ServicePage} />
         <Route path={"/blog"} component={BlogPost} />
         <Route path={"/blog/:slug"} component={BlogPost} />
+        <Route path={"/contact"} component={ContactPage} />
+        <Route path={"/products/tradeflow"} component={TradeflowPage} />
         <Route path={"/privacy"} component={PrivacyPolicy} />
         <Route path={"/terms"} component={TermsOfUse} />
         <Route path={"/login"}>
@@ -84,6 +102,9 @@ function Router() {
         {/* Final fallback route */}
         <Route component={NotFound} />
       </Switch>
+      </Suspense>
+      </div>
+      </AnimatePresence>
     </>
 
   );
@@ -94,7 +115,11 @@ function Router() {
 //   to keep consistent foreground/background color across components
 // - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
-function App() {
+/**
+ * `ssrPath` and `helmetContext` are only passed when pre-rendering pages at build
+ * time (see entry-server.tsx); in the browser the app reads the real URL.
+ */
+function App({ ssrPath, helmetContext }: { ssrPath?: string; helmetContext?: object } = {}) {
   return (
     <ErrorBoundary>
       <ThemeProvider
@@ -103,9 +128,11 @@ function App() {
       >
         <AuthProvider>
           <TooltipProvider>
-            <HelmetProvider>
-              <Toaster />
-              <Router />
+            <HelmetProvider context={helmetContext}>
+              <WouterRouter ssrPath={ssrPath}>
+                <Toaster />
+                <Router />
+              </WouterRouter>
             </HelmetProvider>
           </TooltipProvider>
         </AuthProvider>

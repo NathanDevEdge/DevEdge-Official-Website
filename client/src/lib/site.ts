@@ -6,19 +6,16 @@ export const SITE = {
   email: "info@devedge.com.au",
   phone: "0490 214 750",
   phoneHref: "tel:+61490214750",
-  // Shown in the footer and legal pages once set
-  abn: (import.meta.env.VITE_BUSINESS_ABN as string | undefined) ?? "",
+  abn: "55 755 335 958",
 };
 
-// Home page anchors → slide section ids
+// Home page anchors that don't match a section id directly
 export const HOME_SECTIONS: Record<string, string> = {
-  "#services": "slide-04",
-  "#about": "slide-05",
-  "#faq": "slide-08",
+  "#services": "what-we-do",
 };
 
 export const NAV_LINKS = [
-  { name: "Services", href: "/#services" },
+  { name: "Services", href: "/services" },
   { name: "Work", href: "/projects" },
   { name: "About", href: "/#about" },
   { name: "Insights", href: "/blog" },

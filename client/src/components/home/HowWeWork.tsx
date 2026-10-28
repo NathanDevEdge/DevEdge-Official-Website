@@ -136,14 +136,14 @@ function AnimatedTimeline({ inView }: { inView: boolean }) {
   );
 }
 
-export default function Slide07Workflow() {
+export default function HowWeWork() {
   const timelineRef = useRef<HTMLDivElement>(null);
   const inView = useInView(timelineRef, { once: true, amount: 0.25 });
 
   return (
     <section
-      id="slide-07"
-      className="relative min-h-screen lg:h-screen lg:snap-start lg:pt-24 flex flex-col justify-center overflow-hidden bg-background"
+      id="how-we-work"
+      className="relative scroll-mt-24 py-24 flex flex-col justify-center overflow-hidden bg-background"
     >
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
@@ -163,7 +163,7 @@ export default function Slide07Workflow() {
             {/* Eyebrow — Copy: COPY_PLAN.md § 7.1 */}
             <span className="font-mono text-[11px] text-primary tracking-[0.18em] uppercase inline-flex items-center gap-3 mb-6">
               <span className="w-8 h-px bg-primary inline-block" />
-              07 The Process
+              The Process
             </span>
             {/* Heading — Copy: COPY_PLAN.md § 7.2 */}
             <h2

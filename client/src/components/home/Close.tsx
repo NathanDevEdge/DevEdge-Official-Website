@@ -1,22 +1,22 @@
 // Slide 09 — The Close
 // Copy reference: COPY_PLAN.md sections 9.1 – 9.6
 // STATUS: Full implementation — CTA pulse, inverted grid, dark bookend
-// Uses useInView hook for reliable snap-scroll animation triggering
+// Uses useInView to trigger its entrance animation
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import ContactModal from "@/components/ContactModal";
 
 const ease = [0.25, 0.1, 0.25, 1.0] as const;
 
-export default function Slide09Close() {
+export default function Close() {
   const sectionRef = useRef<HTMLElement>(null);
   const inView = useInView(sectionRef, { once: true, amount: 0.3 });
 
   return (
     <section
       ref={sectionRef}
-      id="slide-09"
-      className="relative min-h-screen lg:h-screen lg:snap-start lg:pt-24 flex flex-col justify-between overflow-hidden bg-[#1A1008]"
+      id="contact"
+      className="relative scroll-mt-24 py-28 flex flex-col justify-between overflow-hidden bg-[#1A1008]"
     >
       {/* ── Background ───────────────────────────────────────── */}
       <div className="absolute inset-0 pointer-events-none">
@@ -66,7 +66,7 @@ export default function Slide09Close() {
         >
           <span className="font-mono text-[11px] text-primary/60 tracking-[0.18em] uppercase inline-flex items-center gap-3 mb-10">
             <span className="w-8 h-px bg-primary/40 inline-block" />
-            09 Let's Build
+            Let's Build
             <span className="w-8 h-px bg-primary/40 inline-block" />
           </span>
         </motion.div>

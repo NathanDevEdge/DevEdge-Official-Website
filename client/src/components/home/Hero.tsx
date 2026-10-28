@@ -94,14 +94,14 @@ function CodeTerminal() {
 }
 
 // ─── Scroll helper ────────────────────────────────────────────────────────────
-const scrollToSlide = (id: string) => {
+const scrollToSection = (id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 };
 
 // ─── Hero slide ───────────────────────────────────────────────────────────────
 const ease = [0.16, 1, 0.3, 1] as const;
 
-export default function Slide01Hero() {
+export default function Hero() {
   // Subtle mouse-reactive tilt on the content block
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);
@@ -115,9 +115,9 @@ export default function Slide01Hero() {
 
   return (
     <section
-      id="slide-01"
+      id="top"
       // min-h-screen for mobile flow; h-screen + snap-start for desktop snap
-      className="relative min-h-screen lg:h-screen lg:snap-start flex items-start pt-36 pb-24 overflow-hidden"
+      className="relative min-h-screen flex items-start pt-36 pb-24 overflow-hidden"
       onMouseMove={handleMouseMove}
     >
       {/* ── Background layers ─────────────────────────────────── */}
@@ -199,8 +199,8 @@ export default function Slide01Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.18, ease }}
             >
-              Custom software, web platforms, and backend systems
-              for businesses that need results — not just deliverables.
+              Websites, apps, business systems and marketing for
+              Australian businesses that need results, not just deliverables.
             </motion.p>
 
             {/* CTAs — Copy: COPY_PLAN.md § 1.4 + 1.5 */}
@@ -215,9 +215,9 @@ export default function Slide01Hero() {
                 buttonText="Start a Project"
                 triggerClassName="bg-primary text-[#1A1008] hover:bg-primary/90 font-semibold px-8 h-12 rounded-none text-[15px] transition-colors duration-150"
               />
-              {/* Secondary CTA — scrolls to slide-02 */}
+              {/* Secondary CTA — scrolls to What we do */}
               <button
-                onClick={() => scrollToSlide("slide-02")}
+                onClick={() => scrollToSection("what-we-do")}
                 className="inline-flex items-center gap-2 px-8 h-12 border border-[#D4B896] text-foreground hover:border-primary hover:text-primary text-[15px] font-medium transition-colors duration-150"
               >
                 See How It Works <ArrowRight className="w-4 h-4" />

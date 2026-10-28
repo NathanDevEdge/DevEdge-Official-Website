@@ -153,13 +153,4 @@
   }
 }
 
-/* ── Desktop snap scroll ─────────────────────────────────────────────────────
-   Only lock body scroll when the homepage snap container is active.
-   Portal and other pages scroll normally.
-────────────────────────────────────────────────────────────────────────────── */
-@media (min-width: 1024px) {
-  body.snap-scroll-active {
-    overflow: hidden;
-    height: 100%;
-  }
-}
+
