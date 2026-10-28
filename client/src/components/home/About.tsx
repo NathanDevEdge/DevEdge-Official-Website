@@ -1,7 +1,8 @@
+import { Link } from "wouter";
 import { Eyebrow, FadeUp, SectionHeading } from "@/components/site/primitives";
 
 // The four brand pillars, written as human sentences (brand guidelines)
-const VALUES = [
+export const VALUES = [
     { name: "Bold", line: "We back ourselves. No hedging and no over-promising, just honest confidence in our work." },
     { name: "Genuine", line: "We talk like people, not a corporate playbook. Real words, real relationships." },
     { name: "Premium", line: "Every output is considered. The quality of the work reflects the quality of the thinking." },
@@ -28,7 +29,13 @@ export default function About() {
                             <p>
                                 We'll tell you if something won't work, or if you don't need us at all. You're paying for honesty, not hype.
                             </p>
+                            <p>
+                                And everything we build is set up for an easy handover, so you stay because you want to, not because you're stuck.
+                            </p>
                         </div>
+                        <Link href="/about" className="mt-8 inline-block text-primary font-semibold hover:text-primary/80 transition-colors duration-150">
+                            Our story →
+                        </Link>
                     </div>
                     <div className="grid sm:grid-cols-2 gap-px bg-[#D4B896] border border-[#D4B896] self-start">
                         {VALUES.map((v) => (

@@ -12,6 +12,7 @@ import Home from "./pages/Home";
 import ProjectsPage from "./pages/ProjectsPage";
 import ServicePage from "./pages/ServicePage";
 import ServicesPage from "./pages/ServicesPage";
+import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import TradeflowPage from "./pages/TradeflowPage";
 import BlogPost from "./pages/BlogPost";
@@ -82,6 +83,7 @@ function Router() {
         <Route path={"/services/:slug"} component={ServicePage} />
         <Route path={"/blog"} component={BlogPost} />
         <Route path={"/blog/:slug"} component={BlogPost} />
+        <Route path={"/about"} component={AboutPage} />
         <Route path={"/contact"} component={ContactPage} />
         <Route path={"/products/tradeflow"} component={TradeflowPage} />
         <Route path={"/privacy"} component={PrivacyPolicy} />

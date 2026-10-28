@@ -2,7 +2,7 @@
 
 > DevEdge is an Australian team that builds websites, custom web and mobile apps, and CRM & ERP systems, and runs the marketing that brings customers in: paid media (Meta and Google Ads), SEO, and conversion tracking. One team does all of it, so the website, the business systems and the marketing work together. Tagline: "We build things that actually work."
 
-DevEdge works with small and medium businesses across Australia, with a lot of experience in trade, building and supply businesses. Projects are scoped and quoted individually; there are no fixed packages. DevEdge works with Zoho, HubSpot, Xero and NetSuite, works closely with Zoho's development team, and can build custom systems in any tech. DevEdge also builds and runs its own product, Tradeflow: quoting, purchase orders and supplier management software for small businesses.
+DevEdge is based in Melbourne CBD and works with small and medium businesses across Australia, with a lot of experience in trade, building and supply businesses. Projects are scoped and quoted individually; there are no fixed packages. DevEdge works with Zoho, HubSpot, Xero and NetSuite, works closely with Zoho's development team, and can build custom systems in any tech. DevEdge also builds and runs its own product, Tradeflow: quoting, purchase orders and supplier management software for small businesses.
 
 Contact: info@devedge.com.au · 0490 214 750 · ABN 55 755 335 958
 
@@ -19,6 +19,7 @@ Contact: info@devedge.com.au · 0490 214 750 · ABN 55 755 335 958
 
 ## Company
 
+- [About](https://devedge.com.au/about): the DevEdge story, based in Melbourne CBD
 - [Work](https://devedge.com.au/projects): selected client projects
 - [Tradeflow](https://devedge.com.au/products/tradeflow): DevEdge's quoting and purchase order software
 - [Contact](https://devedge.com.au/contact)

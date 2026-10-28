@@ -10,6 +10,7 @@ export const PRERENDER_ROUTES: { path: string; priority: number; changefreq: str
   { path: "/services", priority: 0.9, changefreq: "monthly" },
   ...SERVICES.map((s) => ({ path: `/services/${s.slug}`, priority: 0.9, changefreq: "monthly" })),
   { path: "/projects", priority: 0.8, changefreq: "monthly" },
+  { path: "/about", priority: 0.7, changefreq: "monthly" },
   { path: "/products/tradeflow", priority: 0.7, changefreq: "monthly" },
   { path: "/contact", priority: 0.7, changefreq: "yearly" },
   { path: "/blog", priority: 0.7, changefreq: "weekly" },

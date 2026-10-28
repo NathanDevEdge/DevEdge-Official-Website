@@ -18,7 +18,7 @@ export const organizationSchema = () => ({
     telephone: "+61490214750",
     taxID: SITE.abn ? `ABN ${SITE.abn}` : undefined,
     areaServed: { "@type": "Country", name: "Australia" },
-    address: { "@type": "PostalAddress", addressCountry: "AU" },
+    address: { "@type": "PostalAddress", addressLocality: "Melbourne", addressRegion: "VIC", addressCountry: "AU" },
     founder: { "@type": "Person", name: "Nathan Anniss" },
     knowsAbout: ["Web development", "Custom software", "CRM implementation", "ERP systems", "Zoho", "HubSpot", "Xero", "NetSuite", "Meta Ads", "Google Ads", "SEO", "Conversion tracking"],
 });

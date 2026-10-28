@@ -17,7 +17,7 @@ export const HOME_SECTIONS: Record<string, string> = {
 export const NAV_LINKS = [
   { name: "Services", href: "/services" },
   { name: "Work", href: "/projects" },
-  { name: "About", href: "/#about" },
+  { name: "About", href: "/about" },
   { name: "Insights", href: "/blog" },
 ];
 
