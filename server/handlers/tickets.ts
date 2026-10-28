@@ -80,7 +80,7 @@ export async function handleCreateTicket(req: any, res: any) {
         const resend = new Resend(RESEND_API_KEY);
         await resend.emails.send({
           from: 'Portal Notifications <noreply@devedge.com.au>',
-          to: ['info@developeredge.net', 'nathan@developeredge.net'],
+          to: ['info@devedge.com.au', 'nathan@devedge.com.au'],
           subject: `New Ticket: ${title} from ${user.name}`,
           html: `
             <p><strong>Submitted by:</strong> ${escapeHtml(user.name)} (${escapeHtml(user.email)})</p>

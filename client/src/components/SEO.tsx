@@ -17,7 +17,7 @@ export default function SEO({
     title = "DevEdge — Custom Software & Web Development Australia",
     description = "We build things that actually work. DevEdge is a small, sharp software team building custom web platforms, backend systems, and automation for Australian businesses that need results.",
     keywords = "custom software development, web development, backend systems, process automation, australia",
-    image = "https://devedge.com.au/og-image.jpg",
+    image = "https://devedge.com.au/og-image.jpg?v=2",
     url,
     type = "website",
     publishedTime,

@@ -1,49 +1,60 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle, Home } from "lucide-react";
-import { useLocation } from "wouter";
+import { Link } from "wouter";
+import { Helmet } from "react-helmet-async";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function NotFound() {
-  const [, setLocation] = useLocation();
-
-  const handleGoHome = () => {
-    setLocation("/");
-  };
-
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
-      <Card className="w-full max-w-lg mx-4 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-        <CardContent className="pt-8 pb-8 text-center">
-          <div className="flex justify-center mb-6">
-            <div className="relative">
-              <div className="absolute inset-0 bg-red-100 rounded-full animate-pulse" />
-              <AlertCircle className="relative h-16 w-16 text-red-500" />
-            </div>
-          </div>
+    <div className="relative min-h-screen w-full bg-[#1A1008] text-[#F5E6D5] flex flex-col overflow-hidden">
+      <Helmet>
+        <title>Page not found | DevEdge</title>
+        <meta name="robots" content="noindex" />
+      </Helmet>
 
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">404</h1>
+      {/* Ember corner brackets */}
+      <div className="pointer-events-none absolute top-6 left-6 w-14 h-14 border-t-2 border-l-2 border-[#C97B3A]" />
+      <div className="pointer-events-none absolute bottom-6 right-6 w-14 h-14 border-b-2 border-r-2 border-[#C97B3A]" />
 
-          <h2 className="text-xl font-semibold text-slate-700 mb-4">
-            Page Not Found
-          </h2>
+      <header className="px-12 md:px-16 pt-14">
+        <Link href="/" className="inline-flex">
+          <BrandLogo variant="light" />
+        </Link>
+      </header>
 
-          <p className="text-slate-600 mb-8 leading-relaxed">
-            Sorry, the page you are looking for doesn't exist.
-            <br />
-            It may have been moved or deleted.
+      <main className="flex-1 flex items-center px-12 md:px-16">
+        <div className="max-w-[1280px] w-full mx-auto">
+          <p className="flex items-center gap-3 font-mono text-[11px] tracking-[0.24em] uppercase text-[#A89070]">
+            <span className="w-8 h-px bg-[#C97B3A]" />
+            404 · Page not found
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button
-              onClick={handleGoHome}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+          <h1 className="mt-5 font-display font-extrabold uppercase text-[56px] md:text-[88px] leading-[0.94] tracking-[-0.02em] max-w-[720px]">
+            This page <span className="text-[#C97B3A]">doesn't exist.</span>
+          </h1>
+
+          <p className="mt-6 max-w-[520px] text-lg leading-[1.7] text-[#A89070]">
+            Either it moved or the link's wrong. Either way, here's the way back.
+          </p>
+
+          <div className="mt-10 flex flex-col sm:flex-row gap-3">
+            <Link
+              href="/"
+              className="inline-flex items-center justify-center bg-[#C97B3A] text-[#1A1008] font-semibold px-7 py-3.5 hover:bg-[#b8692e] transition-colors"
             >
-              <Home className="w-4 h-4 mr-2" />
-              Go Home
-            </Button>
+              Back to home
+            </Link>
+            <Link
+              href="/projects"
+              className="inline-flex items-center justify-center border border-[#C97B3A] text-[#C97B3A] font-semibold px-7 py-3.5 hover:bg-[#C97B3A]/10 transition-colors"
+            >
+              See our work
+            </Link>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </main>
+
+      <footer className="px-12 md:px-16 pb-12 font-mono text-[11px] tracking-[0.12em] text-[#A89070]">
+        devedge.com.au
+      </footer>
     </div>
   );
 }

@@ -1,6 +1,6 @@
-# DevEdge Solutions - Official Website
+# DevEdge — Official Website
 
-The official website for **DevEdge Solutions**, an Australian software development agency linking ideas to execution.
+The official website for **DevEdge** — a small, sharp team building custom software, web platforms, and backend systems for businesses that need results.
 
 ## 🚀 The Redesign
 
@@ -56,7 +56,7 @@ devedge-website/
 
 1.  Clone the repository:
     ```bash
-    git clone https://github.com/YOUR_USERNAME/DevEdge-Official-Website.git
+    git clone https://github.com/NathanDevEdge/DevEdge-Official-Website.git
     cd DevEdge-Official-Website
     ```
 
@@ -84,4 +84,4 @@ The output files will be in the `dist` directory, ready to be deployed to any st
 
 ## 📄 License
 
-Proprietary software. All rights reserved by **DevEdge Solutions**.
+Proprietary software. All rights reserved by **DevEdge**.
