@@ -51,7 +51,7 @@ export default function Navigation() {
       >
         <div className="flex items-center justify-between w-full">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/images/logo-transparent.png" alt="DevEdge" className="h-8 w-auto" />
+            <img src="/images/logo.webp" alt="DevEdge" className="h-8 w-auto" />
             <span className="font-display font-bold text-xl tracking-tight text-foreground">DevEdge</span>
           </Link>
 

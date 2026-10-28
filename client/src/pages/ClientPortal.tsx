@@ -135,7 +135,7 @@ export default function ClientPortal() {
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           <div className="flex items-center gap-5">
             <a href="/" className="flex items-center gap-2">
-              <img src="/images/logo-transparent.png" alt="DevEdge" className="h-6 w-auto" />
+              <img src="/images/logo.webp" alt="DevEdge" className="h-6 w-auto" />
               <span className="font-display font-bold text-base tracking-tight text-foreground">DevEdge</span>
             </a>
             <div className="hidden sm:block w-px h-4 bg-border" />

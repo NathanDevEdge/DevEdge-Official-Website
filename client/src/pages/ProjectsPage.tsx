@@ -101,7 +101,11 @@ export default function ProjectsPage() {
                                 >
                                     <img
                                         src={project.image}
-                                        alt={project.title}
+                                        alt={`${project.title} website homepage`}
+                                        width={1600}
+                                        height={1000}
+                                        loading="lazy"
+                                        decoding="async"
                                         className="w-full h-auto transition-transform duration-500 group-hover:scale-[1.02]"
                                     />
                                     {/* Ember tint on hover */}

@@ -36,7 +36,7 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-2">
             <a href="/" className="flex items-center gap-2 mb-6">
-              <img src="/images/logo-transparent.png" alt="DevEdge" className="h-8 w-auto" />
+              <img src="/images/logo.webp" alt="DevEdge" className="h-8 w-auto" />
               <span className="font-display font-bold text-xl tracking-tight text-foreground">DevEdge</span>
             </a>
             <p className="text-muted-foreground text-sm max-w-sm mb-2 leading-relaxed">
