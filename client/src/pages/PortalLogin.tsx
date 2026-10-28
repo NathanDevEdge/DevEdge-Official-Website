@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Lock, ArrowLeft } from "lucide-react";
+import BrandLogo from "@/components/BrandLogo";
 
 type Mode = "login" | "forgot";
 
@@ -111,9 +112,8 @@ export default function PortalLogin() {
 
       {/* Top bar */}
       <div className="relative z-10 border-b border-border bg-background/80 backdrop-blur-sm px-6 py-4 flex items-center justify-between">
-        <a href="/" className="flex items-center gap-2">
-          <img src="/images/logo.webp" alt="DevEdge" className="h-7 w-auto" />
-          <span className="font-display font-bold text-lg tracking-tight text-foreground">DevEdge</span>
+        <a href="/" className="flex items-center">
+          <BrandLogo size="md" />
         </a>
         <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground">
           Client Portal

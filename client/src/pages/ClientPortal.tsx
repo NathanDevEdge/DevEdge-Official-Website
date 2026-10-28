@@ -9,6 +9,7 @@ import { useSearch } from "wouter";
 import KanbanBoard from "@/components/KanbanBoard";
 import TicketDetailPanel from "@/components/TicketDetailPanel";
 import { PRIORITY_OPTIONS, PRIORITY_CONFIG } from "@/lib/ticketPriority";
+import BrandLogo from "@/components/BrandLogo";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
@@ -134,9 +135,8 @@ export default function ClientPortal() {
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           <div className="flex items-center gap-5">
-            <a href="/" className="flex items-center gap-2">
-              <img src="/images/logo.webp" alt="DevEdge" className="h-6 w-auto" />
-              <span className="font-display font-bold text-base tracking-tight text-foreground">DevEdge</span>
+            <a href="/" className="flex items-center">
+              <BrandLogo size="sm" />
             </a>
             <div className="hidden sm:block w-px h-4 bg-border" />
             <span className="hidden sm:block font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground">

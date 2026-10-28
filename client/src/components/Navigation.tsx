@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import ContactModal from "@/components/ContactModal";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -50,9 +51,8 @@ export default function Navigation() {
         )}
       >
         <div className="flex items-center justify-between w-full">
-          <Link href="/" className="flex items-center gap-2">
-            <img src="/images/logo.webp" alt="DevEdge" className="h-8 w-auto" />
-            <span className="font-display font-bold text-xl tracking-tight text-foreground">DevEdge</span>
+          <Link href="/" className="flex items-center">
+            <BrandLogo size="lg" />
           </Link>
 
           {/* Desktop nav */}

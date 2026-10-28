@@ -1,6 +1,7 @@
 import { Github, Linkedin, Mail } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function Footer() {
   const ref = useRef<HTMLElement>(null);
@@ -35,9 +36,8 @@ export default function Footer() {
         {/* Links row */}
         <div className="grid md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-2">
-            <a href="/" className="flex items-center gap-2 mb-6">
-              <img src="/images/logo.webp" alt="DevEdge" className="h-8 w-auto" />
-              <span className="font-display font-bold text-xl tracking-tight text-foreground">DevEdge</span>
+            <a href="/" className="flex items-center mb-6">
+              <BrandLogo size="lg" variant="light" />
             </a>
             <p className="text-muted-foreground text-sm max-w-sm mb-2 leading-relaxed">
               We build things that actually work.
