@@ -2,7 +2,7 @@
 
 _Audit date: 28 Oct 2026 · Owner: Nathan_
 
-Four focuses (across DevEdge Build + Grow): **SEO & Keywords**, **Re-Design**, **Marketing**, **Portal Access**.
+Four focuses: **SEO & Keywords**, **Re-Design**, **Marketing**, **Portal Access**.
 Priorities: **P0** = blocking / do first · **P1** = high impact · **P2** = worthwhile later.
 Every visual task follows `devedge-brand-guidelines-v2.pdf`. Only use the new brand (DE mark, DEVEDGE wordmark).
 
@@ -10,13 +10,13 @@ Every visual task follows `devedge-brand-guidelines-v2.pdf`. Only use the new br
 
 ## Services (decided 28 Oct 2026)
 
-DevEdge is one brand with **two practices**: **DevEdge Build** (development) and **DevEdge Grow** (marketing). Both live on one site and one domain, so SEO, reviews and reputation all accrue to devedge.com.au.
+DevEdge is **one brand and one team**. The services are designed to complement each other: build the website and systems, then bring the customers in and track every one. "Build" and "Grow" are only **light grouping labels** for the service list. They are **not separate divisions, brands, hubs or sub-sites.** Same brand guidelines, logo and voice everywhere, on one site and one domain.
 
 **Positioning:** *We build the systems and bring the customers.* Ads → website → CRM → tracked sale, all with one team. Ad agencies can't fix the website, tracking or CRM, and dev shops can't fill it with customers. DevEdge does both and can prove which ad produced which customer.
 **Taglines:** Build: *"We build things that actually work."* · Grow: *"Marketing that actually works."*
 **Audience:** any Australian SMB. Most proof comes from trade, building and supply businesses, so case studies naturally lean that way.
 
-### DevEdge Build
+### Build it
 | # | Service | What it covers | Proof |
 |---|---|---|---|
 | 1 | **Websites** | Fast, premium business websites built to turn visitors into enquiries (Next.js / WordPress), with SEO from day one. | Kim Hilton Studio, Lockd75, NLB Built, WoodEvo, Lumeboard, Woodhouse |
@@ -24,7 +24,7 @@ DevEdge is one brand with **two practices**: **DevEdge Build** (development) and
 | 3 | **CRM & ERP Systems** | Setting up, cleaning up, customising, integrating and automating the systems a business runs on: CRM, inventory, quoting, purchasing, accounting (Zoho, Xero, HubSpot and others), or a custom-built system when off-the-shelf doesn't fit. Includes internal tools such as approval and file portals. | DeckMate (Zoho CRM), TPD Timber (Zoho Inventory), WoodEvo (file portal), Tradeflow (an ERP DevEdge built) |
 | 4 | **Care & Hosting** | Ongoing hosting, security updates, backups, fixes and small changes after launch. | ~5 client sites already hosted |
 
-### DevEdge Grow
+### Grow it
 | # | Service | What it covers | Proof |
 |---|---|---|---|
 | 5 | **Paid Media Management** | Full management of Meta (Facebook / Instagram) and Google Ads: strategy, audiences, budgets, **ad creative production**, testing and ongoing optimisation. | WoodEvo Meta ads (strong results; can be named publicly **after December 2026**) |
@@ -133,7 +133,7 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
     - From Ad Click to Paid Invoice: Connecting Ads, Website and CRM
     - How We Grew WoodEvo with Meta Ads (publish **after December 2026**, with permission)
 - [ ] Move blog content out of `BlogPost.tsx` into Markdown/MDX files so new posts don't require code changes.
-- [ ] Add a blog index with categories (Build: CRM & ERP · Apps · Websites — Grow: Paid Media · SEO · Tracking) and an email signup.
+- [ ] Add a blog index with categories (CRM & ERP · Apps · Websites · Paid Media · SEO · Tracking) and an email signup.
 
 ### P1 — Off-site & local
 - [ ] **Google Business Profile** (set up as a service-area business, Australia):
@@ -154,16 +154,16 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
 
 ### P0 — Structure
 - [ ] **Shared site layout** (header + footer) on every marketing page, including Home.
-  - Header: logo · **Build** (dropdown: 4 services) · **Grow** (dropdown: 3 services) · Work · About · Insights (blog) · **Client Login** · **Start a Project** (primary Ember button).
+  - Header: logo · **Services** (one mega-menu: two columns, "Build it" and "Grow it") · Work · About · Insights (blog) · **Client Login** · **Start a Project** (primary Ember button).
   - Footer: services, case studies, latest posts, contact details, socials, Client Portal, ABN and legal links.
 - [ ] **Rebuild Home as a long-scroll page** following the guidelines' content architecture:
   1. **Hero:** headline, subhead, primary CTA and the animated code block (keep).
   2. **Position:** one paragraph on what makes DevEdge different.
-  3. **Build + Grow:** two clearly labelled groups. Build: Websites · Web & Mobile Apps · CRM & ERP Systems · Care & Hosting. Grow: Paid Media · SEO · Tracking & Reporting. Tiles link to service pages. Include the "ads → website → CRM → sale" story and a Tradeflow product strip.
+  3. **What we do:** one services section showing the services as a **connected journey**, not two departments: Website → Systems (CRM & ERP, apps) → Customers (paid media, SEO) → Proof (tracking & reporting) → Care. Each step links to its service page. Add a Tradeflow product strip.
   4. **Selected work:** 2–3 outcome-first case study cards linking to case studies. **This fixes "can't find the projects".**
   5. **Testimonials**, 6. **How we work** (3 steps), 7. **FAQ**, 8. **Close CTA**.
   - Drop desktop snap-scroll and the dot navigation, and use standard scrolling with fade-up on enter (300ms, ease-out).
-- [ ] **Hub pages** `/build` and `/grow` (practice overview, services, related work). Keep service URLs flat under `/services/` for SEO.
+- [ ] **`/services` overview page:** all 7 services on one page in the same journey order, with a short "how they work together" section. No separate Build / Grow hub pages.
 - [ ] **Grow service pages:** `/services/paid-media`, `/services/seo`, `/services/tracking-and-reporting`.
 - [ ] **Replace the 6 old service pages with the 4 new Build ones**, and 301-redirect the old URLs:
   - `/services/websites` ← web-platform
@@ -171,7 +171,8 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
   - `/services/crm-erp-systems` ← system-integration, process-automation
   - `/services/care-and-hosting` (new)
   - cloud-migration → `/services`
-- [ ] **Contact form:** add a Build / Grow / Both choice before the service list, so leads are routed and tagged.
+- [ ] **Contact form:** replace the dropdown with "What do you need help with?", a multi-select of the 7 services plus "Not sure yet". Leads are tagged by service without forcing a Build / Grow choice.
+- [ ] **Remove "Software & Systems"** from the home hero eyebrow (`Slide01Hero.tsx`), the footer, and the eyebrow on `og-image.jpg`, since it no longer describes DevEdge. Re-render the OG image.
 - [ ] **Make the service list consistent everywhere:** home tiles, nav dropdown, footer, contact-form dropdown (currently 5 different options), FAQ and structured data.
 - [ ] **New pages:**
   - `/about`: the real story, how DevEdge works, Nathan, the 4 values (from the guidelines' content architecture)
@@ -183,6 +184,52 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
   - DeckMate and Tradeflow (have screenshots)
   - Tennantly, Woodhouse, TPD Timber (need client sign-off)
   - Kim Hilton Studio, Lockd75, NLB Built (check whether they belong in the portfolio)
+
+### P0 — Site structure: homepage & landing pages
+
+One homepage tells the whole DevEdge story. Every other page is either an **SEO page** (indexed, built to rank) or a **campaign landing page** (not indexed, built to convert ad traffic).
+
+```
+devedge.com.au/                         Homepage: the one DevEdge story
+├── /services                           All 7 services as one connected journey
+│   ├── /services/websites
+│   ├── /services/web-and-mobile-apps
+│   ├── /services/crm-erp-systems
+│   ├── /services/care-and-hosting
+│   ├── /services/paid-media
+│   ├── /services/seo
+│   └── /services/tracking-and-reporting
+├── /solutions/<use-case>               SEO landing pages for specific needs (template-driven)
+├── /work  →  /work/<case-study>        Outcome-first case studies (Build and Grow work together)
+├── /products/tradeflow
+├── /about · /contact · /insights (blog)
+├── /lp/<campaign>                      Paid-ad landing pages (noindex)
+└── /portal/login                       Client portal
+```
+
+- [ ] **Homepage (one story):**
+  1. Hero: one headline, one subhead, CTA, signature code animation
+  2. The problem: disconnected tools and agencies that don't talk to each other
+  3. What we do: the connected journey (above)
+  4. Selected work: case studies that show build + grow together
+  5. How we work
+  6. Testimonials
+  7. FAQ
+  8. Close CTA
+- [ ] **Service page template:** every service page ends with **"Works best with"**, cross-linking the complementary services (e.g. Paid Media ↔ Tracking & Reporting ↔ Websites; CRM & ERP ↔ Tracking). This reinforces "one team" and helps internal linking for SEO.
+- [ ] **SEO landing pages** `/solutions/<use-case>`: one reusable template targeting specific searches that combine services. Each page is unique content, not a copy with a word swapped. For example:
+  - `/solutions/crm-for-trade-businesses`
+  - `/solutions/quoting-and-purchase-order-system`
+  - `/solutions/meta-ads-for-building-product-brands`
+  - `/solutions/website-and-ads-for-small-business`
+  - `/solutions/connect-website-to-crm`
+- [ ] **Campaign landing pages** `/lp/<campaign>`, for DevEdge's own ads:
+  - The message matches the ad.
+  - One offer, one CTA, minimal nav.
+  - Social proof, a short form, full tracking (Pixel + Conversions API + GA4).
+  - `noindex`, and left out of the sitemap.
+  - Built from one template so a new campaign page takes minutes.
+- [ ] **Signature lead offer** that shows the joined-up service: a **free "Website, Ads & CRM Check"**. DevEdge reviews the site, tracking and lead handling, and sends back a short report. It works for both Build and Grow prospects and is the main CTA on campaign pages.
 
 ### P1 — "More advanced" (interactive, not decorative)
 - [ ] **Project scoping tool** (replaces the cost-estimator idea, with no prices): a few questions (what you need, current tools, users, timeline) that produce a short "project brief" summary the visitor can send straight to DevEdge. It qualifies leads and makes the first call faster.
@@ -278,7 +325,7 @@ Nathan wants the site to feel high-end and technical ("fancy, 3D"), as befits a 
 
 ## Open questions for Nathan
 - [ ] Which clients approve **named** case studies and logos? (Tennantly, Woodhouse, TPD Timber, Kim Hilton Studio, Lockd75, NLB Built)
-- [ ] **Brand guidelines update for Build / Grow:** the logo descriptor is "Software & Systems". Does Grow need its own descriptor or accent? The "We are / We are not" and voice sections should also cover marketing.
+- [ ] Homepage hero headline: keep "We build things that actually work." or broaden it to cover marketing (e.g. "Websites, systems and marketing that actually work.")?
 - [ ] WoodEvo: confirm in December 2026 that results can be published, and collect the numbers (cost per lead / purchase, ROAS, spend, period).
 - [ ] Grow scope: does Paid Media include landing pages, and which platforms beyond Meta and Google (TikTok, LinkedIn)?
 - [ ] Which CRM/ERP platforms do you want to be known for (Zoho, HubSpot, Odoo, Xero, NetSuite…)? Are you a partner with any, or eligible?
