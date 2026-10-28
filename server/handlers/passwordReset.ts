@@ -2,6 +2,7 @@ import { pool } from '../db.js';
 import { Resend } from 'resend';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
+import { escapeHtml } from '../lib/escapeHtml.js';
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const APP_URL = process.env.APP_URL || 'http://localhost:3000';
@@ -104,7 +105,9 @@ export async function handleResetPassword(req: any, res: any) {
   }
 }
 
-function resetEmailHtml({ name, resetUrl }: { name: string; resetUrl: string }): string {
+function resetEmailHtml(params: { name: string; resetUrl: string }): string {
+  const name = escapeHtml(params.name);
+  const resetUrl = escapeHtml(params.resetUrl);
   return `<!DOCTYPE html>
 <html lang="en">
 <head>

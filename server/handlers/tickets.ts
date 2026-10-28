@@ -1,6 +1,7 @@
 import { pool } from '../db.js';
 import { verifyToken } from '../middleware/auth.js';
 import { Resend } from 'resend';
+import { escapeHtml, escapeHtmlMultiline } from '../lib/escapeHtml.js';
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
@@ -82,10 +83,10 @@ export async function handleCreateTicket(req: any, res: any) {
           to: ['info@developeredge.net', 'nathan@developeredge.net'],
           subject: `New Ticket: ${title} from ${user.name}`,
           html: `
-            <p><strong>Submitted by:</strong> ${user.name} (${user.email})</p>
-            <p><strong>Title:</strong> ${title}</p>
+            <p><strong>Submitted by:</strong> ${escapeHtml(user.name)} (${escapeHtml(user.email)})</p>
+            <p><strong>Title:</strong> ${escapeHtml(title)}</p>
             <p><strong>Description:</strong></p>
-            <p>${description.replace(/\n/g, '<br>')}</p>
+            <p>${escapeHtmlMultiline(description)}</p>
           `,
         });
       } catch (e) {
@@ -166,7 +167,7 @@ export async function handleUpdateTicket(req: any, res: any) {
             from: 'Portal Notifications <noreply@devedge.com.au>',
             to: [client.email],
             subject: `Ticket Update: ${updated.title}`,
-            html: `<p>Hi ${client.name},</p><p>Your ticket "<strong>${updated.title}</strong>" has been updated to: <strong>${status.replace(/_/g, ' ').toUpperCase()}</strong>.</p>`,
+            html: `<p>Hi ${escapeHtml(client.name)},</p><p>Your ticket "<strong>${escapeHtml(updated.title)}</strong>" has been updated to: <strong>${status.replace(/_/g, ' ').toUpperCase()}</strong>.</p>`,
           });
         }
       } catch (e) {

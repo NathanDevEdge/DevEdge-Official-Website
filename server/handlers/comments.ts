@@ -1,6 +1,7 @@
 import { pool } from '../db.js';
 import { verifyToken } from '../middleware/auth.js';
 import { Resend } from 'resend';
+import { escapeHtml, escapeHtmlMultiline } from '../lib/escapeHtml.js';
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const APP_URL = process.env.APP_URL || 'http://localhost:3000';
@@ -149,13 +150,15 @@ async function notifyMentions(
   }
 }
 
-function mentionEmailHtml({
-  mentionedName, authorName, ticketTitle, commentContent, ticketUrl,
-}: {
+function mentionEmailHtml(params: {
   mentionedName: string; authorName: string; ticketTitle: string;
   commentContent: string; ticketUrl: string;
 }): string {
-  const safeContent = commentContent.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+  const mentionedName = escapeHtml(params.mentionedName);
+  const authorName = escapeHtml(params.authorName);
+  const ticketTitle = escapeHtml(params.ticketTitle);
+  const ticketUrl = escapeHtml(params.ticketUrl);
+  const safeContent = escapeHtmlMultiline(params.commentContent);
   return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>

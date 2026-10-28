@@ -16,8 +16,15 @@ export const upload = multer({
       cb(null, `${crypto.randomUUID()}${ext}`);
     },
   }),
-  limits: { fileSize: 10 * 1024 * 1024 },
+  limits: { fileSize: 10 * 1024 * 1024, files: 1 },
 });
+
+// Runs before multer so unauthenticated requests never write to disk
+export function requireAuth(req: any, res: any, next: any) {
+  const user = verifyToken(req.headers.authorization);
+  if (!user) return res.status(401).json({ error: 'Unauthorized' });
+  next();
+}
 
 export async function handleGetAttachments(req: any, res: any) {
   const user = verifyToken(req.headers.authorization);
@@ -112,8 +119,8 @@ export async function handleServeAttachment(req: any, res: any) {
     const filePath = path.join(uploadDir, att.filename);
     if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'File not found on disk' });
 
+    res.attachment(att.original_name);
     res.setHeader('Content-Type', att.mime_type);
-    res.setHeader('Content-Disposition', `attachment; filename="${att.original_name}"`);
     return res.sendFile(filePath);
   } catch (err: any) {
     console.error('Serve attachment error:', err);

@@ -1,4 +1,5 @@
 import express from "express";
+import rateLimit from "express-rate-limit";
 import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -30,8 +31,10 @@ import {
   handleResetPassword,
 } from "./handlers/passwordReset.js";
 import { handleGetComments, handleCreateComment } from "./handlers/comments.js";
+import { escapeHtml, escapeHtmlMultiline } from "./lib/escapeHtml.js";
 import {
   upload,
+  requireAuth,
   handleGetAttachments,
   handleUploadAttachment,
   handleServeAttachment,
@@ -45,10 +48,28 @@ async function startServer() {
   const app = express();
   const server = createServer(app);
 
-  app.use(express.json());
+  // nginx sits in front of the app, so trust exactly one proxy hop for client IPs
+  app.set("trust proxy", 1);
+  app.use(express.json({ limit: "100kb" }));
+
+  // ── Rate limits ──────────────────────────────────────────────────────────────
+  const limiter = (windowMinutes: number, limit: number) =>
+    rateLimit({
+      windowMs: windowMinutes * 60 * 1000,
+      limit,
+      standardHeaders: "draft-7",
+      legacyHeaders: false,
+      message: { error: "Too many requests, please try again later." },
+    });
+
+  app.use("/api", limiter(15, 300));
+  const loginLimiter = limiter(15, 10);
+  const passwordResetLimiter = limiter(15, 5);
+  const inviteLimiter = limiter(15, 20);
+  const contactLimiter = limiter(60, 5);
 
   // ── Auth ─────────────────────────────────────────────────────────────────────
-  app.post("/api/auth", handleLogin);
+  app.post("/api/auth", loginLimiter, handleLogin);
   app.get("/api/auth", handleValidateToken);
 
   // ── Tickets ──────────────────────────────────────────────────────────────────
@@ -70,7 +91,7 @@ async function startServer() {
 
   // ── Invites ───────────────────────────────────────────────────────────────────
   app.get("/api/invites", handleValidateInvite);
-  app.post("/api/invites", async (req, res) => {
+  app.post("/api/invites", inviteLimiter, async (req, res) => {
     const { action } = req.body || {};
     if (action === "create") return handleCreateInvite(req, res);
     if (action === "accept") return handleAcceptInvite(req, res);
@@ -81,7 +102,7 @@ async function startServer() {
 
   // ── Password reset ────────────────────────────────────────────────────────────
   app.get("/api/password-reset", handleValidateResetToken);
-  app.post("/api/password-reset", async (req, res) => {
+  app.post("/api/password-reset", passwordResetLimiter, async (req, res) => {
     const { action } = req.body || {};
     if (action === "forgot") return handleForgotPassword(req, res);
     if (action === "reset")  return handleResetPassword(req, res);
@@ -94,16 +115,26 @@ async function startServer() {
 
   // ── Attachments ───────────────────────────────────────────────────────────────
   app.get("/api/attachments", handleGetAttachments);
-  app.post("/api/attachments", upload.single("file"), handleUploadAttachment);
+  app.post("/api/attachments", requireAuth, upload.single("file"), handleUploadAttachment);
   app.get("/api/attachments/file/:id", handleServeAttachment);
   app.delete("/api/attachments/:id", handleDeleteAttachment);
 
   // ── Contact ──────────────────────────────────────────────────────────────────
-  app.post("/api/contact", async (req, res) => {
+  app.post("/api/contact", contactLimiter, async (req, res) => {
     try {
-      const { name, email, phone, service, message } = req.body;
+      const { name, email, phone, service, message } = req.body || {};
       if (!name || !email || !service || !message) {
         return res.status(400).json({ error: "Missing required fields" });
+      }
+      const fields = { name, email, phone: phone ?? "", service, message };
+      if (Object.values(fields).some((v) => typeof v !== "string")) {
+        return res.status(400).json({ error: "Invalid field types" });
+      }
+      if (name.length > 200 || email.length > 254 || fields.phone.length > 50 || service.length > 200 || message.length > 5000) {
+        return res.status(400).json({ error: "One or more fields are too long" });
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return res.status(400).json({ error: "Invalid email address" });
       }
 
       const RESEND_API_KEY = process.env.RESEND_API_KEY;
@@ -129,13 +160,13 @@ async function startServer() {
           <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
             <h2 style="color:#1A1008">New Contact Form Submission</h2>
             <table style="width:100%;border-collapse:collapse">
-              <tr><td style="padding:8px 0;color:#7A5C3A;width:100px"><strong>Name</strong></td><td>${name}</td></tr>
-              <tr><td style="padding:8px 0;color:#7A5C3A"><strong>Email</strong></td><td><a href="mailto:${email}">${email}</a></td></tr>
-              ${phone ? `<tr><td style="padding:8px 0;color:#7A5C3A"><strong>Phone</strong></td><td><a href="tel:${phone}">${phone}</a></td></tr>` : ""}
-              <tr><td style="padding:8px 0;color:#7A5C3A"><strong>Service</strong></td><td>${service}</td></tr>
+              <tr><td style="padding:8px 0;color:#7A5C3A;width:100px"><strong>Name</strong></td><td>${escapeHtml(name)}</td></tr>
+              <tr><td style="padding:8px 0;color:#7A5C3A"><strong>Email</strong></td><td><a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></td></tr>
+              ${phone ? `<tr><td style="padding:8px 0;color:#7A5C3A"><strong>Phone</strong></td><td><a href="tel:${escapeHtml(phone)}">${escapeHtml(phone)}</a></td></tr>` : ""}
+              <tr><td style="padding:8px 0;color:#7A5C3A"><strong>Service</strong></td><td>${escapeHtml(service)}</td></tr>
             </table>
             <hr style="border:none;border-top:1px solid #D4B896;margin:16px 0">
-            <p style="color:#1A1008;white-space:pre-wrap">${message.replace(/\n/g, "<br>")}</p>
+            <p style="color:#1A1008;white-space:pre-wrap">${escapeHtmlMultiline(message)}</p>
           </div>
         `,
       });
@@ -159,6 +190,17 @@ async function startServer() {
       res.sendFile(path.join(staticPath, "index.html"));
     });
   }
+
+  // Malformed URLs from scanners (e.g. "/%c0") get a quiet 400 instead of a logged stack trace
+  app.use((err: any, _req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (err instanceof URIError || err?.status === 400) {
+      return res.status(400).json({ error: "Bad request" });
+    }
+    if (err?.code === "LIMIT_FILE_SIZE") {
+      return res.status(413).json({ error: "File too large (max 10MB)" });
+    }
+    next(err);
+  });
 
   const port = process.env.PORT || (process.env.NODE_ENV === "production" ? 3000 : 3002);
   server.listen(port, () => {

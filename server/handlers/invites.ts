@@ -3,6 +3,7 @@ import { verifyToken } from '../middleware/auth.js';
 import { Resend } from 'resend';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
+import { escapeHtml } from '../lib/escapeHtml.js';
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const APP_URL = process.env.APP_URL || 'http://localhost:3000';
@@ -220,11 +221,13 @@ export async function handleCancelInvite(req: any, res: any) {
   }
 }
 
-function inviteEmailHtml({
-  name, orgName, inviterName, acceptUrl,
-}: {
+function inviteEmailHtml(params: {
   name: string; orgName: string; inviterName: string; acceptUrl: string;
 }): string {
+  const name = escapeHtml(params.name);
+  const orgName = escapeHtml(params.orgName);
+  const inviterName = escapeHtml(params.inviterName);
+  const acceptUrl = escapeHtml(params.acceptUrl);
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
