@@ -167,6 +167,13 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
 - [ ] Result metrics strip with real numbers once case studies supply them (hours saved, quote turnaround).
 - [ ] Check the mobile layout at 375px, keyboard navigation and colour contrast (Dust on Obsidian at small sizes).
 
+### P1 — Visual design deep-dive (after content is settled)
+Nathan wants the site to feel high-end and technical ("fancy, 3D"), as befits a software development studio. Do this once the services, pages and copy are locked, so the design wraps real content.
+- [ ] **Design direction session:** collect reference sites, pick 1–2 signature 3D or interactive moments, and decide where they live (hero, services, work).
+- [ ] **Reconcile with the brand guidelines.** The motion section currently says "restraint" everywhere except the code-block hero. Either update the guidelines to allow a defined 3D/WebGL layer, or keep 3D to the hero and one other section.
+- [ ] **Prototype the 3D options** (React Three Fiber / Three.js or Spline): e.g. a 3D system diagram for CRM & ERP, or a 3D take on the DE mark in the hero.
+- [ ] **Performance budget for 3D:** lazy-load WebGL, provide a static fallback on mobile and low-power devices, respect `prefers-reduced-motion`, and keep LCP < 2.5s so SEO doesn't suffer.
+
 ### P1 — Clean-up during the rebuild
 - [ ] Delete the unused components (`Hero`, `About`, `Pricing`, `Features`, `Services`, `Testimonials`, `Workflow`, `FAQ`, `Map`, `Projects`, the old `testimonials.json`) and around 40 unused `ui/*` components and their Radix packages.
 - [ ] Replace one-off hex values with the palette tokens from `index.css`.
