@@ -204,7 +204,7 @@ async function startServer() {
 
     // Keep the client portal and admin out of search results
     app.use((req, res, next) => {
-      if (/^\/(portal|admin|login)(\/|$)/.test(req.path)) {
+      if (/^\/(portal|admin|login|lab)(\/|$)/.test(req.path)) {
         res.setHeader("X-Robots-Tag", "noindex, nofollow");
       }
       next();
@@ -215,7 +215,7 @@ async function startServer() {
     const prerendered = new Set(
       fs.existsSync(pagesDir) ? fs.readdirSync(pagesDir).map((f) => f.replace(/\.html$/, "")) : [],
     );
-    const isAppOnly = (p: string) => /^\/(portal|admin|login)(\/|$)/.test(p);
+    const isAppOnly = (p: string) => /^\/(portal|admin|login|lab)(\/|$)/.test(p);
 
     app.use((req, res, next) => (req.path.startsWith("/__pages") ? res.status(404).end() : next()));
     app.use(

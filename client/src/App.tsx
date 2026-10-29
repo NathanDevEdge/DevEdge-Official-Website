@@ -26,6 +26,7 @@ const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const ClientPortal = lazy(() => import("./pages/ClientPortal"));
 const AcceptInvite = lazy(() => import("./pages/AcceptInvite"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const HeroLab = lazy(() => import("./pages/HeroLab"));
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -99,6 +100,7 @@ function Router() {
         <Route path={"/admin"}>
           {() => <ProtectedRoute component={AdminDashboard} role="admin" />}
         </Route>
+        <Route path={"/lab/hero"} component={HeroLab} />
         <Route path={"/404"} component={NotFound} />
         {/* Final fallback route */}
         <Route component={NotFound} />

@@ -230,3 +230,34 @@
 }
 
 
+
+/* ── 3D Stack labels (components/three/StackScene.tsx) ── */
+.stack-label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  white-space: nowrap;
+  padding: 4px 8px 4px 6px;
+  transform: translateY(-50%);
+  background: rgb(245 230 213 / 0.85);
+  border-left: 1px solid var(--color-primary, #C97B3A);
+  color: #1A1008;
+  cursor: pointer;
+  transition: color 150ms ease-out, background-color 150ms ease-out;
+}
+.stack-label[data-active] { background: #1A1008; color: #F5E6D5; }
+.stack-label-num { font-family: "IBM Plex Mono", "IBM Plex Mono Fallback", monospace; font-size: 10px; letter-spacing: 0.12em; color: #C97B3A; }
+.stack-label-name { font-family: "Big Shoulders Display", "Big Shoulders Display Fallback", sans-serif; font-weight: 800; font-size: 17px; letter-spacing: -0.01em; }
+.stack-bracket {
+  transform: translate(-100%, -50%);
+  font-family: "IBM Plex Mono", "IBM Plex Mono Fallback", monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #C97B3A;
+  white-space: nowrap;
+}
+@media (max-width: 639px) {
+  .stack-label { padding: 2px 6px 2px 4px; gap: 6px; }
+  .stack-label-name { font-size: 14px; }
+}

@@ -241,12 +241,47 @@ devedge.com.au/                         Homepage: the one DevEdge story
 - [ ] Result metrics strip with real numbers once case studies supply them (hours saved, quote turnaround).
 - [ ] Check the mobile layout at 375px, keyboard navigation and colour contrast (Dust on Obsidian at small sizes).
 
-### P1 — Visual design deep-dive (after content is settled)
-Nathan wants the site to feel high-end and technical ("fancy, 3D"), as befits a software development studio. Do this once the services, pages and copy are locked, so the design wraps real content.
-- [ ] **Design direction session:** collect reference sites, pick 1–2 signature 3D or interactive moments, and decide where they live (hero, services, work).
-- [ ] **Reconcile with the brand guidelines.** The motion section currently says "restraint" everywhere except the code-block hero. Either update the guidelines to allow a defined 3D/WebGL layer, or keep 3D to the hero and one other section.
-- [ ] **Prototype the 3D options** (React Three Fiber / Three.js or Spline): e.g. a 3D system diagram for CRM & ERP, or a 3D take on the DE mark in the hero.
-- [ ] **Performance budget for 3D:** lazy-load WebGL, provide a static fallback on mobile and low-power devices, respect `prefers-reduced-motion`, and keep LCP < 2.5s so SEO doesn't suffer.
+### P1 — Design & 3D layer
+The content baseline is live, so the design now wraps real content. Direction agreed on 29 Oct 2026.
+
+**Direction (decided)**
+- **Concept: the exploded view.** Like an engine drawing that separates into its parts, a single precise object assembles and explodes to show what's inside. For DevEdge, the object is the business system itself: one solid block that separates into labelled layers (website, app, CRM & ERP, hosting, ads, SEO, tracking), joined by leader lines and ember "data" lines. It says the core message without words: *separate parts, built to work as one, by one team.*
+- **Look: technical drawing, not glossy render.** Real-time 3D with crisp edges, line-work, labels and measurements on Parchment. Obsidian and Ember as accents. No gradient blobs, floating abstract shapes or stock-style renders.
+- **Canvas: Parchment-led.** Parchment is the primary surface; Obsidian is a secondary colour used as an accent and to split up Parchment sections. (This reverses the current guidelines, which say Obsidian-first.)
+- **Ambition: as many 3D moments as are meaningful.** Each one has to explain something. The mobile experience can differ significantly from desktop.
+- **First priority: the home hero.**
+
+**D1 — Brand guidelines v3 (text spec, then the PDF)**
+- [ ] Section 07, Imagery: replace "avoid 3D renders" with a defined **"Exploded-view 3D"** rule (real-time, line-led, explains structure) and keep the ban on glossy renders, gradients and decorative 3D.
+- [ ] Colour: Parchment primary, Obsidian secondary (accent and section breaks).
+- [ ] Section 10, Motion: widen "the hero exception" to **"signature 3D moments"**, which can be continuous or scroll-driven. Restraint everywhere else stays. Bring "How we work" in line (no staggered list animation) or document it as one of the exceptions.
+
+**D2 — Hero prototype (test page, not linked or indexed)**
+- [ ] Build "The Stack" in React Three Fiber, using geometry built in code (no heavy model files): assembled on load, exploding into its labelled layers on scroll or hover, with each layer linking to its service page.
+- [ ] Desktop and mobile variants. Mobile can be a simpler scroll-driven version, or a pre-drawn exploded diagram.
+- [ ] Measure against the performance budget before anything ships.
+- [ ] Nathan reviews and iterates on the prototype; then it moves to production.
+
+**D3 — Hero in production**
+- [ ] The headline stays as real HTML text and remains the LCP element. The 3D canvas loads after the first paint and only on the home page.
+- [ ] Fallbacks: a static exploded diagram (SVG) for `prefers-reduced-motion`, no-WebGL and low-power devices.
+
+**D4 — Further moments (each must explain something; decide after the hero)**
+- [ ] **Service pages:** each page shows the same Stack with *its* layer highlighted and pulled out. It's consistent and reuses the hero work.
+- [ ] **"How it connects":** the layers in action, with a lead travelling from ad → website → CRM → Xero (replaces the flat diagram idea in "More advanced" above).
+- [ ] **Tradeflow page:** the product exploded into quotes → POs → suppliers.
+- [ ] **Work page:** richer project showcase (once case studies exist).
+- [ ] **How we work:** the process shown as assembly steps.
+
+**D5 — Design system refresh (alongside D3)**
+- [ ] Palette roles updated (Parchment primary), type scale and spacing tightened, motion tokens from guidelines v3.
+- [ ] Clean-up items below.
+
+**Performance budget (applies to every 3D moment)**
+- Mobile PageSpeed median ≥ 85, desktop ≥ 95. LCP < 2.5s, CLS < 0.1. The 3D layer never delays the headline.
+- Three.js loads only on pages that use it, after first paint. Target ≤ 250KB compressed for the 3D chunk.
+- `prefers-reduced-motion` and no-WebGL always get the static version.
+- Final speed pass after D4, including the Cloudflare proxy decision (real-IP nginx change first).
 
 ### P1 — Clean-up during the rebuild
 - [ ] Delete the unused components (`Hero`, `About`, `Pricing`, `Features`, `Services`, `Testimonials`, `Workflow`, `FAQ`, `Map`, `Projects`, the old `testimonials.json`) and around 40 unused `ui/*` components and their Radix packages.
