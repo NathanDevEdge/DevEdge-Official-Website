@@ -218,7 +218,17 @@ async function startServer() {
     const isAppOnly = (p: string) => /^\/(portal|admin|login)(\/|$)/.test(p);
 
     app.use((req, res, next) => (req.path.startsWith("/__pages") ? res.status(404).end() : next()));
-    app.use(express.static(staticPath, { index: false }));
+    app.use(
+      express.static(staticPath, {
+        index: false,
+        // Hashed build assets and fonts never change under the same name: cache for a year
+        setHeaders: (res, filePath) => {
+          if (/[\\/](assets|fonts)[\\/]/.test(filePath)) {
+            res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+          }
+        },
+      }),
+    );
 
     app.get("*", (req, res) => {
       // One canonical URL per page: drop trailing slashes
