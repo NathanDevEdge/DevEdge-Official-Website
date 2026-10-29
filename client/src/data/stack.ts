@@ -1,6 +1,6 @@
 // The layers of "The Stack" (components/three/StackScene.tsx). Kept separate so pages can
 // list them without pulling three.js into their bundle.
-export type Detail = "target" | "bars" | "graph" | "browser" | "devices" | "database" | "rack";
+export type Detail = "target" | "bars" | "graph" | "browser" | "devices" | "database" | "rack" | "invoice";
 export type StackLayer = { slug: string; name: string; short: string; h: number; detail: Detail };
 
 // Top to bottom: traffic comes in at the top and flows down into the systems underneath

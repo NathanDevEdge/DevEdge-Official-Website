@@ -261,3 +261,23 @@
   .stack-label { padding: 2px 6px 2px 4px; gap: 6px; }
   .stack-label-name { font-size: 14px; }
 }
+
+/* ── "How it connects" captions (components/three/ConnectsScene.tsx) ── */
+.flow-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 190px;
+  gap: 2px;
+  color: #7A5C3A;
+  transition: color 200ms ease-out;
+}
+.flow-label[data-compact] { align-items: flex-start; text-align: left; width: 155px; transform: translateY(-50%); }
+.flow-label[data-compact] .flow-label-title { font-size: 19px; }
+.flow-label[data-compact] .flow-label-line { font-size: 12px; }
+.flow-label-num { font-family: "IBM Plex Mono", "IBM Plex Mono Fallback", monospace; font-size: 10px; letter-spacing: 0.14em; color: #C97B3A; }
+.flow-label-title { font-family: "Big Shoulders Display", "Big Shoulders Display Fallback", sans-serif; font-weight: 800; font-size: 22px; line-height: 1; color: #1A1008; }
+.flow-label-line { font-size: 13px; line-height: 1.4; opacity: 0.55; transition: opacity 200ms ease-out; }
+.flow-label[data-active] .flow-label-line { opacity: 1; color: #1A1008; }
+.flow-label[data-active] .flow-label-title { color: #C97B3A; }

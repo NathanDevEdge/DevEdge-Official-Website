@@ -5,76 +5,14 @@ import { useMemo, useRef, useState, type MutableRefObject } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Edges, Html, Line, useTexture } from "@react-three/drei";
 import * as THREE from "three";
-
-const C = {
-    face: "#FBF3E9",
-    part: "#EED9BF", // inner components, a shade darker than the slabs
-    edge: "#1A1008",
-    ember: "#C97B3A",
-    dust: "#D4B896",
-    muted: "#7A5C3A",
-};
-
-import { STACK_LAYERS, type Detail, type StackLayer } from "@/data/stack";
+import { STACK_LAYERS, type StackLayer } from "@/data/stack";
+import { C, LayerDetail, smooth } from "@/components/three/parts";
 
 const GROW_COUNT = 3; // the top three layers are "Grow it", the rest "Build it"
 
 const W = 3.2; // slab footprint
 const GAP = 0.95; // extra space between layers when fully exploded
 const LEADER = 0.9; // leader line length, in world units
-
-const smooth = (a: number, b: number, x: number) => {
-    const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
-    return t * t * (3 - 2 * t);
-};
-
-// ── Small parts that sit on each layer, revealed as it opens up ───────────────
-function Part({ size, pos, round, edge }: { size: [number, number, number]; pos: [number, number, number]; round?: boolean; edge: string }) {
-    return (
-        <mesh position={pos}>
-            {round ? <cylinderGeometry args={[size[0], size[0], size[1], 40]} /> : <boxGeometry args={size} />}
-            <meshLambertMaterial color={C.part} />
-            <Edges color={edge} threshold={20} />
-        </mesh>
-    );
-}
-
-function LayerDetail({ detail, edge }: { detail: Detail; edge: string }) {
-    const p = (size: [number, number, number], x: number, z: number, y = 0, round = false) => (
-        <Part key={`${x},${z},${y},${size.join()}`} size={size} pos={[x, y + size[1] / 2, z]} round={round} edge={edge} />
-    );
-    switch (detail) {
-        case "target": // concentric rings around the shaft
-            return <>{p([1.25, 0.05, 0], 0, 0, 0, true)}{p([0.85, 0.1, 0], 0, 0, 0, true)}{p([0.45, 0.16, 0], 0, 0, 0, true)}</>;
-        case "bars": // rising rankings
-            return <>{[0.1, 0.2, 0.32, 0.46].map((hh, i) => p([0.32, hh, 0.32], -0.9 + i * 0.5, 0.95))}</>;
-        case "graph": {
-            const pts = [[-1.1, 0.12], [-0.5, 0.3], [0.1, 0.2], [0.7, 0.42], [1.15, 0.5]] as const;
-            return (
-                <>
-                    {pts.map(([x, hh]) => p([0.07, hh, 0.07], x, -0.9))}
-                    <Line points={pts.map(([x, hh]) => [x, hh, -0.9] as [number, number, number])} color={C.ember} lineWidth={2} />
-                </>
-            );
-        }
-        case "browser": // a page: frame, nav bar, hero and content blocks
-            return (
-                <>
-                    {p([2.3, 0.05, 1.5], 0.1, 0.45)}
-                    {p([2.1, 0.06, 0.18], 0.1, -0.14, 0.05)}
-                    {p([1.2, 0.1, 0.5], -0.35, 0.4, 0.05)}
-                    {p([0.6, 0.14, 0.5], 0.75, 0.4, 0.05)}
-                    {p([2.1, 0.08, 0.25], 0.1, 0.92, 0.05)}
-                </>
-            );
-        case "devices": // phone and tablet
-            return <>{p([0.55, 0.08, 1.0], -0.9, 0.6)}{p([1.0, 0.06, 1.3], 0.65, 0.4)}{p([0.25, 0.04, 0.06], -0.9, 0.12, 0.08)}</>;
-        case "database": // three data stores
-            return <>{p([0.32, 0.36, 0], -0.85, 0.75, 0, true)}{p([0.32, 0.5, 0], 0.15, 0.95, 0, true)}{p([0.32, 0.28, 0], 0.95, 0.35, 0, true)}</>;
-        case "rack": // server fins
-            return <>{[0, 1, 2, 3, 4, 5].map((i) => p([0.1, 0.32, 1.6], -1.15 + i * 0.3, 0.55))}</>;
-    }
-}
 
 // ── One layer: slab + its parts + label with leader line ──────────────────────
 function Layer({
@@ -256,7 +194,12 @@ function Lid({ yRef, tRef }: { yRef: MutableRefObject<number[]>; tRef: MutableRe
 }
 
 // ── Scene: positions, camera framing, pointer parallax ──────────────────────────
-function Scene({ progressRef, reducedMotion, onSelect }: { progressRef: MutableRefObject<number>; reducedMotion: boolean; onSelect: (slug: string) => void }) {
+// Autoplay timeline (seconds): closed → opens → holds open with leads flowing → closes → repeat
+const CYCLE = 14;
+const OPEN_AT = 1.2;
+const CLOSE_AT = 11;
+
+function Scene({ progressRef, reducedMotion, onSelect }: { progressRef?: MutableRefObject<number>; reducedMotion: boolean; onSelect: (slug: string) => void }) {
     const { size, camera } = useThree();
     const compact = size.width < 640;
     const [hovered, setHovered] = useState<number | null>(null);
@@ -264,11 +207,20 @@ function Scene({ progressRef, reducedMotion, onSelect }: { progressRef: MutableR
     const yRef = useRef<number[]>(STACK_LAYERS.map(() => 0));
     const rig = useRef<THREE.Group>(null);
     const pointer = useRef({ x: 0, y: 0 });
+    const clockRef = useRef(0);
+    const auto = !progressRef;
 
     useFrame((state, dt) => {
-        // Ease toward the scroll position rather than snapping to it
-        const target = reducedMotion ? 1 : progressRef.current;
-        tRef.current = THREE.MathUtils.damp(tRef.current, target, 6, dt);
+        // Driven by its own timeline (pauses open while a layer is hovered), or by an external value
+        let target = 1;
+        if (!reducedMotion && auto) {
+            if (hovered === null) clockRef.current = (clockRef.current + Math.min(dt, 0.1)) % CYCLE;
+            const c = clockRef.current;
+            target = hovered !== null || (c >= OPEN_AT && c < CLOSE_AT) ? 1 : 0;
+        } else if (!reducedMotion && progressRef) {
+            target = progressRef.current;
+        }
+        tRef.current = THREE.MathUtils.damp(tRef.current, target, auto ? 2.2 : 6, dt);
         const t = tRef.current;
 
         // Stack layers from the bottom up; each gap grows with t
@@ -283,16 +235,18 @@ function Scene({ progressRef, reducedMotion, onSelect }: { progressRef: MutableR
         // Frame the whole stack plus room for labels (right) and brackets (left)
         const cam = camera as THREE.OrthographicCamera;
         // Room for labels/brackets is only reserved as they appear, so the closed block fills the frame
-        const open = smooth(0.1, 0.6, t);
+        // In autoplay the frame is fixed to the fully open size, so the drawing doesn't pump in and out
+        const open = auto ? 1 : smooth(0.1, 0.6, t);
+        const frameHeight = auto ? STACK_LAYERS.reduce((a, l) => a + l.h, 0) + GAP * (STACK_LAYERS.length - 1) : height;
         const labelPx = 20 + (compact ? 110 : 220) * open;
         const bracketPx = 20 + (compact ? 0 : 110) * open;
-        const projH = 0.857 * height + W * 1.414 * 0.516 + 0.8;
+        const projH = 0.857 * frameHeight + W * 1.414 * 0.516 + 0.8;
         const projW = W * 1.414 + LEADER * open;
         const zoom = Math.min((size.width - labelPx - bracketPx) / projW, (size.height * 0.92) / projH);
         cam.zoom = THREE.MathUtils.damp(cam.zoom, zoom, 6, dt);
         const shift = (labelPx - bracketPx) / 2 / cam.zoom; // keep the drawing centred with its labels
         const right = new THREE.Vector3(1, 0, -1).normalize();
-        const look = new THREE.Vector3(0, height / 2, 0).addScaledVector(right, shift);
+        const look = new THREE.Vector3(0, height / 2, 0).addScaledVector(right, shift); // opens out from its centre
         cam.position.set(look.x + 10, look.y + 8.5, look.z + 10);
         cam.lookAt(look);
         cam.updateProjectionMatrix();
@@ -344,7 +298,7 @@ export default function StackScene({
     active,
     onSelect,
 }: {
-    progressRef: MutableRefObject<number>;
+    progressRef?: MutableRefObject<number>; // omit to autoplay
     reducedMotion: boolean;
     active: boolean;
     onSelect: (slug: string) => void;
