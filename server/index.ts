@@ -34,6 +34,7 @@ import {
 import { handleGetComments, handleCreateComment } from "./handlers/comments.js";
 import { escapeHtml, escapeHtmlMultiline } from "./lib/escapeHtml.js";
 import { LEGACY_SERVICE_REDIRECTS } from "../client/src/data/services.js";
+import { LEGACY_BLOG_REDIRECTS } from "../client/src/data/blogRedirects.js";
 import {
   upload,
   requireAuth,
@@ -191,6 +192,12 @@ async function startServer() {
     // Old service URLs → new ones (permanent, so search rankings carry over)
     app.get("/services/:slug", (req, res, next) => {
       const target = LEGACY_SERVICE_REDIRECTS[req.params.slug];
+      if (target) return res.redirect(301, target);
+      next();
+    });
+
+    app.get("/blog/:slug", (req, res, next) => {
+      const target = LEGACY_BLOG_REDIRECTS[req.params.slug];
       if (target) return res.redirect(301, target);
       next();
     });

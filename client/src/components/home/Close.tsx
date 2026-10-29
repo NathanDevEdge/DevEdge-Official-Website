@@ -1,20 +1,24 @@
 // Slide 09 — The Close
 // Copy reference: COPY_PLAN.md sections 9.1 – 9.6
 // STATUS: Full implementation — CTA pulse, inverted grid, dark bookend
-// Uses useInView to trigger its entrance animation
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { m } from "framer-motion";
 import ContactModal from "@/components/ContactModal";
 
-const ease = [0.25, 0.1, 0.25, 1.0] as const;
+type Bezier = [number, number, number, number];
+const ease: Bezier = [0.25, 0.1, 0.25, 1.0];
+
+// Animate in when scrolled into view. whileInView (not useInView + animate) so it
+// reliably fires on pages hydrated from pre-rendered HTML.
+const reveal = (from: Record<string, number>, delay = 0, duration = 0.5, e: Bezier = ease) => ({
+  initial: from,
+  whileInView: { opacity: 1, x: 0, y: 0, scale: 1 },
+  viewport: { once: true, amount: 0.3 },
+  transition: { duration, delay, ease: e },
+});
 
 export default function Close() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const inView = useInView(sectionRef, { once: true, amount: 0.3 });
-
   return (
     <section
-      ref={sectionRef}
       id="contact"
       className="relative scroll-mt-24 py-28 flex flex-col justify-between overflow-hidden bg-[#1A1008]"
     >
@@ -59,60 +63,50 @@ export default function Close() {
       <div className="flex-1 flex flex-col items-center justify-center text-center container relative z-10 py-20">
 
         {/* Eyebrow */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-          transition={{ duration: 0.5, ease }}
+        <m.div
+          {...reveal({ opacity: 0, y: 16 }, 0, 0.5)}
         >
           <span className="font-mono text-[11px] text-primary/60 tracking-[0.18em] uppercase inline-flex items-center gap-3 mb-10">
             <span className="w-8 h-px bg-primary/40 inline-block" />
             Let's Build
             <span className="w-8 h-px bg-primary/40 inline-block" />
           </span>
-        </motion.div>
+        </m.div>
 
         {/* Heading line 1 — Copy: COPY_PLAN.md § 9.1 */}
-        <motion.h2
+        <m.h2
           className="font-display font-black text-[#F5E6D5] leading-[0.88] tracking-tight mb-2"
           style={{ fontSize: "clamp(52px, 7vw, 96px)" }}
-          initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-          transition={{ duration: 0.7, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+          {...reveal({ opacity: 0, y: 40 }, 0.08, 0.7, [0.16, 1, 0.3, 1])}
         >
           Ready to build
-        </motion.h2>
+        </m.h2>
 
         {/* Heading line 2 */}
-        <motion.h2
+        <m.h2
           className="font-display font-black text-primary leading-[0.88] tracking-tight mb-10"
           style={{ fontSize: "clamp(52px, 7vw, 96px)" }}
-          initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-          transition={{ duration: 0.7, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
+          {...reveal({ opacity: 0, y: 40 }, 0.16, 0.7, [0.16, 1, 0.3, 1])}
         >
           something real?
-        </motion.h2>
+        </m.h2>
 
         {/* Supporting statement — Copy: COPY_PLAN.md § 9.2 */}
-        <motion.p
+        <m.p
           className="text-[15px] text-[#A89070] max-w-sm leading-relaxed mb-12"
-          initial={{ opacity: 0, y: 12 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-          transition={{ duration: 0.5, delay: 0.28, ease }}
+          {...reveal({ opacity: 0, y: 12 }, 0.28, 0.5)}
         >
           We take on a limited number of projects at a time.
           If you're serious about what you're building, let's talk.
-        </motion.p>
+        </m.p>
 
         {/* Primary CTA — Copy: COPY_PLAN.md § 9.3 */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.96 }}
-          transition={{ duration: 0.5, delay: 0.38, ease }}
+        <m.div
+          {...reveal({ opacity: 0, scale: 0.96 }, 0.38, 0.5)}
           className="relative"
         >
           {/* Ember pulse ring */}
-          <motion.span
+          <m.span
             className="absolute inset-0 bg-primary/20 rounded-none"
             animate={{ scale: [1, 1.08, 1], opacity: [0.6, 0, 0.6] }}
             transition={{ repeat: Infinity, duration: 2.8, ease: "easeInOut" }}
@@ -121,14 +115,12 @@ export default function Close() {
             buttonText="Start a Project"
             triggerClassName="relative bg-primary text-[#1A1008] hover:bg-primary/90 font-semibold px-14 h-14 rounded-none text-[16px] transition-colors duration-150"
           />
-        </motion.div>
+        </m.div>
 
         {/* Email / phone fallback — Copy: COPY_PLAN.md § 9.4 */}
-        <motion.div
+        <m.div
           className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 font-mono text-[11px] text-[#664422] tracking-widest text-center"
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.5, delay: 0.52, ease }}
+          {...reveal({ opacity: 0 }, 0.52, 0.5)}
         >
           <span>alternatively email or call us at</span>
           <div className="flex items-center gap-3">
@@ -146,15 +138,13 @@ export default function Close() {
               0490 214 750
             </a>
           </div>
-        </motion.div>
+        </m.div>
       </div>
 
       {/* ── Footer bar ───────────────────────────────────────── */}
-      <motion.div
+      <m.div
         className="relative z-10 border-t border-[#2E1F0F] px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3"
-        initial={{ opacity: 0 }}
-        animate={inView ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 0.6, delay: 0.45, ease }}
+        {...reveal({ opacity: 0 }, 0.45, 0.6)}
       >
         {/* Copy: COPY_PLAN.md § 9.5 */}
         <p className="font-mono text-[10px] text-[#664422] tracking-widest">
@@ -164,7 +154,7 @@ export default function Close() {
         <p className="font-mono text-[10px] text-[#664422] tracking-widest">
           Built different. On purpose.
         </p>
-      </motion.div>
+      </m.div>
     </section>
   );
 }

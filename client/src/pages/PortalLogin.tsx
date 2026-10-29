@@ -3,7 +3,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { ArrowRight, Lock, ArrowLeft } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
 
@@ -127,7 +127,7 @@ export default function PortalLogin() {
 
             {/* ── Login mode ──────────────────────────────────────────────── */}
             {mode === "login" && (
-              <motion.div
+              <m.div
                 key="login"
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -135,7 +135,7 @@ export default function PortalLogin() {
                 transition={{ duration: 0.4, ease }}
               >
                 <div className="mb-10">
-                  <motion.span
+                  <m.span
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: 0.05, ease }}
@@ -143,8 +143,8 @@ export default function PortalLogin() {
                   >
                     <span className="w-6 h-px bg-primary inline-block" />
                     Secure Access
-                  </motion.span>
-                  <motion.h1
+                  </m.span>
+                  <m.h1
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.1, ease }}
@@ -152,18 +152,18 @@ export default function PortalLogin() {
                     style={{ fontSize: "clamp(52px, 7vw, 80px)" }}
                   >
                     Client<br /><span className="text-primary">Portal.</span>
-                  </motion.h1>
-                  <motion.p
+                  </m.h1>
+                  <m.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.4, delay: 0.2, ease }}
                     className="mt-4 text-sm text-muted-foreground leading-relaxed"
                   >
                     Sign in to manage your development tickets and track project progress.
-                  </motion.p>
+                  </m.p>
                 </div>
 
-                <motion.form
+                <m.form
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.18, ease }}
@@ -210,9 +210,9 @@ export default function PortalLogin() {
                       <>Sign in to Portal <ArrowRight className="w-4 h-4" /></>
                     )}
                   </Button>
-                </motion.form>
+                </m.form>
 
-                <motion.div
+                <m.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5, delay: 0.35, ease }}
@@ -229,13 +229,13 @@ export default function PortalLogin() {
                   >
                     Forgot password?
                   </button>
-                </motion.div>
-              </motion.div>
+                </m.div>
+              </m.div>
             )}
 
             {/* ── Forgot password mode ────────────────────────────────────── */}
             {mode === "forgot" && (
-              <motion.div
+              <m.div
                 key="forgot"
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -257,7 +257,7 @@ export default function PortalLogin() {
 
                 <AnimatePresence mode="wait">
                   {forgotSent ? (
-                    <motion.div
+                    <m.div
                       key="sent"
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -278,9 +278,9 @@ export default function PortalLogin() {
                       >
                         <ArrowLeft className="w-3 h-3" /> Back to sign in
                       </button>
-                    </motion.div>
+                    </m.div>
                   ) : (
-                    <motion.form
+                    <m.form
                       key="form"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -324,10 +324,10 @@ export default function PortalLogin() {
                       >
                         <ArrowLeft className="w-3 h-3" /> Back to sign in
                       </button>
-                    </motion.form>
+                    </m.form>
                   )}
                 </AnimatePresence>
-              </motion.div>
+              </m.div>
             )}
 
           </AnimatePresence>

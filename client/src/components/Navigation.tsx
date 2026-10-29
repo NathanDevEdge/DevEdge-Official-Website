@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
 import ContactModal from "@/components/ContactModal";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import BrandLogo from "@/components/BrandLogo";
 import { HOME_SECTIONS, NAV_LINKS, PORTAL_LOGIN_HREF } from "@/lib/site";
 
@@ -32,7 +32,7 @@ export default function Navigation() {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex justify-center w-full mt-4 px-4">
-      <motion.nav
+      <m.nav
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
@@ -86,7 +86,7 @@ export default function Navigation() {
         {/* Mobile menu */}
         <AnimatePresence>
           {isMobileMenuOpen && (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
@@ -118,10 +118,10 @@ export default function Navigation() {
                   />
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
-      </motion.nav>
+      </m.nav>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export const ease = [0.16, 1, 0.3, 1] as const;
@@ -23,7 +23,7 @@ export function Eyebrow({ children, className, light }: { children: ReactNode; c
 /** One fade-up per section, per the brand motion rules (20px, 300ms, ease-out, 20% in view) */
 export function FadeUp({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
     return (
-        <motion.div
+        <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
@@ -31,7 +31,7 @@ export function FadeUp({ children, className, delay = 0 }: { children: ReactNode
             className={className}
         >
             {children}
-        </motion.div>
+        </m.div>
     );
 }
 

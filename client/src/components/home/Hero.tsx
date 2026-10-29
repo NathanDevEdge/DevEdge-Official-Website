@@ -1,7 +1,7 @@
 // Slide 01 — Hero
 // Copy reference: COPY_PLAN.md sections 1.1 – 1.8
 import { useState, useEffect } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { m, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import ContactModal from "@/components/ContactModal";
 
@@ -161,13 +161,13 @@ export default function Hero() {
       </div>
 
       {/* ── Content — mouse-reactive tilt ─────────────────────── */}
-      <motion.div className="container relative z-10" style={{ rotateX, rotateY }}>
+      <m.div className="container relative z-10" style={{ rotateX, rotateY }}>
         <div className="grid lg:grid-cols-[1fr_460px] gap-20 items-center">
 
           {/* Left: text + CTAs */}
           <div>
             {/* Eyebrow — Copy: COPY_PLAN.md § 1.1 */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, ease }}
@@ -176,10 +176,10 @@ export default function Hero() {
                 <span className="w-8 h-px bg-primary inline-block" />
                 Websites · Apps · Systems · Growth
               </span>
-            </motion.div>
+            </m.div>
 
             {/* Headline — Copy: COPY_PLAN.md § 1.2 */}
-            <motion.h1
+            <m.h1
               className="mt-6 font-display font-black leading-[0.88] tracking-tight text-foreground"
               style={{ fontSize: "clamp(64px, 8vw, 108px)" }}
               initial={{ opacity: 0, y: 30 }}
@@ -190,10 +190,10 @@ export default function Hero() {
               things that<br />
               actually{" "}
               <span className="text-primary">work.</span>
-            </motion.h1>
+            </m.h1>
 
             {/* Subheadline — Copy: COPY_PLAN.md § 1.3 */}
-            <motion.p
+            <m.p
               className="mt-7 text-[17px] text-muted-foreground max-w-[420px] leading-relaxed"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -201,10 +201,10 @@ export default function Hero() {
             >
               Websites, apps, business systems and marketing for
               Australian businesses that need results, not just deliverables.
-            </motion.p>
+            </m.p>
 
             {/* CTAs — Copy: COPY_PLAN.md § 1.4 + 1.5 */}
-            <motion.div
+            <m.div
               className="mt-9 flex flex-wrap gap-3"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -222,10 +222,10 @@ export default function Hero() {
               >
                 See How It Works <ArrowRight className="w-4 h-4" />
               </button>
-            </motion.div>
+            </m.div>
 
             {/* Trust tagline — Copy: COPY_PLAN.md § 1.6 */}
-            <motion.div
+            <m.div
               className="mt-10 pt-8 border-t border-[#D4B896]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -234,23 +234,23 @@ export default function Hero() {
               <p className="font-mono text-[11px] text-muted-foreground tracking-[0.12em] uppercase">
                 Small team&nbsp;·&nbsp;Full attention&nbsp;·&nbsp;No farming out, no templates
               </p>
-            </motion.div>
+            </m.div>
           </div>
 
           {/* Right: Code terminal — desktop only */}
-          <motion.div
+          <m.div
             className="hidden lg:block"
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.45, ease: "easeOut" }}
           >
             <CodeTerminal />
-          </motion.div>
+          </m.div>
         </div>
-      </motion.div>
+      </m.div>
 
       {/* ── Scroll indicator — Copy: COPY_PLAN.md § 1.7 ──────── */}
-      <motion.div
+      <m.div
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -259,12 +259,12 @@ export default function Hero() {
         <span className="font-mono text-[10px] text-muted-foreground/40 tracking-[0.25em] uppercase">
           scroll
         </span>
-        <motion.div
+        <m.div
           className="w-px h-10 bg-gradient-to-b from-primary/50 to-transparent"
           animate={{ scaleY: [0.2, 1, 0.2], opacity: [0.3, 1, 0.3] }}
           transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
         />
-      </motion.div>
+      </m.div>
     </section>
   );
 }

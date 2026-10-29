@@ -2,7 +2,7 @@
 // Copy reference: COPY_PLAN.md sections 8.1 – 8.8
 // STATUS: Full implementation — polished two-column layout, functional accordion
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Plus } from "lucide-react";
 import ContactModal from "@/components/ContactModal";
 
@@ -54,7 +54,7 @@ function AccordionItem({
   index: number;
 }) {
   return (
-    <motion.div
+    <m.div
       className={`border-b border-[#D4B896] transition-colors duration-200 ${
         isOpen ? "border-l-2 border-l-primary pl-4" : "pl-0"
       }`}
@@ -87,7 +87,7 @@ function AccordionItem({
 
       <AnimatePresence initial={false}>
         {isOpen && (
-          <motion.div
+          <m.div
             key="content"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
@@ -95,10 +95,10 @@ function AccordionItem({
             transition={{ duration: 0.28, ease }}
           >
             <p className="pb-5 text-[14px] text-muted-foreground leading-relaxed">{a}</p>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -122,7 +122,7 @@ export default function FAQ() {
         <div className="grid lg:grid-cols-[280px_1fr] gap-16 items-start">
 
           {/* Left: heading + CTA */}
-          <motion.div
+          <m.div
             className="lg:sticky lg:top-16"
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -148,7 +148,7 @@ export default function FAQ() {
               buttonText="Ask us anything →"
               triggerClassName="bg-foreground text-background hover:bg-primary hover:text-[#1A1008] font-semibold px-6 h-11 rounded-none text-[13px] transition-colors duration-150"
             />
-          </motion.div>
+          </m.div>
 
           {/* Right: accordion */}
           <div>
@@ -166,7 +166,7 @@ export default function FAQ() {
             </div>
 
             {/* Bottom note */}
-            <motion.p
+            <m.p
               className="font-mono text-[10px] text-muted-foreground tracking-widest mt-6"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -174,7 +174,7 @@ export default function FAQ() {
               transition={{ duration: 0.5, delay: 0.4, ease }}
             >
               * All pricing and timelines are project-specific. First conversation is always free.
-            </motion.p>
+            </m.p>
           </div>
         </div>
       </div>

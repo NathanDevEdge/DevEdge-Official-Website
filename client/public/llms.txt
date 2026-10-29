@@ -24,3 +24,11 @@ Contact: info@devedge.com.au · 0490 214 750 · ABN 55 755 335 958
 - [Tradeflow](https://devedge.com.au/products/tradeflow): DevEdge's quoting and purchase order software
 - [Contact](https://devedge.com.au/contact)
 - [Insights](https://devedge.com.au/blog)
+
+## Articles
+
+- [How much does a custom app cost in Australia?](https://devedge.com.au/blog/custom-app-cost-australia): what drives the price, and why DevEdge quotes privately
+- [Why your Meta ads aren't working](https://devedge.com.au/blog/meta-ads-tracking-small-business): tracking problems that waste ad spend
+- [7 signs you've outgrown spreadsheets](https://devedge.com.au/blog/signs-you-have-outgrown-spreadsheets): when to move to a CRM or ERP
+- [Custom vs off-the-shelf software](https://devedge.com.au/blog/custom-vs-off-the-shelf-software): when to buy, configure or build
+- [Workflow automation for trade, building and supply businesses](https://devedge.com.au/blog/automated-workflow-software-logistics)

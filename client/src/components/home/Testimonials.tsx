@@ -2,7 +2,7 @@
 // Copy reference: COPY_PLAN.md sections 6.1 – 6.6
 // STATUS: Full implementation — large single-testimonial cycling view with arrow nav + swipe
 import { useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const ease = [0.25, 0.1, 0.25, 1.0] as const;
@@ -99,7 +99,7 @@ export default function Testimonials() {
       <div className="container relative z-10 flex flex-col h-full py-16">
 
         {/* Header */}
-        <motion.div
+        <m.div
           className="mb-12"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -118,7 +118,7 @@ export default function Testimonials() {
           >
             Don't take our word for it.
           </h2>
-        </motion.div>
+        </m.div>
 
         {/* Testimonial display — takes remaining height */}
         <div className="flex-1 flex flex-col justify-between">
@@ -126,7 +126,7 @@ export default function Testimonials() {
           {/* Quote area */}
           <div className="relative flex-1 flex items-center">
             <AnimatePresence mode="wait" custom={direction} initial={false}>
-              <motion.div
+              <m.div
                 key={index}
                 custom={direction}
                 variants={variants}
@@ -171,7 +171,7 @@ export default function Testimonials() {
                     </div>
                   </div>
                 )}
-              </motion.div>
+              </m.div>
             </AnimatePresence>
           </div>
 
@@ -180,7 +180,7 @@ export default function Testimonials() {
 
             {/* Client identity */}
             <AnimatePresence mode="wait" initial={false}>
-              <motion.div
+              <m.div
                 key={`meta-${index}`}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -197,7 +197,7 @@ export default function Testimonials() {
                     {current.role} · {current.company}
                   </p>
                 </div>
-              </motion.div>
+              </m.div>
             </AnimatePresence>
 
             {/* Navigation */}

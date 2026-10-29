@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { STATUS_CONFIG, STATUS_OPTIONS, type TicketStatus } from "@/lib/ticketStatus";
 import { PRIORITY_CONFIG, type TicketPriority } from "@/lib/ticketPriority";
@@ -32,7 +32,7 @@ function KanbanCard({
   };
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, delay: index * 0.03, ease }}
@@ -93,7 +93,7 @@ function KanbanCard({
           </div>
         )}
       </div>
-    </motion.div>
+    </m.div>
   );
 }
 

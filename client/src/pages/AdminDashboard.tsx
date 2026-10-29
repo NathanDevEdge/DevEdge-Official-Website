@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Ticket, Users, Building2, Plus, ChevronDown, ChevronRight, Mail, RotateCcw, X, Send, Paperclip } from "lucide-react";
 import KanbanBoard from "@/components/KanbanBoard";
 import TicketDetailPanel from "@/components/TicketDetailPanel";
@@ -262,7 +262,7 @@ function OrgCard({
   };
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.06, ease }}
@@ -289,7 +289,7 @@ function OrgCard({
 
       <AnimatePresence>
         {expanded && (
-          <motion.div
+          <m.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -336,7 +336,7 @@ function OrgCard({
               {/* Invite form */}
               <AnimatePresence>
                 {showInvite && (
-                  <motion.div
+                  <m.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
@@ -351,7 +351,7 @@ function OrgCard({
                       onSuccess={() => { setShowInvite(false); onRefresh(); }}
                       onCancel={() => setShowInvite(false)}
                     />
-                  </motion.div>
+                  </m.div>
                 )}
               </AnimatePresence>
 
@@ -365,10 +365,10 @@ function OrgCard({
                 </Button>
               )}
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -589,7 +589,7 @@ export default function AdminDashboard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Heading */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease }}
@@ -606,10 +606,10 @@ export default function AdminDashboard() {
             {isSuperAdmin ? "Super Admin" : "Admin"}<br />
             <span className="text-primary">Dashboard.</span>
           </h1>
-        </motion.div>
+        </m.div>
 
         {/* Stats */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1, ease }}
@@ -624,7 +624,7 @@ export default function AdminDashboard() {
               <div className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground">{label}</div>
             </div>
           ))}
-        </motion.div>
+        </m.div>
 
         {/* Tabs */}
         <Tabs defaultValue="tickets" className="w-full">
@@ -675,7 +675,7 @@ export default function AdminDashboard() {
 
             <AnimatePresence>
               {showTicketForm && (
-                <motion.div
+                <m.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
@@ -750,7 +750,7 @@ export default function AdminDashboard() {
                       {creatingTicket ? "Submitting..." : "Submit Ticket"}
                     </Button>
                   </form>
-                </motion.div>
+                </m.div>
               )}
             </AnimatePresence>
             {loading ? (
@@ -785,7 +785,7 @@ export default function AdminDashboard() {
             {/* New org inline form */}
             <AnimatePresence>
               {showAddOrg && (
-                <motion.div
+                <m.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
@@ -810,7 +810,7 @@ export default function AdminDashboard() {
                       Cancel
                     </Button>
                   </form>
-                </motion.div>
+                </m.div>
               )}
             </AnimatePresence>
 
@@ -850,23 +850,23 @@ export default function AdminDashboard() {
                   <p className="text-sm text-muted-foreground mb-6">Send an invite link to add a new team member.</p>
                   <AnimatePresence mode="wait">
                     {showInvite ? (
-                      <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                      <m.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                         <InviteUserForm
                           token={token}
                           isSuperAdmin={false}
                           onSuccess={() => { setShowInvite(false); fetchData(); }}
                           onCancel={() => setShowInvite(false)}
                         />
-                      </motion.div>
+                      </m.div>
                     ) : (
-                      <motion.div key="button" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                      <m.div key="button" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                         <Button
                           onClick={() => setShowInvite(true)}
                           className="rounded-none bg-primary text-primary-foreground hover:bg-primary/90 font-semibold h-11 px-6 transition-colors duration-150 flex items-center gap-2"
                         >
                           <Mail className="w-4 h-4" /> Send Invite
                         </Button>
-                      </motion.div>
+                      </m.div>
                     )}
                   </AnimatePresence>
                 </div>
@@ -881,7 +881,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="space-y-2 mb-8">
                   {clients.map((client, i) => (
-                    <motion.div
+                    <m.div
                       key={client.id}
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -907,7 +907,7 @@ export default function AdminDashboard() {
                           {new Date(client.created_at).toLocaleDateString("en-AU", { month: "short", year: "numeric" })}
                         </span>
                       </div>
-                    </motion.div>
+                    </m.div>
                   ))}
                   {clients.length === 0 && (
                     <div className="py-10 border border-dashed border-border text-center">
@@ -949,7 +949,7 @@ export default function AdminDashboard() {
                     <p className="text-sm text-muted-foreground mb-6">Add a new member to the DevEdge team.</p>
                     <AnimatePresence mode="wait">
                       {showDevEdgeInvite ? (
-                        <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                        <m.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                           <InviteUserForm
                             token={token}
                             isSuperAdmin={true}
@@ -958,16 +958,16 @@ export default function AdminDashboard() {
                             onSuccess={() => { setShowDevEdgeInvite(false); fetchData(); }}
                             onCancel={() => setShowDevEdgeInvite(false)}
                           />
-                        </motion.div>
+                        </m.div>
                       ) : (
-                        <motion.div key="button" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                        <m.div key="button" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                           <Button
                             onClick={() => setShowDevEdgeInvite(true)}
                             className="rounded-none bg-primary text-primary-foreground hover:bg-primary/90 font-semibold h-11 px-6 transition-colors duration-150 flex items-center gap-2"
                           >
                             <Mail className="w-4 h-4" /> Send Invite
                           </Button>
-                        </motion.div>
+                        </m.div>
                       )}
                     </AnimatePresence>
                   </div>
@@ -981,7 +981,7 @@ export default function AdminDashboard() {
                   </div>
                   <div className="space-y-2 mb-8">
                     {devEdgeTeam.map((member, i) => (
-                      <motion.div
+                      <m.div
                         key={member.id}
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -1008,7 +1008,7 @@ export default function AdminDashboard() {
                             {new Date(member.created_at).toLocaleDateString("en-AU", { month: "short", year: "numeric" })}
                           </span>
                         </div>
-                      </motion.div>
+                      </m.div>
                     ))}
                   </div>
 

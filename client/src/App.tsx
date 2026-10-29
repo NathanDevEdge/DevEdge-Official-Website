@@ -1,5 +1,4 @@
 import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Router as WouterRouter, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -19,7 +18,7 @@ import BlogPost from "./pages/BlogPost";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { Redirect } from "wouter";
 import { lazy, Suspense, useEffect } from "react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, LazyMotion, domAnimation } from "framer-motion";
 
 // Portal pages load on demand so marketing visitors don't download them
 const PortalLogin = lazy(() => import("./pages/PortalLogin"));
@@ -129,14 +128,15 @@ function App({ ssrPath, helmetContext }: { ssrPath?: string; helmetContext?: obj
       // switchable
       >
         <AuthProvider>
-          <TooltipProvider>
-            <HelmetProvider context={helmetContext}>
+          <HelmetProvider context={helmetContext}>
+            {/* Only the animation features the site uses, instead of the full framer-motion bundle */}
+            <LazyMotion features={domAnimation}>
               <WouterRouter ssrPath={ssrPath}>
                 <Toaster />
                 <Router />
               </WouterRouter>
-            </HelmetProvider>
-          </TooltipProvider>
+            </LazyMotion>
+          </HelmetProvider>
         </AuthProvider>
       </ThemeProvider>
     </ErrorBoundary>

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { ArrowRight, CheckCircle, AlertTriangle } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
 
@@ -115,7 +115,7 @@ export default function ResetPassword() {
             Verifying link...
           </span>
         ) : tokenError ? (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease }}
@@ -131,9 +131,9 @@ export default function ResetPassword() {
             >
               Back to sign in
             </Button>
-          </motion.div>
+          </m.div>
         ) : (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease }}
@@ -141,7 +141,7 @@ export default function ResetPassword() {
           >
             <AnimatePresence mode="wait">
               {success ? (
-                <motion.div
+                <m.div
                   key="success"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -156,9 +156,9 @@ export default function ResetPassword() {
                   <p className="font-mono text-[10px] text-muted-foreground tracking-widest uppercase animate-pulse">
                     Redirecting to sign in...
                   </p>
-                </motion.div>
+                </m.div>
               ) : (
-                <motion.div key="form">
+                <m.div key="form">
                   {/* Heading */}
                   <div className="mb-10">
                     <span className="font-mono text-[11px] text-primary tracking-[0.18em] uppercase inline-flex items-center gap-3">
@@ -227,10 +227,10 @@ export default function ResetPassword() {
                   >
                     ← Back to sign in
                   </button>
-                </motion.div>
+                </m.div>
               )}
             </AnimatePresence>
-          </motion.div>
+          </m.div>
         )}
       </div>
     </div>

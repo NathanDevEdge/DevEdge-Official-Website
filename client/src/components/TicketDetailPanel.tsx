@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { X, Paperclip, Send, Trash2, Download, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -256,7 +256,7 @@ export default function TicketDetailPanel({ ticket, token, currentUserId, isAdmi
   return (
     <>
       {/* Backdrop */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -265,7 +265,7 @@ export default function TicketDetailPanel({ ticket, token, currentUserId, isAdmi
       />
 
       {/* Panel */}
-      <motion.div
+      <m.div
         initial={{ x: "100%" }}
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
@@ -388,7 +388,7 @@ export default function TicketDetailPanel({ ticket, token, currentUserId, isAdmi
 
                 <AnimatePresence>
                   {isDirty && (
-                    <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}>
+                    <m.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}>
                       <Button
                         onClick={handleSave}
                         disabled={saving}
@@ -396,7 +396,7 @@ export default function TicketDetailPanel({ ticket, token, currentUserId, isAdmi
                       >
                         {saving ? "Saving..." : "Save Changes"}
                       </Button>
-                    </motion.div>
+                    </m.div>
                   )}
                 </AnimatePresence>
               </div>
@@ -567,7 +567,7 @@ export default function TicketDetailPanel({ ticket, token, currentUserId, isAdmi
             <div className="h-4" />
           </div>
         </div>
-      </motion.div>
+      </m.div>
     </>
   );
 }

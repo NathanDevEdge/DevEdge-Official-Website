@@ -1,22 +1,24 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import type { FieldErrors, Resolver } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
 import { Send } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { SERVICES } from "@/data/services";
 
-const formSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters."),
-  email: z.string().email("Please enter a valid email address."),
-  phone: z.string().optional(),
-  services: z.array(z.string()).min(1, "Pick at least one, or \"Not sure yet\"."),
-  message: z.string().min(10, "Message must be at least 10 characters."),
-});
+type FormValues = { name: string; email: string; phone?: string; services: string[]; message: string };
 
-type FormValues = z.infer<typeof formSchema>;
+// Plain validation (a schema library would add ~60KB to every page for five fields)
+const resolver: Resolver<FormValues> = async (values) => {
+  const errors: FieldErrors<FormValues> = {};
+  const fail = (field: keyof FormValues, message: string) => (errors[field] = { type: "validate", message });
+  if (values.name.trim().length < 2) fail("name", "Name must be at least 2 characters.");
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) fail("email", "Please enter a valid email address.");
+  if (values.services.length < 1) fail("services", "Pick at least one, or \"Not sure yet\".");
+  if (values.message.trim().length < 10) fail("message", "Message must be at least 10 characters.");
+  return Object.keys(errors).length ? { values: {}, errors } : { values, errors: {} };
+};
 
 const serviceOptions = [...SERVICES.map((s) => s.name), "Not sure yet"];
 
@@ -25,7 +27,7 @@ export default function ContactForm({ onSuccess }: { onSuccess?: () => void }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    resolver,
     defaultValues: { name: "", email: "", phone: "", services: [], message: "" },
   });
 

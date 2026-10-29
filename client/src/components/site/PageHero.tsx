@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "wouter";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import HeroBackdrop from "@/components/site/HeroBackdrop";
 import { Eyebrow, ease } from "@/components/site/primitives";
 
@@ -21,7 +21,7 @@ export default function PageHero({
     return (
         <section className="relative bg-background overflow-hidden pt-36 pb-20 min-h-[60vh] flex items-end">
             <HeroBackdrop />
-            <motion.div
+            <m.div
                 className="container relative z-10"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -48,7 +48,7 @@ export default function PageHero({
                 </h1>
                 {tagline && <p className="mt-6 text-muted-foreground text-[19px] leading-relaxed max-w-[620px]">{tagline}</p>}
                 {children && <div className="mt-10">{children}</div>}
-            </motion.div>
+            </m.div>
         </section>
     );
 }

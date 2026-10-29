@@ -3,7 +3,7 @@ import { breadcrumbSchema } from "@/lib/schema";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ContactModal from "@/components/ContactModal";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Link } from "wouter";
 import { ExternalLink } from "lucide-react";
 import projects from "@/data/projects.json";
@@ -53,13 +53,13 @@ export default function ProjectsPage() {
             <section className="relative bg-background overflow-hidden pt-32 pb-20 min-h-[55vh] flex items-end">
                 <BgDecorations />
                 <div className="container relative z-10">
-                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease }}>
+                    <m.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease }}>
                         <span className="font-mono text-[11px] text-primary tracking-[0.18em] uppercase inline-flex items-center gap-3">
                             <span className="w-8 h-px bg-primary inline-block" />
                             Selected Work
                         </span>
-                    </motion.div>
-                    <motion.h1
+                    </m.div>
+                    <m.h1
                         className="mt-6 font-display font-black text-foreground leading-[0.88] tracking-tight"
                         style={{ fontSize: "clamp(52px, 7vw, 96px)" }}
                         initial={{ opacity: 0, y: 30 }}
@@ -67,22 +67,22 @@ export default function ProjectsPage() {
                         transition={{ duration: 0.6, delay: 0.08, ease }}
                     >
                         Work that does<br />what it's supposed to.
-                    </motion.h1>
-                    <motion.p
+                    </m.h1>
+                    <m.p
                         className="mt-6 text-muted-foreground text-[17px] leading-relaxed max-w-[520px]"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.16, ease }}
                     >
                         Every project starts with a real problem. These are the outcomes.
-                    </motion.p>
+                    </m.p>
                 </div>
             </section>
 
             {/* Projects */}
             <section className="bg-background">
                 <div className="container py-16">
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, amount: 0.1 }}
@@ -95,7 +95,7 @@ export default function ProjectsPage() {
                                 className={`border-b border-[#D4B896] py-16 grid lg:grid-cols-2 gap-12 lg:gap-20 items-start ${index % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""}`}
                             >
                                 {/* Screenshot */}
-                                <motion.div
+                                <m.div
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true, amount: 0.2 }}
@@ -113,10 +113,10 @@ export default function ProjectsPage() {
                                     />
                                     {/* Ember tint on hover */}
                                     <div className="absolute inset-0 bg-[#C97B3A]/0 group-hover:bg-[#C97B3A]/5 transition-colors duration-300" />
-                                </motion.div>
+                                </m.div>
 
                                 {/* Case study content */}
-                                <motion.div
+                                <m.div
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true, amount: 0.2 }}
@@ -173,10 +173,10 @@ export default function ProjectsPage() {
                                         View live site
                                         <ExternalLink className="w-3.5 h-3.5" />
                                     </a>
-                                </motion.div>
+                                </m.div>
                             </div>
                         ))}
-                    </motion.div>
+                    </m.div>
                 </div>
             </section>
 
@@ -186,7 +186,7 @@ export default function ProjectsPage() {
                     <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-[#C97B3A]/8 blur-[120px] rounded-full" />
                 </div>
                 <div className="container relative z-10 text-center">
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, amount: 0.3 }}
@@ -217,7 +217,7 @@ export default function ProjectsPage() {
                                 Back to home →
                             </Link>
                         </div>
-                    </motion.div>
+                    </m.div>
                 </div>
             </section>
             <Footer />

@@ -1,11 +1,12 @@
 // Slide 07 — The Process / Workflow
 // Copy reference: COPY_PLAN.md sections 7.1 – 7.7
 // STATUS: Full implementation — SVG vertical line (solid 01→04, dotted 04→05) + CTA
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { m } from "framer-motion";
 import ContactModal from "@/components/ContactModal";
 
 const ease = [0.25, 0.1, 0.25, 1.0] as const;
+// whileInView (not useInView + animate) so it reliably fires on pages hydrated from pre-rendered HTML
+const viewport = { once: true, amount: 0.25 } as const;
 
 // Copy: COPY_PLAN.md § 7.3 – 7.7 — [USE SUGGESTED COPY]
 const steps = [
@@ -45,33 +46,33 @@ const steps = [
 function StepRow({
   step,
   index,
-  inView,
 }: {
   step: (typeof steps)[0];
   index: number;
-  inView: boolean;
 }) {
-  const dotDelay = 0.3 + index * (1.8 / steps.length);
-  const contentDelay = dotDelay + 0.1;
+  const dotDelay = 0.15 + index * 0.18;
+  const contentDelay = dotDelay + 0.08;
 
   return (
     <div className="flex gap-6 relative">
       {/* Dot on the timeline */}
       <div className="flex flex-col items-center shrink-0">
-        <motion.div
+        <m.div
           className="w-3 h-3 rounded-full bg-primary border-2 border-background z-10 shrink-0"
           style={{ marginTop: "5px" }}
           initial={{ scale: 0, opacity: 0 }}
-          animate={inView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+          whileInView={{ scale: 1, opacity: 1 }}
+          viewport={viewport}
           transition={{ duration: 0.3, delay: dotDelay, ease: [0.34, 1.56, 0.64, 1] }}
         />
       </div>
 
       {/* Step content */}
-      <motion.div
+      <m.div
         className="pb-10 flex-1"
         initial={{ opacity: 0, x: -12 }}
-        animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -12 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={viewport}
         transition={{ duration: 0.45, delay: contentDelay, ease }}
       >
         <div className="flex items-baseline gap-3 mb-2">
@@ -89,7 +90,7 @@ function StepRow({
         <p className="text-muted-foreground text-[14px] leading-relaxed max-w-sm">
           {step.description}
         </p>
-      </motion.div>
+      </m.div>
     </div>
   );
 }
@@ -100,7 +101,7 @@ function StepRow({
 const LINE_HEIGHT = 492; // slightly past step 5 dot (480px in SVG coords)
 const SOLID_END = 362;   // step 4 dot position in SVG coordinates (367 - 5)
 
-function AnimatedTimeline({ inView }: { inView: boolean }) {
+function AnimatedTimeline() {
   return (
     <div className="absolute left-[5px] top-[5px]" style={{ height: LINE_HEIGHT }}>
       <svg width="2" height={LINE_HEIGHT} viewBox={`0 0 2 ${LINE_HEIGHT}`} fill="none">
@@ -108,19 +109,20 @@ function AnimatedTimeline({ inView }: { inView: boolean }) {
         <line x1="1" y1="0" x2="1" y2={LINE_HEIGHT} stroke="#D4B896" strokeWidth="2" />
 
         {/* Solid ember fill — steps 01 through 04 */}
-        <motion.path
+        <m.path
           d={`M 1 0 L 1 ${SOLID_END}`}
           stroke="#C97B3A"
           strokeWidth="2"
           strokeLinecap="round"
           fill="none"
           initial={{ pathLength: 0 }}
-          animate={inView ? { pathLength: 1 } : { pathLength: 0 }}
-          transition={{ duration: 1.5, delay: 0.2, ease: "easeInOut" }}
+          whileInView={{ pathLength: 1 }}
+          viewport={viewport}
+          transition={{ duration: 1, delay: 0.1, ease: "easeInOut" }}
         />
 
         {/* Dotted ember line — step 04 → 05 (Support = ongoing/optional) */}
-        <motion.path
+        <m.path
           d={`M 1 ${SOLID_END} L 1 ${LINE_HEIGHT}`}
           stroke="#C97B3A"
           strokeWidth="2"
@@ -128,8 +130,9 @@ function AnimatedTimeline({ inView }: { inView: boolean }) {
           strokeDasharray="4 7"
           fill="none"
           initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.4, delay: 1.75, ease: "easeInOut" }}
+          whileInView={{ opacity: 1 }}
+          viewport={viewport}
+          transition={{ duration: 0.4, delay: 1, ease: "easeInOut" }}
         />
       </svg>
     </div>
@@ -137,9 +140,6 @@ function AnimatedTimeline({ inView }: { inView: boolean }) {
 }
 
 export default function HowWeWork() {
-  const timelineRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(timelineRef, { once: true, amount: 0.25 });
-
   return (
     <section
       id="how-we-work"
@@ -154,7 +154,7 @@ export default function HowWeWork() {
         <div className="grid lg:grid-cols-[1fr_1.4fr] gap-16 items-start">
 
           {/* Left: heading block + CTA */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -185,26 +185,27 @@ export default function HowWeWork() {
             </p>
 
             {/* CTA */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 10 }}
-              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-              transition={{ duration: 0.5, delay: 2.1, ease }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={viewport}
+              transition={{ duration: 0.5, delay: 0.3, ease }}
             >
               <ContactModal
                 buttonText="Start the process →"
                 triggerClassName="bg-primary text-[#1A1008] hover:bg-primary/90 font-semibold px-7 h-11 rounded-none text-[14px] transition-colors duration-150"
               />
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
 
           {/* Right: animated timeline */}
-          <div ref={timelineRef} className="relative pl-8">
+          <div className="relative pl-8">
             {/* SVG track + ember fill */}
-            <AnimatedTimeline inView={inView} />
+            <AnimatedTimeline />
 
             {/* Step rows */}
             {steps.map((step, i) => (
-              <StepRow key={step.number} step={step} index={i} inView={inView} />
+              <StepRow key={step.number} step={step} index={i} />
             ))}
           </div>
         </div>

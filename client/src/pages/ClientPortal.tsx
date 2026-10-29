@@ -3,7 +3,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Plus, X, Paperclip } from "lucide-react";
 import { useSearch } from "wouter";
 import KanbanBoard from "@/components/KanbanBoard";
@@ -158,7 +158,7 @@ export default function ClientPortal() {
 
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Page heading */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease }}
@@ -183,12 +183,12 @@ export default function ClientPortal() {
             {showForm ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
             {showForm ? "Cancel" : "New Ticket"}
           </Button>
-        </motion.div>
+        </m.div>
 
         {/* New ticket form */}
         <AnimatePresence>
           {showForm && (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
@@ -300,7 +300,7 @@ export default function ClientPortal() {
                   </div>
                 </form>
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
 
