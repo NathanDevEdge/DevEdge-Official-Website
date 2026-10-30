@@ -1,5 +1,5 @@
 // schema.org structured data builders (rendered as JSON-LD via <SEO jsonLd>)
-import { SITE } from "@/lib/site";
+import { PROFILES, SITE } from "@/lib/site";
 import type { Service } from "@/data/services";
 
 const ORG_ID = `${SITE.url}/#organization`;
@@ -19,6 +19,8 @@ export const organizationSchema = () => ({
     taxID: SITE.abn ? `ABN ${SITE.abn}` : undefined,
     areaServed: { "@type": "Country", name: "Australia" },
     address: { "@type": "PostalAddress", addressLocality: "Melbourne", addressRegion: "VIC", addressCountry: "AU" },
+    hasMap: SITE.mapsUrl,
+    sameAs: PROFILES,
     founder: { "@type": "Person", name: "Nathan Anniss" },
     knowsAbout: ["Web development", "Custom software", "CRM implementation", "ERP systems", "Zoho", "HubSpot", "Xero", "NetSuite", "Meta Ads", "Google Ads", "SEO", "Conversion tracking"],
 });
