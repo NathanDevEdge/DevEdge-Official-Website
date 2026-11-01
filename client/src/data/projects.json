@@ -2,8 +2,6 @@
     {
         "id": "deckmate",
         "title": "DeckMate",
-        "url": "https://deckmate.au",
-        "image": "/images/project-deckmate.webp",
         "tags": [
             "Web App",
             "Zoho Integration",
@@ -20,8 +18,6 @@
     {
         "id": "tradeflow",
         "title": "Tradeflow",
-        "url": "https://tradeflow.devedge.com.au",
-        "image": "/images/project-tradeflow.webp",
         "tags": [
             "Enterprise SaaS",
             "Logistics",

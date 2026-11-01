@@ -6,14 +6,12 @@ const FEATURED = [
         client: "DeckMate",
         what: "Website, deck calculator & Zoho CRM",
         line: "A website with a built-in deck calculator that gives customers accurate quotes fast, connected to Zoho CRM so every lead lands in the sales pipeline.",
-        image: "/images/project-deckmate.webp",
         href: "/projects",
     },
     {
         client: "Tradeflow",
         what: "Our own SaaS product",
         line: "Quoting, purchase orders and supplier management for small businesses. Built, launched and run by DevEdge.",
-        image: "/images/project-tradeflow.webp",
         href: "/products/tradeflow",
     },
 ];
@@ -42,19 +40,8 @@ export default function SelectedWork() {
                     <div className="mt-14 grid lg:grid-cols-2 gap-10">
                         {FEATURED.map((p) => (
                             <Link key={p.client} href={p.href}>
-                                <article className="group">
-                                    <div className="overflow-hidden border border-[#D4B896]">
-                                        <img
-                                            src={p.image}
-                                            alt={`${p.client} website`}
-                                            width={1600}
-                                            height={1000}
-                                            loading="lazy"
-                                            decoding="async"
-                                            className="w-full h-auto transition-transform duration-300 group-hover:scale-[1.02]"
-                                        />
-                                    </div>
-                                    <p className="mt-5 font-mono text-[11px] tracking-[0.18em] uppercase text-primary">{p.what}</p>
+                                <article className="group h-full border-t-2 border-primary pt-6">
+                                    <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-primary">{p.what}</p>
                                     <h3 className="mt-1 font-display font-black text-[34px] tracking-tight group-hover:text-primary transition-colors duration-150">
                                         {p.client}
                                     </h3>

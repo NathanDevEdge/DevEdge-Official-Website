@@ -74,20 +74,6 @@ export default function TradeflowPage() {
                 </div>
             </PageHero>
 
-            <section className="container pb-24">
-                <FadeUp>
-                    <img
-                        src="/images/project-tradeflow.webp"
-                        alt="Tradeflow homepage showing the quotes dashboard"
-                        width={1600}
-                        height={1000}
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-auto border border-[#D4B896] shadow-[0_32px_80px_-20px_rgba(46,31,15,0.25)]"
-                    />
-                </FadeUp>
-            </section>
-
             <section className="bg-[#1A1008] py-24">
                 <div className="container">
                     <FadeUp>

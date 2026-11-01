@@ -5,7 +5,6 @@ import Footer from "@/components/Footer";
 import ContactModal from "@/components/ContactModal";
 import { m } from "framer-motion";
 import { Link } from "wouter";
-import { ExternalLink } from "lucide-react";
 import projects from "@/data/projects.json";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -89,32 +88,8 @@ export default function ProjectsPage() {
                         transition={{ duration: 0.3, ease }}
                         className="border-t border-[#D4B896] space-y-0"
                     >
-                        {projects.map((project, index) => (
-                            <div
-                                key={project.id}
-                                className={`border-b border-[#D4B896] py-16 grid lg:grid-cols-2 gap-12 lg:gap-20 items-start ${index % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""}`}
-                            >
-                                {/* Screenshot */}
-                                <m.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true, amount: 0.2 }}
-                                    transition={{ duration: 0.3, ease }}
-                                    className="relative overflow-hidden border border-[#D4B896] group"
-                                >
-                                    <img
-                                        src={project.image}
-                                        alt={`${project.title} website homepage`}
-                                        width={1600}
-                                        height={1000}
-                                        loading="lazy"
-                                        decoding="async"
-                                        className="w-full h-auto transition-transform duration-500 group-hover:scale-[1.02]"
-                                    />
-                                    {/* Ember tint on hover */}
-                                    <div className="absolute inset-0 bg-[#C97B3A]/0 group-hover:bg-[#C97B3A]/5 transition-colors duration-300" />
-                                </m.div>
-
+                        {projects.map((project) => (
+                            <div key={project.id} className="border-b border-[#D4B896] py-16 max-w-3xl">
                                 {/* Case study content */}
                                 <m.div
                                     initial={{ opacity: 0, y: 20 }}
@@ -144,7 +119,7 @@ export default function ProjectsPage() {
                                     </h2>
 
                                     {/* Case study rows */}
-                                    <div className="border-t border-[#D4B896] mb-8">
+                                    <div className="border-t border-[#D4B896]">
                                         <div className="grid grid-cols-[100px_1fr] py-4 border-b border-[#D4B896] gap-4">
                                             <span className="font-mono text-[10px] text-muted-foreground tracking-widest uppercase pt-0.5">Project</span>
                                             <span className="text-foreground text-[15px] leading-snug">{project.description}</span>
@@ -161,18 +136,6 @@ export default function ProjectsPage() {
                                             </ul>
                                         </div>
                                     </div>
-
-                                    {/* View live link */}
-                                    <a
-                                        href={project.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-3 font-mono text-[11px] text-primary tracking-[0.18em] uppercase group w-fit hover:gap-4 transition-all duration-150"
-                                    >
-                                        <span className="w-8 h-px bg-primary inline-block" />
-                                        View live site
-                                        <ExternalLink className="w-3.5 h-3.5" />
-                                    </a>
                                 </m.div>
                             </div>
                         ))}
