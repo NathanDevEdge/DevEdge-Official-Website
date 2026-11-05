@@ -5,44 +5,9 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
-import { handleLogin, handleValidateToken } from "./handlers/auth.js";
-import {
-  handleGetTickets,
-  handleCreateTicket,
-  handleUpdateTicket,
-  handleDeleteTicket,
-} from "./handlers/tickets.js";
-import {
-  handleGetAdmin,
-  handleCreateOrg,
-  handleCreateUser,
-  handleUpdateUserRole,
-  handleDeleteUser,
-} from "./handlers/admin.js";
-import {
-  handleCreateInvite,
-  handleValidateInvite,
-  handleAcceptInvite,
-  handleResendInvite,
-  handleCancelInvite,
-} from "./handlers/invites.js";
-import {
-  handleForgotPassword,
-  handleValidateResetToken,
-  handleResetPassword,
-} from "./handlers/passwordReset.js";
-import { handleGetComments, handleCreateComment } from "./handlers/comments.js";
 import { escapeHtml, escapeHtmlMultiline } from "./lib/escapeHtml.js";
 import { LEGACY_SERVICE_REDIRECTS } from "../client/src/data/services.js";
 import { LEGACY_BLOG_REDIRECTS } from "../client/src/data/blogRedirects.js";
-import {
-  upload,
-  requireAuth,
-  handleGetAttachments,
-  handleUploadAttachment,
-  handleServeAttachment,
-  handleDeleteAttachment,
-} from "./handlers/attachments.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -70,69 +35,18 @@ async function startServer() {
   // lands here after tickets were migrated to the new portal.
   const NEW_PORTAL = "https://portal.devedge.com.au";
   app.use((req, res, next) => {
-    if (/^\/(portal|admin|login)(\/|$)/.test(req.path)) return res.redirect(301, NEW_PORTAL);
-    if (/^\/api\/(auth|tickets|admin|invites|password-reset|comments|attachments)(\/|$)/.test(req.path)) {
+    if (/^\/(portal|admin|login)(\/|$)/i.test(req.path)) return res.redirect(301, NEW_PORTAL);
+    if (/^\/api\/(auth|tickets|admin|invites|password-reset|comments|attachments)(\/|$)/i.test(req.path)) {
       return res.status(410).json({ error: `The client portal has moved to ${NEW_PORTAL}` });
     }
     next();
   });
 
   app.use("/api", limiter(15, 300));
-  const loginLimiter = limiter(15, 10);
-  const passwordResetLimiter = limiter(15, 5);
-  const inviteLimiter = limiter(15, 20);
   const contactLimiter = limiter(60, 5);
 
-  // ── Auth ─────────────────────────────────────────────────────────────────────
-  app.post("/api/auth", loginLimiter, handleLogin);
-  app.get("/api/auth", handleValidateToken);
-
-  // ── Tickets ──────────────────────────────────────────────────────────────────
-  app.get("/api/tickets", handleGetTickets);
-  app.post("/api/tickets", handleCreateTicket);
-  app.patch("/api/tickets", handleUpdateTicket);
-  app.delete("/api/tickets", handleDeleteTicket);
-
-  // ── Admin ─────────────────────────────────────────────────────────────────────
-  app.get("/api/admin", handleGetAdmin);
-  app.post("/api/admin", async (req, res) => {
-    const { action } = req.body || {};
-    if (action === "create_org")   return handleCreateOrg(req, res);
-    if (action === "create_user")  return handleCreateUser(req, res);
-    if (action === "update_role")  return handleUpdateUserRole(req, res);
-    return res.status(400).json({ error: "Missing or invalid action" });
-  });
-  app.delete("/api/admin", handleDeleteUser);
-
-  // ── Invites ───────────────────────────────────────────────────────────────────
-  app.get("/api/invites", handleValidateInvite);
-  app.post("/api/invites", inviteLimiter, async (req, res) => {
-    const { action } = req.body || {};
-    if (action === "create") return handleCreateInvite(req, res);
-    if (action === "accept") return handleAcceptInvite(req, res);
-    if (action === "resend") return handleResendInvite(req, res);
-    return res.status(400).json({ error: "Missing or invalid action" });
-  });
-  app.delete("/api/invites", handleCancelInvite);
-
-  // ── Password reset ────────────────────────────────────────────────────────────
-  app.get("/api/password-reset", handleValidateResetToken);
-  app.post("/api/password-reset", passwordResetLimiter, async (req, res) => {
-    const { action } = req.body || {};
-    if (action === "forgot") return handleForgotPassword(req, res);
-    if (action === "reset")  return handleResetPassword(req, res);
-    return res.status(400).json({ error: "Missing or invalid action" });
-  });
-
-  // ── Comments ─────────────────────────────────────────────────────────────────
-  app.get("/api/comments", handleGetComments);
-  app.post("/api/comments", handleCreateComment);
-
-  // ── Attachments ───────────────────────────────────────────────────────────────
-  app.get("/api/attachments", handleGetAttachments);
-  app.post("/api/attachments", requireAuth, upload.single("file"), handleUploadAttachment);
-  app.get("/api/attachments/file/:id", handleServeAttachment);
-  app.delete("/api/attachments/:id", handleDeleteAttachment);
+  // The old portal's API routes have been removed entirely (the portal lives at
+  // portal.devedge.com.au). The guard above answers 410 for any spelling of them.
 
   // ── Contact ──────────────────────────────────────────────────────────────────
   app.post("/api/contact", contactLimiter, async (req, res) => {
@@ -268,9 +182,6 @@ async function startServer() {
   app.use((err: any, _req: express.Request, res: express.Response, next: express.NextFunction) => {
     if (err instanceof URIError || err?.status === 400) {
       return res.status(400).json({ error: "Bad request" });
-    }
-    if (err?.code === "LIMIT_FILE_SIZE") {
-      return res.status(413).json({ error: "File too large (max 10MB)" });
     }
     next(err);
   });
