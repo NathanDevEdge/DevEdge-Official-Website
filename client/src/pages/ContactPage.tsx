@@ -4,8 +4,8 @@ import Footer from "@/components/Footer";
 import ContactForm from "@/components/ContactForm";
 import PageHero from "@/components/site/PageHero";
 import { Eyebrow, FadeUp } from "@/components/site/primitives";
-import { SITE } from "@/lib/site";
 import { breadcrumbSchema } from "@/lib/schema";
+import { PORTAL_LOGIN_HREF, SITE } from "@/lib/site";
 
 const NEXT_STEPS = [
     "We reply within one business day, usually sooner.",
@@ -70,7 +70,7 @@ export default function ContactPage() {
                         <div className="bg-[#EDD9C0] border-l-2 border-primary p-6">
                             <p className="text-[15px] leading-[1.7]">
                                 <strong>Already a client?</strong> Raise and track requests in the{" "}
-                                <a href="/portal/login" className="text-primary hover:text-primary/80 font-semibold">
+                                <a href={PORTAL_LOGIN_HREF} className="text-primary hover:text-primary/80 font-semibold">
                                     client portal
                                 </a>
                                 .

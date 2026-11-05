@@ -27,4 +27,5 @@ export const NAV_LINKS = [
   { name: "Insights", href: "/blog" },
 ];
 
-export const PORTAL_LOGIN_HREF = "/portal/login";
+/** The client portal is its own app (devedge-portal repo). */
+export const PORTAL_LOGIN_HREF = "https://portal.devedge.com.au";

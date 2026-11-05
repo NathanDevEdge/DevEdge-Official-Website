@@ -60,12 +60,12 @@ export default function Navigation() {
                 {link.name}
               </Link>
             ))}
-            <Link
+            <a
               href={PORTAL_LOGIN_HREF}
               className="font-mono text-[12px] tracking-wider text-muted-foreground hover:text-primary transition-colors duration-150 uppercase pl-6 border-l border-[#D4B896]"
             >
               Client Login
-            </Link>
+            </a>
             <ContactModal
               buttonText="Start a Project"
               triggerClassName="bg-primary hover:bg-primary/90 text-[#1A1008] font-semibold rounded-none px-5 h-9 text-sm transition-colors duration-150"
@@ -104,13 +104,13 @@ export default function Navigation() {
                     {link.name}
                   </Link>
                 ))}
-                <Link
+                <a
                   href={PORTAL_LOGIN_HREF}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="font-mono text-[12px] tracking-wider text-muted-foreground hover:text-primary py-3 uppercase transition-colors duration-150"
                 >
                   Client Login
-                </Link>
+                </a>
                 <div className="mt-3 pt-3 border-t border-[#D4B896]">
                   <ContactModal
                     buttonText="Start a Project"

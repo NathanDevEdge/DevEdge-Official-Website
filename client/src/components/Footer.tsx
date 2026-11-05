@@ -56,12 +56,18 @@ export default function Footer({ className }: { className?: string }) {
               <ul className="space-y-4">
                 {col.links.map((item) => (
                   <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className="text-sm text-[#A89070] hover:text-[#F5E6D5] transition-colors duration-150"
-                    >
-                      {item.name}
-                    </Link>
+                    {/^https?:/.test(item.href) ? (
+                      <a href={item.href} className="text-sm text-[#A89070] hover:text-[#F5E6D5] transition-colors duration-150">
+                        {item.name}
+                      </a>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        className="text-sm text-[#A89070] hover:text-[#F5E6D5] transition-colors duration-150"
+                      >
+                        {item.name}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

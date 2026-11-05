@@ -65,6 +65,18 @@ async function startServer() {
       message: { error: "Too many requests, please try again later." },
     });
 
+  // ── Client portal moved to portal.devedge.com.au ──────────────────────────────
+  // Old portal pages redirect; the old portal API is switched off so nothing new
+  // lands here after tickets were migrated to the new portal.
+  const NEW_PORTAL = "https://portal.devedge.com.au";
+  app.use((req, res, next) => {
+    if (/^\/(portal|admin|login)(\/|$)/.test(req.path)) return res.redirect(301, NEW_PORTAL);
+    if (/^\/api\/(auth|tickets|admin|invites|password-reset|comments|attachments)(\/|$)/.test(req.path)) {
+      return res.status(410).json({ error: `The client portal has moved to ${NEW_PORTAL}` });
+    }
+    next();
+  });
+
   app.use("/api", limiter(15, 300));
   const loginLimiter = limiter(15, 10);
   const passwordResetLimiter = limiter(15, 5);
