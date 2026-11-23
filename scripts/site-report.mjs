@@ -112,6 +112,10 @@ async function ga4(token, r) {
           dateRanges: cur,
           dimensions: [{ name: "pagePath" }],
           metrics: [{ name: "screenPageViews" }, { name: "activeUsers" }],
+          // Leave out the internal /lab prototype and bot probes like //webapi/auth.cgi
+          dimensionFilter: {
+            notExpression: { filter: { fieldName: "pagePath", stringFilter: { matchType: "PARTIAL_REGEXP", value: "^/lab|^//|\\.(cgi|php)" } } },
+          },
           orderBys: [{ metric: { metricName: "screenPageViews" }, desc: true }],
           limit: 10,
         },
