@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import ContactForm from "@/components/ContactForm";
+import { trackEvent } from "@/lib/analytics";
 
 interface ContactModalProps {
   children?: React.ReactNode;
@@ -28,7 +29,16 @@ export default function ContactModal({
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger
+        asChild
+        onClick={(e) =>
+          // Every "Start a Project" / "Get in Touch" button opens this modal
+          trackEvent("cta_click", {
+            cta_text: (e.currentTarget.textContent || buttonText).trim().slice(0, 100),
+            page_path: window.location.pathname,
+          })
+        }
+      >
         {children || (
           <Button variant={variant} size={size} className={triggerClassName}>
             {buttonText}
@@ -51,7 +61,7 @@ export default function ContactModal({
 
         {/* Form */}
         <div className="px-8 py-6">
-          <ContactForm onSuccess={() => setOpen(false)} />
+          <ContactForm location="modal" onSuccess={() => setOpen(false)} />
         </div>
       </DialogContent>
     </Dialog>

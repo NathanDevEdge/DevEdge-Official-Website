@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { FieldErrors, Resolver } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -23,8 +23,23 @@ const resolver: Resolver<FormValues> = async (values) => {
 const serviceOptions = [...SERVICES.map((s) => s.name), "Not sure yet"];
 
 /** The enquiry form, used in the contact modal and on /contact */
-export default function ContactForm({ onSuccess }: { onSuccess?: () => void }) {
+export default function ContactForm({
+  onSuccess,
+  location = "contact_page",
+}: {
+  onSuccess?: () => void;
+  /** Where the form is shown, sent with the analytics events */
+  location?: "modal" | "contact_page";
+}) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const started = useRef(false);
+
+  // form_start: first time someone focuses a field
+  const onFirstFocus = () => {
+    if (started.current) return;
+    started.current = true;
+    trackEvent("form_start", { form: "contact", form_location: location });
+  };
 
   const form = useForm<FormValues>({
     resolver,
@@ -46,13 +61,14 @@ export default function ContactForm({ onSuccess }: { onSuccess?: () => void }) {
         }),
       });
       if (!response.ok) throw new Error("Failed to send message");
-      trackEvent("generate_lead", { form: "contact", service: data.services.join(", ") });
+      trackEvent("generate_lead", { form: "contact", form_location: location, service: data.services.join(", ") });
       toast.success("Message sent!", {
         description: "We'll get back to you within 24 hours.",
       });
       form.reset();
       onSuccess?.();
     } catch {
+      trackEvent("form_error", { form: "contact", form_location: location });
       toast.error("Failed to send message", {
         description: "Please try again or email info@devedge.com.au",
       });
@@ -66,7 +82,7 @@ export default function ContactForm({ onSuccess }: { onSuccess?: () => void }) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+      <form onSubmit={form.handleSubmit(onSubmit)} onFocus={onFirstFocus} className="space-y-5">
 
         {/* Name */}
         <FormField
