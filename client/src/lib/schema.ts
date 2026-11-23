@@ -1,6 +1,7 @@
 // schema.org structured data builders (rendered as JSON-LD via <SEO jsonLd>)
 import { PROFILES, SITE } from "@/lib/site";
 import type { Service } from "@/data/services";
+import type { BlogPost } from "@shared/blog";
 
 const ORG_ID = `${SITE.url}/#organization`;
 
@@ -34,6 +35,26 @@ export const serviceSchema = (s: Service) => ({
     url: `${SITE.url}/services/${s.slug}`,
     provider: { "@id": ORG_ID },
     areaServed: { "@type": "Country", name: "Australia" },
+});
+
+/** The /blog index: the blog itself, with a summary of every post */
+export const blogSchema = (posts: BlogPost[]) => ({
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": `${SITE.url}/blog#blog`,
+    name: "DevEdge Insights",
+    url: `${SITE.url}/blog`,
+    publisher: { "@id": ORG_ID },
+    inLanguage: "en-AU",
+    blogPost: posts.map((p) => ({
+        "@type": "BlogPosting",
+        headline: p.title,
+        description: p.description,
+        url: `${SITE.url}/blog/${p.slug}`,
+        datePublished: p.date,
+        dateModified: p.updated ?? p.date,
+        author: { "@type": "Person", name: p.author },
+    })),
 });
 
 export const breadcrumbSchema = (items: { name: string; path: string }[]) => ({

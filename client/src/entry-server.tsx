@@ -2,10 +2,10 @@
 import { renderToString } from "react-dom/server";
 import App from "./App";
 import { SERVICES, LEGACY_SERVICE_REDIRECTS } from "./data/services";
-import { BLOG_SLUGS } from "./pages/BlogPost";
+import { BLOG_POSTS } from "./pages/BlogPost";
 
 /** Every public page that should be pre-rendered and listed in the sitemap */
-export const PRERENDER_ROUTES: { path: string; priority: number; changefreq: string }[] = [
+export const PRERENDER_ROUTES: { path: string; priority: number; changefreq: string; lastmod?: string }[] = [
   { path: "/", priority: 1.0, changefreq: "weekly" },
   { path: "/services", priority: 0.9, changefreq: "monthly" },
   ...SERVICES.map((s) => ({ path: `/services/${s.slug}`, priority: 0.9, changefreq: "monthly" })),
@@ -13,8 +13,13 @@ export const PRERENDER_ROUTES: { path: string; priority: number; changefreq: str
   { path: "/about", priority: 0.7, changefreq: "monthly" },
   { path: "/products/tradeflow", priority: 0.7, changefreq: "monthly" },
   { path: "/contact", priority: 0.7, changefreq: "yearly" },
-  { path: "/blog", priority: 0.7, changefreq: "weekly" },
-  ...BLOG_SLUGS.map((slug) => ({ path: `/blog/${slug}`, priority: 0.6, changefreq: "monthly" })),
+  { path: "/blog", priority: 0.7, changefreq: "weekly", lastmod: BLOG_POSTS.map((p) => p.updated ?? p.date).sort().at(-1) },
+  ...BLOG_POSTS.map((p) => ({
+    path: `/blog/${p.slug}`,
+    priority: 0.6,
+    changefreq: "monthly",
+    lastmod: p.updated ?? p.date,
+  })),
   { path: "/privacy", priority: 0.2, changefreq: "yearly" },
   { path: "/terms", priority: 0.2, changefreq: "yearly" },
 ];

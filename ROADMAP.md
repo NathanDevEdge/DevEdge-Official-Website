@@ -134,7 +134,7 @@ Map one primary keyword to each page. Use it in the title, H1, URL, first paragr
     - Ad Creative That Converts: What We Test First
     - From Ad Click to Paid Invoice: Connecting Ads, Website and CRM
     - How We Grew WoodEvo with Meta Ads (publish **after December 2026**, with permission)
-- [ ] Move blog content out of `BlogPost.tsx` into Markdown/MDX files so new posts don't require code changes.
+- [x] Move blog content out of `BlogPost.tsx` into Markdown files (`content/blog/`, see its README) so new posts don't require code changes.
 - [ ] Add a blog index with categories (CRM & ERP · Apps · Websites · Paid Media · SEO · Tracking) and an email signup.
 
 ### P1 — Off-site & local

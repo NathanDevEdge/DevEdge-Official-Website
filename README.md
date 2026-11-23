@@ -33,6 +33,7 @@ devedge-website/
 │   │   ├── lib/         # Utility functions
 │   │   ├── App.tsx      # Main application router
 │   │   └── index.css    # Global styles & Tailwind configuration
+├── content/blog/        # Blog posts as Markdown (see content/blog/README.md)
 ├── server/              # Backend services 
 └── package.json         # Dependencies and scripts
 ```
