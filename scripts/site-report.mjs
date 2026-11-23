@@ -153,11 +153,19 @@ async function ga4(token, r) {
           orderBys: [{ metric: { metricName: "eventCount" }, desc: true }],
           limit: 8,
         },
+        {
+          // Page titles, so the email can show "Home" or "About DevEdge" instead of a bare path
+          dateRanges: [{ startDate: "90daysAgo", endDate: "today" }],
+          dimensions: [{ name: "pagePath" }, { name: "pageTitle" }],
+          metrics: [{ name: "screenPageViews" }],
+          orderBys: [{ metric: { metricName: "screenPageViews" }, desc: true }],
+          limit: 500,
+        },
       ],
     }),
   ]);
   const [totals, events, pages, channels, ctaPages] = a.reports;
-  const [cities, leadSources] = b.reports;
+  const [cities, leadSources, titles] = b.reports;
 
   // With two date ranges GA adds a "dateRange" dimension at the end of each row
   const split = (report, nDims = 0) => {
@@ -178,6 +186,7 @@ async function ga4(token, r) {
   const tp = t.prev.total ?? [0, 0, 0, 0, 0, 0];
   const ev = split(events, 1);
   const evCount = (w, name) => ev[w][name]?.[0] ?? 0;
+  for (const [path, title] of rows(titles)) if (!pageTitles.has(path)) pageTitles.set(path, title);
 
   return {
     totals: ["activeUsers", "newUsers", "sessions", "screenPageViews", "engagementRate", "keyEvents"].reduce(
@@ -266,6 +275,20 @@ const table = (head, body) => `
   </table>`;
 
 const h2 = (t) => `<h2 style="font-size:16px;color:${C.ink};margin:28px 0 6px;border-left:4px solid ${C.accent};padding-left:10px">${t}</h2>`;
+// Friendly page names: "/" is Home; otherwise the page's title without the "| DevEdge" style suffix
+const pageTitles = new Map();
+function pageName(path) {
+  const clean = path.length > 1 ? path.replace(/\/$/, "") : path;
+  if (clean === "/") return "Home";
+  const title = pageTitles.get(clean) ?? pageTitles.get(`${clean}/`);
+  const short = title?.split(/\s+[|–—]\s+/)[0].trim();
+  if (short && !/^devedge$/i.test(short)) return short;
+  const slug = clean.split("/").filter(Boolean).pop() ?? clean;
+  return slug.replace(/-/g, " ").replace(/^./, (c) => c.toUpperCase());
+}
+const pageCell = (path) =>
+  `${esc(pageName(path))}<div style="font-size:11px;color:${C.brown}">${esc(path)}</div>`;
+
 const pathOf = (u) => {
   try {
     return new URL(u).pathname;
@@ -315,10 +338,10 @@ function render(r, g, s) {
   )}
   <div style="font-size:12px;color:${C.brown}">Enquiries per session: ${pct(leadRate)}.</div>
   ${g.leadSources.length ? table(["Enquiries came from", "Enquiries"], g.leadSources.map(([src, c]) => [esc(src), n0(c)])) : ""}
-  ${g.ctaPages.length ? table(["Pages where the button was clicked", "Clicks"], g.ctaPages.map(([p, c]) => [esc(p), n0(c)])) : ""}
+  ${g.ctaPages.length ? table(["Pages where the button was clicked", "Clicks"], g.ctaPages.map(([p, c]) => [pageCell(p), n0(c)])) : ""}
 
   ${h2("Most viewed pages")}
-  ${table(["Page", "Views", "Visitors"], g.pages.map(([p, v, u]) => [esc(p), n0(v), n0(u)]))}
+  ${table(["Page", "Views", "Visitors"], g.pages.map(([p, v, u]) => [pageCell(p), n0(v), n0(u)]))}
 
   ${h2("Where visitors came from")}
   ${table(["Channel", "Sessions", "Key events"], g.channels.map(([ch, se, k]) => [esc(ch), n0(se), n0(k)]))}
@@ -337,7 +360,7 @@ function render(r, g, s) {
   )}
   ${table(
     ["Page in Google", "Clicks", "Impr.", "Position"],
-    s.pages.map((p) => [esc(pathOf(p.keys[0])), n0(p.clicks), n0(p.impressions), p.position.toFixed(1)]),
+    s.pages.map((p) => [pageCell(pathOf(p.keys[0])), n0(p.clicks), n0(p.impressions), p.position.toFixed(1)]),
   )}
 
   <p style="font-size:12px;color:${C.brown};margin-top:28px">
