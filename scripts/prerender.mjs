@@ -40,7 +40,7 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 ${PRERENDER_ROUTES.map(
   (r) => `  <url>
     <loc>${SITE}${r.path}</loc>
-    <lastmod>${today}</lastmod>
+    <lastmod>${r.lastmod ?? today}</lastmod>
     <changefreq>${r.changefreq}</changefreq>
     <priority>${r.priority.toFixed(1)}</priority>
   </url>`,

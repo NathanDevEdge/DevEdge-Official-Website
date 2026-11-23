@@ -17,6 +17,8 @@ interface SEOProps {
     type?: "website" | "article";
     /** ISO date string — set on blog posts */
     publishedTime?: string;
+    /** ISO date string — set on blog posts that have been updated */
+    modifiedTime?: string;
     /** Structured data objects, rendered as JSON-LD */
     jsonLd?: object | object[];
     noindex?: boolean;
@@ -29,6 +31,7 @@ export default function SEO({
     url,
     type = "website",
     publishedTime,
+    modifiedTime,
     jsonLd,
     noindex,
 }: SEOProps) {
@@ -54,6 +57,7 @@ export default function SEO({
             <meta property="og:image:height" content="630" />
 
             {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+            {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
 
             {/* Twitter */}
             <meta name="twitter:card" content="summary_large_image" />
