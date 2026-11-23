@@ -205,7 +205,9 @@ export default function blogPlugin(contentDir: string): Plugin {
     },
     load(id) {
       if (id !== RESOLVED_ID) return;
-      this.addWatchFile(contentDir);
+      // In dev, configureServer below watches the folder. Adding the folder as a watch
+      // file there makes Vite treat it as an import and fail with "Does the file exist?".
+      if (!includeDrafts) this.addWatchFile(contentDir);
       return `export default ${JSON.stringify(loadPosts(contentDir, { includeDrafts }))};`;
     },
     configureServer(server) {
