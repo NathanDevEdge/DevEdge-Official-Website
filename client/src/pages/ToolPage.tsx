@@ -24,8 +24,8 @@ const PROSE = `prose prose-stone max-w-none
     prose-p:text-muted-foreground prose-p:text-[16px] prose-p:leading-relaxed
     prose-strong:text-foreground prose-strong:font-semibold
     prose-ul:text-muted-foreground prose-ol:text-muted-foreground prose-li:leading-relaxed
-    prose-code:text-foreground prose-code:bg-[#EDD9C0] prose-code:px-1.5 prose-code:py-0.5 prose-code:font-normal prose-code:before:content-none prose-code:after:content-none
-    prose-table:text-[15px] prose-th:text-foreground prose-td:text-muted-foreground
+    prose-code:text-foreground prose-code:bg-[#EDD9C0] prose-code:px-1.5 prose-code:py-0.5 prose-code:font-normal prose-code:before:content-none prose-code:after:content-none prose-code:[overflow-wrap:anywhere]
+    prose-table:text-[15px] prose-table:block prose-table:overflow-x-auto prose-th:text-foreground prose-td:text-muted-foreground
     prose-blockquote:border-l-primary prose-blockquote:bg-[#EDD9C0] prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:text-foreground prose-blockquote:not-italic prose-blockquote:font-medium
     prose-a:text-primary hover:prose-a:text-primary/80`;
 
@@ -182,7 +182,7 @@ export default function ToolPage() {
                             Put it on your own website.
                         </SectionHeading>
                         <p className="text-[#A89070] text-[17px] leading-relaxed mb-12 max-w-2xl">
-                            Give your customers the {tool.name.toLowerCase()} on your own site, in your own colours. Free, no account needed.
+                            Give your customers the {tool.name} on your own site, in your own colours. Free, no account needed.
                         </p>
                         <EmbedBox tool={tool} />
                     </FadeUp>

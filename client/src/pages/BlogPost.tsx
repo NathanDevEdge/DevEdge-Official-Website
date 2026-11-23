@@ -282,7 +282,8 @@ export default function BlogPost() {
                         prose-strong:text-foreground prose-strong:font-semibold
                         prose-ul:text-muted-foreground prose-li:leading-relaxed
                         prose-blockquote:border-l-primary prose-blockquote:bg-[#EDD9C0] prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:text-foreground prose-blockquote:not-italic prose-blockquote:font-medium
-                        prose-a:text-primary hover:prose-a:text-primary/80"
+                        prose-a:text-primary hover:prose-a:text-primary/80
+                        prose-code:[overflow-wrap:anywhere] prose-code:before:content-none prose-code:after:content-none prose-code:font-normal prose-code:text-foreground prose-code:bg-[#EDD9C0] prose-code:px-1 prose-table:block prose-table:overflow-x-auto"
                     onClick={onBodyClick}
                 >
                     {/* How-to posts: the tool they teach, near the top (after the takeaway if there is one) */}
