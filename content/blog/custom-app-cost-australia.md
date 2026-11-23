@@ -4,21 +4,6 @@ description: "The honest answer is \"it depends\", so here's exactly what it dep
 date: 2026-10-29
 category: Apps
 readTime: 7 min read
-heroCode:
-  filename: scope.ts
-  code: |
-    // What actually moves the price
-
-    const drivers = [
-      "screens & user flows",
-      "user roles & permissions",
-      "integrations",
-      "platforms",
-      "reporting & admin",
-    ];
-
-    const quote = scope(mvp, drivers);
-    // written, fixed, no surprises
 ---
 
 Search "how much does an app cost" and you'll find price ranges so wide they're useless. That's not because agencies are being cagey. It's because "app" covers everything from a quoting calculator to a two-sided marketplace. A number without a scope is a guess.

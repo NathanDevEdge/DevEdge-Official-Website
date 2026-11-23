@@ -7,7 +7,6 @@ import Footer from "@/components/Footer";
 import ContactModal from "@/components/ContactModal";
 import { m } from "framer-motion";
 import posts from "virtual:blog-posts";
-import type { CodeLine, CodeRole } from "@shared/blog";
 
 // Posts live in content/blog/*.md (see content/blog/README.md).
 // Prices never appear in them: every project is quoted privately.
@@ -20,43 +19,6 @@ export const BLOG_POSTS = posts;
 /** "2026-10-29" → "Oct 29, 2026", the same on the server and in every time zone */
 const formatDate = (iso: string) =>
     new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
-
-// ── Code block visuals (replaces stock photography) ───────────────────────────
-const CODE_COLOURS: Record<CodeRole, string> = {
-    keyword: "#C97B3A",
-    name: "#F5E6D5",
-    punct: "#A89070",
-    comment: "#664422",
-};
-
-function CodeBlock({ filename, lines, className = "" }: { filename: string; lines: CodeLine[]; className?: string }) {
-    return (
-        <div className={`w-full border border-[#2E1F0F] bg-[#1A1008] overflow-hidden ${className}`}>
-            {/* Window chrome */}
-            <div className="flex items-center gap-2 px-5 py-3 border-b border-[#2E1F0F]">
-                <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />
-                <span className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
-                <span className="w-3 h-3 rounded-full bg-[#28C840]" />
-                <span className="ml-auto font-mono text-[11px] text-[#664422] tracking-widest">{filename}</span>
-            </div>
-            {/* Code */}
-            <div className="px-6 py-5 font-mono text-[13px] leading-[1.8]">
-                {lines.map((line, i) => (
-                    <div key={i} className="flex gap-5">
-                        <span className="w-4 shrink-0 text-right text-[#332010] select-none text-xs pt-px">
-                            {line.length > 0 ? i + 1 : ""}
-                        </span>
-                        <span>
-                            {line.map((token, j) => (
-                                <span key={j} style={{ color: CODE_COLOURS[token.role] }}>{token.text}</span>
-                            ))}
-                        </span>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-}
 
 // ── Shared components ─────────────────────────────────────────────────────────
 function BgDecorations() {
@@ -147,10 +109,10 @@ function BlogIndex() {
                         className="border-t border-[#D4B896]"
                     >
                         {posts.map((post) => {
-                            const { slug, heroCode: code } = post;
+                            const { slug } = post;
                             return (
                                 <Link key={slug} href={`/insights/${slug}`}>
-                                    <div className="border-b border-[#D4B896] py-8 grid md:grid-cols-[1fr_220px] gap-8 items-center group hover:bg-[#F5DFC8] transition-colors duration-150 cursor-pointer">
+                                    <div className="border-b border-[#D4B896] py-8 group hover:bg-[#F5DFC8] transition-colors duration-150 cursor-pointer">
                                         {/* Text */}
                                         <div>
                                             <div className="flex items-center gap-4 font-mono text-[11px] text-muted-foreground tracking-widest mb-3">
@@ -168,26 +130,6 @@ function BlogIndex() {
                                                 Read article →
                                             </span>
                                         </div>
-                                        {/* Code block thumbnail */}
-                                        {code && (
-                                            <div className="hidden md:block overflow-hidden border border-[#2E1F0F] bg-[#1A1008] group-hover:border-[#C97B3A]/40 transition-colors duration-300">
-                                                <div className="flex items-center gap-1.5 px-4 py-2 border-b border-[#2E1F0F]">
-                                                    <span className="w-2 h-2 rounded-full bg-[#FF5F57]" />
-                                                    <span className="w-2 h-2 rounded-full bg-[#FEBC2E]" />
-                                                    <span className="w-2 h-2 rounded-full bg-[#28C840]" />
-                                                    <span className="ml-auto font-mono text-[9px] text-[#664422] tracking-widest">{code.filename}</span>
-                                                </div>
-                                                <div className="px-4 py-3 font-mono text-[10px] leading-[1.7] overflow-hidden max-h-[120px]">
-                                                    {code.lines.slice(0, 8).map((line, i) => (
-                                                        <div key={i} className="whitespace-nowrap overflow-hidden text-ellipsis">
-                                                            {line.length === 0 ? <>&nbsp;</> : line.map((tok, j) => (
-                                                                <span key={j} style={{ color: CODE_COLOURS[tok.role] }}>{tok.text}</span>
-                                                            ))}
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
                                     </div>
                                 </Link>
                             );
@@ -211,7 +153,6 @@ export default function BlogPost() {
         return <BlogIndex />;
     }
 
-    const code = post.heroCode;
     const url = `https://devedge.com.au/insights/${post.slug}`;
 
     // The body is plain HTML from Markdown, so route its links to other pages on the
@@ -307,22 +248,8 @@ export default function BlogPost() {
                 </div>
             </section>
 
-            {/* Code block hero (replaces stock image) */}
-            {code && (
-                <div className="container">
-                    <m.div
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3, delay: 0.2, ease }}
-                        className="my-12"
-                    >
-                        <CodeBlock filename={code.filename} lines={code.lines} />
-                    </m.div>
-                </div>
-            )}
-
             {/* Article body */}
-            <div className="container max-w-3xl">
+            <div className="container max-w-3xl mt-12">
                 <m.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}

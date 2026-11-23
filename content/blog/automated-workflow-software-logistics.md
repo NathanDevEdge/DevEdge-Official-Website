@@ -5,21 +5,6 @@ date: 2026-04-10
 updated: 2026-10-29
 category: CRM & ERP
 readTime: 6 min read
-heroCode:
-  filename: quote-to-cash.ts
-  code: |
-    // Quote accepted → paid, with no retyping
-
-    on("quote.accepted", async (quote) => {
-      await createOrder(quote);
-      await raisePurchaseOrders(quote);
-      await notifyCustomer(quote);
-    });
-
-    on("order.delivered", async (order) => {
-      await invoiceInXero(order);
-    });
-    // manual steps: 0
 ---
 
 ## The copy-and-paste tax

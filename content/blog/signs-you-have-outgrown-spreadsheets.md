@@ -4,19 +4,6 @@ description: "Spreadsheets are brilliant until they aren't. Here are the warning
 date: 2026-10-29
 category: CRM & ERP
 readTime: 7 min read
-heroCode:
-  filename: outgrown.ts
-  code: |
-    // Time to move off spreadsheets?
-
-    const signs = [
-      "Quotes_FINAL_v3.xlsx",
-      "only Sam knows the formulas",
-      "leads lost in the inbox",
-      "typing it all into Xero twice",
-    ];
-
-    if (signs.length > 1) plan("crm");
 ---
 
 Almost every business we work with started on spreadsheets, and that's the right call. They're flexible, free and everyone knows how to use them. The trouble is that they don't tell you when you've outgrown them. You just slowly start losing time, money and customers.

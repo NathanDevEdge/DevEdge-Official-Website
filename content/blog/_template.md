@@ -4,12 +4,6 @@ description: "One or two sentences, 140 to 160 characters, that make someone wan
 date: 2026-12-01
 category: CRM & ERP
 draft: true
-heroCode:
-  filename: example.ts
-  code: |
-    // A short, on-topic snippet
-
-    const answer = solve(problem);
 ---
 
 Opening paragraph: the problem, in the reader's words.

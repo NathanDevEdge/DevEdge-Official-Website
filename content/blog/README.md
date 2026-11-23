@@ -22,7 +22,6 @@ if the frontmatter is wrong.
 | `readTime` | no | e.g. `6 min read`. Worked out from the word count (230 words a minute) if left out. |
 | `draft` | no | `true` keeps the post off the live site (no page, not in the sitemap). It still shows in `pnpm dev`. |
 | `slug` | no | Overrides the URL if it must differ from the file name. Lowercase words joined by hyphens. |
-| `heroCode` | no | The code-window artwork at the top of the post: a `filename` and a short `code` block. |
 
 ## Writing
 

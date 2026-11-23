@@ -6,7 +6,7 @@ import path from "node:path";
 import { Marked } from "marked";
 import { parse as parseYaml } from "yaml";
 import type { Plugin } from "vite";
-import { BLOG_CATEGORIES, type BlogPost, type CodeLine, type CodeRole } from "../shared/blog";
+import { BLOG_CATEGORIES, type BlogPost } from "../shared/blog";
 import { LEGACY_BLOG_REDIRECTS } from "../client/src/data/blogRedirects";
 
 const VIRTUAL_ID = "virtual:blog-posts";
@@ -60,51 +60,6 @@ function asText(value: unknown, field: string, file: string): string {
   return value.trim();
 }
 
-// ── Code-block artwork ────────────────────────────────────────────────────────
-// A tiny highlighter for the decorative snippet at the top of a post. It only needs
-// to colour short, made-up TypeScript the way the site's design does.
-const KEYWORDS = new Set([
-  "const", "let", "var", "if", "else", "return", "async", "await", "function",
-  "new", "true", "false", "null", "undefined", "for", "of", "in", "export", "import", "from",
-]);
-
-function highlightLine(line: string): CodeLine {
-  const tokens: CodeLine = [];
-  const push = (text: string, role: CodeRole) => {
-    const last = tokens[tokens.length - 1];
-    if (last && last.role === role) last.text += text;
-    else tokens.push({ text, role });
-  };
-  const re = /(\/\/.*$)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)|(\b\d+(?:\.\d+)?\b)|([A-Za-z_$][\w$]*)|(\s+)|([^\sA-Za-z0-9_$"'`/]+|\/)/g;
-  let prevWord = "";
-  for (const m of line.matchAll(re)) {
-    const [text, comment, str, num, word, space] = m;
-    if (comment) push(text, "comment");
-    else if (str || num) push(text, "keyword");
-    else if (word) {
-      if (KEYWORDS.has(word)) push(text, "keyword");
-      else {
-        const rest = line.slice((m.index ?? 0) + text.length);
-        const declared = ["const", "let", "var", "function"].includes(prevWord);
-        push(text, declared || rest.startsWith("(") ? "name" : "punct");
-      }
-      prevWord = word;
-    } else if (space) push(text, tokens[tokens.length - 1]?.role ?? "punct"); // whitespace isn't visible, so join the previous token
-    else push(text, "punct");
-  }
-  return tokens;
-}
-
-function parseHeroCode(value: unknown, file: string): BlogPost["heroCode"] {
-  if (value == null) return undefined;
-  const v = value as { filename?: unknown; code?: unknown };
-  if (typeof v.filename !== "string" || typeof v.code !== "string") {
-    throw new Error(`${file}: "heroCode" needs a "filename" and a "code" block`);
-  }
-  const lines = v.code.replace(/\s+$/, "").split(/\r?\n/).map(highlightLine);
-  return { filename: v.filename, lines };
-}
-
 // ── Loading ───────────────────────────────────────────────────────────────────
 export function loadPosts(dir: string, { includeDrafts }: { includeDrafts: boolean }): BlogPost[] {
   const files = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith(".md") && !f.startsWith("_") && f.toLowerCase() !== "readme.md") : [];
@@ -144,7 +99,6 @@ export function loadPosts(dir: string, { includeDrafts }: { includeDrafts: boole
       readTime: data.readTime == null ? `${Math.max(1, Math.round(words / WORDS_PER_MINUTE))} min read` : String(data.readTime),
       category: category as BlogPost["category"],
       draft: data.draft === true,
-      heroCode: parseHeroCode(data.heroCode, file),
       html: markdown.parse(body, { async: false }) as string,
     };
     if (post.draft && !includeDrafts) continue;

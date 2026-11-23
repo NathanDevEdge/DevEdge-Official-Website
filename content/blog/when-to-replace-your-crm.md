@@ -3,17 +3,6 @@ title: "When to Replace Your CRM (and When to Fix the One You've Got)"
 description: "Hating your CRM doesn't always mean you need a new one. How to tell a broken setup from the wrong platform, and what to do about each before you switch."
 date: 2026-11-03
 category: CRM & ERP
-heroCode:
-  filename: crm-check.ts
-  code: |
-    // Replace it, or fix it?
-
-    const problem = diagnose(crm);
-
-    if (problem === "setup")    fix(crm);
-    if (problem === "platform") migrate(crm);
-
-    // most of the time, it's the setup
 ---
 
 Most business owners who tell us they need a new CRM are frustrated with the one they have, and fair enough. The team doesn't use it, the reports don't match reality and half the work still happens in spreadsheets and inboxes. Switching feels like a fresh start.

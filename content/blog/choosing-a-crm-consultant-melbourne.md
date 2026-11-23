@@ -3,18 +3,6 @@ title: "How to Choose a CRM Consultant in Melbourne: 8 Questions to Ask First"
 description: "Hiring someone to set up your CRM? The questions that separate a consultant who'll fit the system to your business from one who'll just install software."
 date: 2026-11-17
 category: CRM & ERP
-heroCode:
-  filename: consultant.ts
-  code: |
-    // Before you sign anything
-
-    const questions = [
-      "how do you learn our process?",
-      "who owns the accounts?",
-      "what happens after go-live?",
-    ];
-
-    if (questions.every(answeredWell)) hire(consultant);
 ---
 
 A CRM is only as good as the way it's set up, so choosing who sets it up is one of the bigger decisions in the project. Get it right and the system fits how your business works. Get it wrong and you end up with expensive software your team quietly works around.

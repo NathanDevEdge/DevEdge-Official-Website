@@ -1,11 +1,6 @@
 // Shape of a blog post once scripts/blogPlugin.ts has read it from content/blog/*.md.
 // The client imports the list from the "virtual:blog-posts" module.
 
-/** Colour role for one piece of the code-block artwork at the top of a post */
-export type CodeRole = "keyword" | "name" | "punct" | "comment";
-export type CodeToken = { text: string; role: CodeRole };
-export type CodeLine = CodeToken[];
-
 export const BLOG_CATEGORIES = [
   "CRM & ERP",
   "Apps",
@@ -30,7 +25,6 @@ export interface BlogPost {
   readTime: string;
   category?: BlogCategory;
   draft: boolean;
-  heroCode?: { filename: string; lines: CodeLine[] };
   /** Rendered article body */
   html: string;
 }

@@ -3,18 +3,6 @@ title: "Zoho One vs Zoho CRM: Which Does Your Business Actually Need?"
 description: "Zoho CRM on its own, or the whole Zoho One suite? A plain-English guide to the difference, who each one suits, and how to avoid paying for apps you never open."
 date: 2026-11-10
 category: CRM & ERP
-heroCode:
-  filename: zoho.ts
-  code: |
-    // One app, or the whole suite?
-
-    const needs = ["crm", "books", "inventory"];
-
-    const plan = needs.length > 2
-      ? "zoho-one"
-      : "zoho-crm";
-
-    // count what you'll use, not what's included
 ---
 
 If you've started looking at Zoho, you've probably hit the same question almost everyone does: should you buy Zoho CRM on its own, or go straight to Zoho One and get everything? Zoho makes both sound like the obvious choice, and the answer genuinely depends on your business.

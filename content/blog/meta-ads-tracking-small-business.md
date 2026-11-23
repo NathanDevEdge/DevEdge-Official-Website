@@ -4,20 +4,6 @@ description: "Before you blame the creative or the budget, check what you're tel
 date: 2026-10-29
 category: Tracking
 readTime: 6 min read
-heroCode:
-  filename: tracking.ts
-  code: |
-    // Tell the algorithm what a win looks like
-
-    const tracking = {
-      pixel:          true,
-      conversionsApi: true,
-      dedupeBy:       "event_id",
-      optimiseFor:    "Lead",
-      crmFeedback:    "closed deals",
-    };
-
-    // not page views. not clicks. customers.
 ---
 
 When Meta ads stop performing, the usual reaction is to change the creative, change the audience or turn up the budget. Sometimes that's right. But more often than not, the real problem is underneath: the ad account doesn't know what a good result looks like, because the tracking is broken.

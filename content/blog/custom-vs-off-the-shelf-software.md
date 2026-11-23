@@ -5,22 +5,6 @@ date: 2026-05-05
 updated: 2026-10-29
 category: Apps
 readTime: 6 min read
-heroCode:
-  filename: evaluate.ts
-  code: |
-    // Should you build custom?
-
-    const offTheShelf = {
-      workflow:  "theirs",
-      ownership: false,
-      cost:      "per user, forever",
-    };
-
-    const custom = {
-      workflow:  "yours",
-      ownership: true,
-      cost:      "scoped up front",
-    };
 ---
 
 ## The SaaS trap
