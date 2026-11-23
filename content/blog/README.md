@@ -1,7 +1,7 @@
-# Blog posts
+# Insights posts
 
-Every file in this folder ending in `.md` is a post on https://devedge.com.au/blog.
-The file name is the URL: `crm-vs-spreadsheets.md` is published at `/blog/crm-vs-spreadsheets`.
+Every file in this folder ending in `.md` is a post on https://devedge.com.au/insights (the old /blog URLs 301 there).
+The file name is the URL: `crm-vs-spreadsheets.md` is published at `/insights/crm-vs-spreadsheets`.
 Files starting with `_` (like `_template.md`) and this README are ignored.
 
 To add a post, copy `_template.md`, rename it, fill in the frontmatter and write the
@@ -13,8 +13,8 @@ if the frontmatter is wrong.
 
 | Field | Required | What it does |
 | --- | --- | --- |
-| `title` | yes | Page heading, `<title>` (with " \| DevEdge Blog"), `headline` in schema |
-| `description` | yes | Meta description, the excerpt on /blog, schema description. Aim for 140–160 characters. |
+| `title` | yes | Page heading, `<title>` (with " \| DevEdge Insights"), `headline` in schema |
+| `description` | yes | Meta description, the excerpt on /insights, schema description. Aim for 140–160 characters. |
 | `date` | yes | Published date, `YYYY-MM-DD`. Posts are listed newest first. |
 | `updated` | no | Date of the last real update, `YYYY-MM-DD`. Shown as "Updated …" and used for `dateModified` and the sitemap. |
 | `category` | no | One of `CRM & ERP`, `Apps`, `Websites`, `Paid Media`, `SEO`, `Tracking`. Sent as `articleSection` in schema. |

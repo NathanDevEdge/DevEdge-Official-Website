@@ -94,13 +94,13 @@ function BlogIndex() {
             <SEO
                 title="Insights: Websites, CRM & ERP, Apps and Marketing | DevEdge"
                 description="Practical, honest articles for Australian businesses on websites, custom software, CRM and ERP systems, automation and marketing that works."
-                url="https://devedge.com.au/blog"
+                url="https://devedge.com.au/insights"
                 type="website"
                 jsonLd={[
                     blogSchema(posts),
                     breadcrumbSchema([
                         { name: "Home", path: "/" },
-                        { name: "Insights", path: "/blog" },
+                        { name: "Insights", path: "/insights" },
                     ]),
                 ]}
             />
@@ -113,7 +113,7 @@ function BlogIndex() {
                     <m.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease }}>
                         <span className="font-mono text-[11px] text-primary tracking-[0.18em] uppercase inline-flex items-center gap-3">
                             <span className="w-8 h-px bg-primary inline-block" />
-                            DevEdge Blog
+                            DevEdge Insights
                         </span>
                     </m.div>
                     <m.h1
@@ -149,7 +149,7 @@ function BlogIndex() {
                         {posts.map((post) => {
                             const { slug, heroCode: code } = post;
                             return (
-                                <Link key={slug} href={`/blog/${slug}`}>
+                                <Link key={slug} href={`/insights/${slug}`}>
                                     <div className="border-b border-[#D4B896] py-8 grid md:grid-cols-[1fr_220px] gap-8 items-center group hover:bg-[#F5DFC8] transition-colors duration-150 cursor-pointer">
                                         {/* Text */}
                                         <div>
@@ -203,7 +203,7 @@ function BlogIndex() {
 
 // ── Individual Article ────────────────────────────────────────────────────────
 export default function BlogPost() {
-    const [match, params] = useRoute("/blog/:slug");
+    const [match, params] = useRoute("/insights/:slug");
     const [, navigate] = useLocation();
     const post = match && params ? POSTS_BY_SLUG.get(params.slug) : undefined;
 
@@ -212,7 +212,7 @@ export default function BlogPost() {
     }
 
     const code = post.heroCode;
-    const url = `https://devedge.com.au/blog/${post.slug}`;
+    const url = `https://devedge.com.au/insights/${post.slug}`;
 
     // The body is plain HTML from Markdown, so route its links to other pages on the
     // site through wouter instead of letting them reload the whole page.
@@ -228,7 +228,7 @@ export default function BlogPost() {
     return (
         <div className="min-h-screen bg-background text-foreground">
             <SEO
-                title={`${post.title} | DevEdge Blog`}
+                title={`${post.title} | DevEdge Insights`}
                 description={post.description}
                 url={url}
                 type="article"
@@ -251,8 +251,8 @@ export default function BlogPost() {
                     },
                     breadcrumbSchema([
                         { name: "Home", path: "/" },
-                        { name: "Insights", path: "/blog" },
-                        { name: post.title, path: `/blog/${post.slug}` },
+                        { name: "Insights", path: "/insights" },
+                        { name: post.title, path: `/insights/${post.slug}` },
                     ]),
                 ]}
             />
@@ -268,13 +268,13 @@ export default function BlogPost() {
                         transition={{ duration: 0.3, ease }}
                         className="flex items-center gap-6 mb-10"
                     >
-                        <Link href="/blog" className="font-mono text-[11px] text-muted-foreground tracking-[0.18em] uppercase inline-flex items-center gap-3 hover:text-primary transition-colors">
+                        <Link href="/insights" className="font-mono text-[11px] text-muted-foreground tracking-[0.18em] uppercase inline-flex items-center gap-3 hover:text-primary transition-colors">
                             ← All Articles
                         </Link>
                         <span className="w-px h-4 bg-[#D4B896]" />
                         <span className="font-mono text-[11px] text-primary tracking-[0.18em] uppercase inline-flex items-center gap-3">
                             <span className="w-8 h-px bg-primary inline-block" />
-                            DevEdge Blog
+                            DevEdge Insights
                         </span>
                     </m.div>
                     <m.h1

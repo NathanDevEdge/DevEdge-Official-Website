@@ -37,20 +37,20 @@ export const serviceSchema = (s: Service) => ({
     areaServed: { "@type": "Country", name: "Australia" },
 });
 
-/** The /blog index: the blog itself, with a summary of every post */
+/** The /insights index: the blog itself, with a summary of every post */
 export const blogSchema = (posts: BlogPost[]) => ({
     "@context": "https://schema.org",
     "@type": "Blog",
-    "@id": `${SITE.url}/blog#blog`,
+    "@id": `${SITE.url}/insights#blog`,
     name: "DevEdge Insights",
-    url: `${SITE.url}/blog`,
+    url: `${SITE.url}/insights`,
     publisher: { "@id": ORG_ID },
     inLanguage: "en-AU",
     blogPost: posts.map((p) => ({
         "@type": "BlogPosting",
         headline: p.title,
         description: p.description,
-        url: `${SITE.url}/blog/${p.slug}`,
+        url: `${SITE.url}/insights/${p.slug}`,
         datePublished: p.date,
         dateModified: p.updated ?? p.date,
         author: { "@type": "Person", name: p.author },

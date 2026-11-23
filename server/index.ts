@@ -122,10 +122,17 @@ async function startServer() {
       next();
     });
 
-    app.get("/blog/:slug", (req, res, next) => {
+    // The blog moved from /blog to /insights (Nov 2026). Retired post slugs go straight to
+    // their replacements; every other /blog URL keeps its path under /insights.
+    app.get(["/insights/:slug", "/blog/:slug"], (req, res, next) => {
       const target = LEGACY_BLOG_REDIRECTS[req.params.slug];
       if (target) return res.redirect(301, target);
       next();
+    });
+    app.get(/^\/blog(\/.*)?$/i, (req, res) => {
+      const rest = (req.path.slice("/blog".length) || "").replace(/\/+$/, "");
+      const query = req.originalUrl.includes("?") ? req.originalUrl.slice(req.originalUrl.indexOf("?")) : "";
+      res.redirect(301, `/insights${rest}${query}`);
     });
 
     // Keep the client portal and admin out of search results

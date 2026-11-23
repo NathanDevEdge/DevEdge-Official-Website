@@ -13,9 +13,9 @@ export const PRERENDER_ROUTES: { path: string; priority: number; changefreq: str
   { path: "/about", priority: 0.7, changefreq: "monthly" },
   { path: "/products/tradeflow", priority: 0.7, changefreq: "monthly" },
   { path: "/contact", priority: 0.7, changefreq: "yearly" },
-  { path: "/blog", priority: 0.7, changefreq: "weekly", lastmod: BLOG_POSTS.map((p) => p.updated ?? p.date).sort().at(-1) },
+  { path: "/insights", priority: 0.7, changefreq: "weekly", lastmod: BLOG_POSTS.map((p) => p.updated ?? p.date).sort().at(-1) },
   ...BLOG_POSTS.map((p) => ({
-    path: `/blog/${p.slug}`,
+    path: `/insights/${p.slug}`,
     priority: 0.6,
     changefreq: "monthly",
     lastmod: p.updated ?? p.date,

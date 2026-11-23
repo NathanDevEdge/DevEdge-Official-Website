@@ -81,8 +81,15 @@ function Router() {
         <Route path={"/projects"} component={ProjectsPage} />
         <Route path={"/services"} component={ServicesPage} />
         <Route path={"/services/:slug"} component={ServicePage} />
-        <Route path={"/blog"} component={BlogPost} />
-        <Route path={"/blog/:slug"} component={BlogPost} />
+        <Route path={"/insights"} component={BlogPost} />
+        <Route path={"/insights/:slug"} component={BlogPost} />
+        {/* The blog moved to /insights. The server 301s these; this covers in-app navigation. */}
+        <Route path={"/blog"}>
+          <Redirect to="/insights" replace />
+        </Route>
+        <Route path={"/blog/:slug"}>
+          {(params) => <Redirect to={`/insights/${params.slug}`} replace />}
+        </Route>
         <Route path={"/about"} component={AboutPage} />
         <Route path={"/contact"} component={ContactPage} />
         <Route path={"/products/tradeflow"} component={TradeflowPage} />
