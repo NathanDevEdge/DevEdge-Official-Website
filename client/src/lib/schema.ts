@@ -77,3 +77,52 @@ export const faqSchema = (faqs: { q: string; a: string }[]) => ({
         acceptedAnswer: { "@type": "Answer", text: f.a },
     })),
 });
+
+/** A Free Tool page (/tools/<slug>) */
+export const webApplicationSchema = (t: {
+    slug: string;
+    name: string;
+    seoDescription: string;
+    category: string;
+    launched: string;
+    updated?: string;
+}) => ({
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "@id": `${SITE.url}/tools/${t.slug}#app`,
+    name: t.name,
+    url: `${SITE.url}/tools/${t.slug}`,
+    description: t.seoDescription,
+    applicationCategory: "BusinessApplication",
+    applicationSubCategory: t.category,
+    operatingSystem: "Any (runs in the browser)",
+    browserRequirements: "Requires JavaScript",
+    isAccessibleForFree: true,
+    offers: { "@type": "Offer", price: "0", priceCurrency: "AUD" },
+    datePublished: t.launched,
+    dateModified: t.updated ?? t.launched,
+    inLanguage: "en-AU",
+    publisher: { "@id": ORG_ID },
+    creator: { "@id": ORG_ID },
+});
+
+/** The /tools hub or a category page: a collection with a list of its tools */
+export const toolCollectionSchema = (c: { path: string; name: string; description: string; tools: { slug: string; name: string }[] }) => ({
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${SITE.url}${c.path}#collection`,
+    name: c.name,
+    url: `${SITE.url}${c.path}`,
+    description: c.description,
+    inLanguage: "en-AU",
+    publisher: { "@id": ORG_ID },
+    mainEntity: {
+        "@type": "ItemList",
+        itemListElement: c.tools.map((t, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            name: t.name,
+            url: `${SITE.url}/tools/${t.slug}`,
+        })),
+    },
+});

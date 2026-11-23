@@ -25,6 +25,7 @@ export const NAV_LINKS = [
   { name: "Work", href: "/projects" },
   { name: "About", href: "/about" },
   { name: "Insights", href: "/insights" },
+  { name: "Free Tools", href: "/tools" },
 ];
 
 /** The client portal is its own app (devedge-portal repo). */

@@ -111,6 +111,38 @@ async function startServer() {
     }
   });
 
+  // ── Free Tools: "email me new tools" ──────────────────────────────────────────
+  app.post("/api/tools-signup", contactLimiter, async (req, res) => {
+    const { email, source } = req.body || {};
+    if (typeof email !== "string" || email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ error: "Invalid email address" });
+    }
+    const from = typeof source === "string" ? source.slice(0, 80) : "unknown";
+    const RESEND_API_KEY = process.env.RESEND_API_KEY;
+    if (!RESEND_API_KEY) {
+      console.log(`New tools signup: ${email} (from ${from})`);
+      return res.status(200).json({ success: true, message: "Logged (no API key)" });
+    }
+    try {
+      const { Resend } = await import("resend");
+      const { error } = await new Resend(RESEND_API_KEY).emails.send({
+        from: "DevEdge Website <noreply@devedge.com.au>",
+        to: ["info@devedge.com.au"],
+        replyTo: email,
+        subject: `Free Tools signup: ${email}`,
+        html: `<div style="font-family:sans-serif"><p><strong>${escapeHtml(email)}</strong> asked to be emailed when a new free tool goes live.</p><p style="color:#7A5C3A">Signed up from: ${escapeHtml(from)}</p></div>`,
+      });
+      if (error) {
+        console.error("Resend error:", error);
+        return res.status(500).json({ error: "Signup failed" });
+      }
+      return res.status(200).json({ success: true });
+    } catch (err) {
+      console.error("Tools signup error:", err);
+      return res.status(500).json({ error: "Signup failed" });
+    }
+  });
+
   // ── Static (production only) ──────────────────────────────────────────────────
   if (process.env.NODE_ENV === "production") {
     const staticPath = path.resolve(__dirname, "public");
@@ -133,6 +165,18 @@ async function startServer() {
       const rest = (req.path.slice("/blog".length) || "").replace(/\/+$/, "");
       const query = req.originalUrl.includes("?") ? req.originalUrl.slice(req.originalUrl.indexOf("?")) : "";
       res.redirect(301, `/insights${rest}${query}`);
+    });
+
+    // Tool embeds (/embed/<tool>) are made to sit in iframes on other sites: allow framing
+    // anywhere, and keep them out of search results (the tool page is the one that ranks).
+    // nginx must not add X-Frame-Options to these either: see the /embed/ block in nginx.conf.
+    app.use((req, res, next) => {
+      if (/^\/embed(\/|$)/.test(req.path)) {
+        res.setHeader("X-Robots-Tag", "noindex");
+        res.setHeader("Content-Security-Policy", "frame-ancestors *");
+        res.removeHeader("X-Frame-Options");
+      }
+      next();
     });
 
     // Keep the client portal and admin out of search results

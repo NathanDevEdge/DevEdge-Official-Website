@@ -179,6 +179,11 @@ export function loadPosts(dir: string, { includeDrafts }: { includeDrafts: boole
     post.takeaway = parseTakeaway(data.takeaway, file);
     post.flow = parseFlow(data.flow, file);
     post.beforeAfter = parseBeforeAfter(data.beforeAfter, file);
+    if (data.tool != null) {
+      const tool = String(data.tool);
+      if (!SLUG.test(tool)) throw new Error(`${file}: "tool" must be a tool slug like utm-builder`);
+      post.tool = tool;
+    }
     post.body = buildBody(body, { takeaway: !!post.takeaway, flow: !!post.flow, "before-after": !!post.beforeAfter }, file);
     if (post.draft && !includeDrafts) continue;
     posts.push(post);

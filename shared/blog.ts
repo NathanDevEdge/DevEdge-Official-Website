@@ -54,6 +54,8 @@ export interface BlogPost {
   takeaway?: Takeaway;
   flow?: Flow;
   beforeAfter?: BeforeAfter;
+  /** Slug of the Free Tool this post teaches (a how-to post). Links the post and /tools/<slug> both ways. */
+  tool?: string;
   /** Rendered article body */
   body: BodyPart[];
 }

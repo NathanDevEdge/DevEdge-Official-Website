@@ -15,6 +15,10 @@ import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import TradeflowPage from "./pages/TradeflowPage";
 import BlogPost from "./pages/BlogPost";
+import ToolsHub from "./pages/ToolsHub";
+import ToolCategoryPage from "./pages/ToolCategoryPage";
+import ToolPage from "./pages/ToolPage";
+import ToolEmbed from "./pages/ToolEmbed";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { Redirect } from "wouter";
 import { lazy, Suspense, useEffect } from "react";
@@ -90,6 +94,10 @@ function Router() {
         <Route path={"/blog/:slug"}>
           {(params) => <Redirect to={`/insights/${params.slug}`} replace />}
         </Route>
+        <Route path={"/tools"} component={ToolsHub} />
+        <Route path={"/tools/category/:category"} component={ToolCategoryPage} />
+        <Route path={"/tools/:slug"} component={ToolPage} />
+        <Route path={"/embed/:slug"} component={ToolEmbed} />
         <Route path={"/about"} component={AboutPage} />
         <Route path={"/contact"} component={ContactPage} />
         <Route path={"/products/tradeflow"} component={TradeflowPage} />

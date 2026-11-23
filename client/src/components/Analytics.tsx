@@ -7,6 +7,8 @@ export default function Analytics() {
   const [location] = useLocation();
 
   useEffect(() => {
+    // Embeds load GA4 themselves, cookieless (see trackEmbedView)
+    if (window.location.pathname.startsWith("/embed/")) return;
     initAnalytics();
 
     const onClick = (e: MouseEvent) => {

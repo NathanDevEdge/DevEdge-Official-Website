@@ -37,7 +37,7 @@ fs.writeFileSync(path.join(pagesDir, "404.html"), page("/404"));
 const today = new Date().toISOString().slice(0, 10);
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${PRERENDER_ROUTES.map(
+${PRERENDER_ROUTES.filter((r) => r.sitemap !== false).map(
   (r) => `  <url>
     <loc>${SITE}${r.path}</loc>
     <lastmod>${r.lastmod ?? today}</lastmod>
@@ -49,4 +49,4 @@ ${PRERENDER_ROUTES.map(
 `;
 fs.writeFileSync(path.join(publicDir, "sitemap.xml"), sitemap);
 
-console.log(`✓ Pre-rendered ${PRERENDER_ROUTES.length} pages + 404, sitemap written`);
+console.log(`✓ Pre-rendered ${PRERENDER_ROUTES.length} pages + 404, sitemap written (${PRERENDER_ROUTES.filter((r) => r.sitemap !== false).length} URLs)`);

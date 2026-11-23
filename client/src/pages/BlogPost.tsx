@@ -11,6 +11,7 @@ import StackArt from "@/components/insights/StackArt";
 import Takeaway from "@/components/insights/Takeaway";
 import FlowDiagram from "@/components/insights/FlowDiagram";
 import BeforeAfter from "@/components/insights/BeforeAfter";
+import ToolCallout from "@/components/tools/ToolCallout";
 
 // Posts live in content/blog/*.md (see content/blog/README.md).
 // Prices never appear in them: every project is quoted privately.
@@ -284,12 +285,21 @@ export default function BlogPost() {
                         prose-a:text-primary hover:prose-a:text-primary/80"
                     onClick={onBodyClick}
                 >
+                    {/* How-to posts: the tool they teach, near the top (after the takeaway if there is one) */}
+                    {post.tool && post.body[0]?.type !== "takeaway" && <ToolCallout slug={post.tool} />}
                     {post.body.map((part, i) => {
                         switch (part.type) {
                             case "html":
                                 return <div key={i} dangerouslySetInnerHTML={{ __html: part.html }} />;
                             case "takeaway":
-                                return post.takeaway && <Takeaway key={i} {...post.takeaway} />;
+                                return (
+                                    post.takeaway && (
+                                        <div key={i}>
+                                            <Takeaway {...post.takeaway} />
+                                            {post.tool && i === 0 && <ToolCallout slug={post.tool} />}
+                                        </div>
+                                    )
+                                );
                             case "flow":
                                 return post.flow && <FlowDiagram key={i} {...post.flow} />;
                             case "beforeAfter":

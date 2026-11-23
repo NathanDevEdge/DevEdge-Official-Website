@@ -24,6 +24,7 @@ if the frontmatter is wrong.
 | `slug` | no | Overrides the URL if it must differ from the file name. Lowercase words joined by hyphens. |
 | `takeaway` | no | A dark panel with the post's answer in big type: `headline` (wrap words in `*stars*` to colour them), optional `answer`, optional `label` (defaults to "The short answer"). |
 | `flow` | no | A simple process picture: 2 to 5 `steps`, each a short `label` and `text`, plus an optional `caption`. The last step is highlighted. |
+| `tool` | no | Makes this the how-to guide for a Free Tool: the slug of `/tools/<slug>`, e.g. `utm-builder`. The post gets a "Try the free tool" card near the top, and the tool page links back with "Read the full guide". |
 | `beforeAfter` | no | The messy "now" next to the tidy result: `before` and `after`, each with `items` and a `caption`. A before item starting with `note:` is drawn as a sticky note. |
 
 ## Artwork and visual blocks
