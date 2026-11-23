@@ -117,7 +117,13 @@ export default function GoogleReviewQrTool({ embedded = false }: { embedded?: bo
     };
 
     return (
-        <div className={cn("grid gap-10 text-foreground", !embedded && "lg:grid-cols-[1fr_400px] lg:gap-14")}>
+        <div
+            className={cn(
+                "grid gap-10 text-foreground min-w-0",
+                "grid-cols-[minmax(0,1fr)] p-4 sm:p-8",
+                !embedded && "lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-14"
+            )}
+        >
             {/* ── Inputs ─────────────────────────────────────────── */}
             <div className="space-y-8 min-w-0">
                 <Step n={1} title="Find your Google review link">
@@ -247,7 +253,7 @@ export default function GoogleReviewQrTool({ embedded = false }: { embedded?: bo
                                         onClick={() => setColour(c.hex)}
                                         className={cn(
                                             "w-9 h-9 border-2 transition-transform",
-                                            colour === c.hex ? "border-foreground scale-110" : "border-transparent"
+                                            colour === c.hex ? "border-foreground ring-2 ring-inset ring-background" : "border-transparent"
                                         )}
                                         style={{ backgroundColor: c.hex }}
                                     />
@@ -299,7 +305,9 @@ export default function GoogleReviewQrTool({ embedded = false }: { embedded?: bo
                                             {copied === msg.key ? "Copied" : "Copy"}
                                         </button>
                                     </div>
-                                    <p className="px-4 py-3 text-[14px] leading-relaxed whitespace-pre-line break-words">{msg.text}</p>
+                                    <p className="px-4 py-3 text-[14px] leading-relaxed whitespace-pre-line [overflow-wrap:anywhere]">
+                                        {msg.text}
+                                    </p>
                                 </div>
                             ))}
                         </div>
