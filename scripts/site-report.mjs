@@ -203,7 +203,10 @@ async function gsc(token, r) {
   const prevStart = period === "week" ? addDays(prevEnd, -len) : r.prevStart;
   const site = encodeURIComponent(env("GSC_SITE_URL", "sc-domain:devedge.com.au"));
   const url = `https://www.googleapis.com/webmasters/v3/sites/${site}/searchAnalytics/query`;
-  const q = (s, e, dims = [], rowLimit = 10) => post(url, token, { startDate: iso(s), endDate: iso(e), dimensions: dims, rowLimit });
+  // The Domain property also covers subdomains (e.g. tradeflow.devedge.com.au); report the main site only
+  const mainSite = [{ filters: [{ dimension: "page", operator: "includingRegex", expression: "^https://devedge\\.com\\.au/" }] }];
+  const q = (s, e, dims = [], rowLimit = 10) =>
+    post(url, token, { startDate: iso(s), endDate: iso(e), dimensions: dims, rowLimit, dimensionFilterGroups: mainSite });
   const [tot, prev, queries, pages] = await Promise.all([
     q(start, end),
     q(prevStart, prevEnd),
@@ -219,6 +222,16 @@ const C = { ink: "#1A1008", brown: "#7A5C3A", line: "#D4B896", bg: "#FBEFD9", ac
 const n0 = (v) => Math.round(v).toLocaleString("en-AU");
 const pct = (v) => `${(v * 100).toFixed(1)}%`;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+// Google position: lower is better, so show places gained or lost rather than a percentage
+function positionDelta(cur, prev) {
+  if (!cur || !prev) return `<span style="color:${C.brown}">${cur ? "new" : "no data"}</span>`;
+  const d = prev - cur; // positive = moved up the results
+  if (Math.abs(d) < 0.1) return `<span style="color:${C.brown}">steady</span>`;
+  return d > 0
+    ? `<span style="color:${C.up}">▲ up ${d.toFixed(1)} places</span>`
+    : `<span style="color:${C.down}">▼ down ${(-d).toFixed(1)} places</span>`;
+}
 
 function delta(cur, prev, { lowerIsBetter = false, asPoints = false } = {}) {
   if (!prev && !cur) return `<span style="color:${C.brown}">no change</span>`;
@@ -316,7 +329,7 @@ function render(r, g, s) {
   <table width="100%" cellpadding="0" cellspacing="6" style="border-collapse:separate"><tr>
     ${tile("Clicks", n0(s.cur.clicks), delta(s.cur.clicks, s.prev.clicks))}
     ${tile("Impressions", n0(s.cur.impressions), delta(s.cur.impressions, s.prev.impressions))}
-    ${tile("Avg position", s.cur.position ? s.cur.position.toFixed(1) : "–", delta(s.cur.position, s.prev.position, { lowerIsBetter: true }))}
+    ${tile("Avg position", s.cur.position ? s.cur.position.toFixed(1) : "–", positionDelta(s.cur.position, s.prev.position))}
   </tr></table>
   ${table(
     ["Search query", "Clicks", "Impr.", "Position"],
