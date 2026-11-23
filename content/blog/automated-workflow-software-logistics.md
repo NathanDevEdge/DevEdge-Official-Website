@@ -5,11 +5,24 @@ date: 2026-04-10
 updated: 2026-10-29
 category: CRM & ERP
 readTime: 6 min read
+flow:
+  caption: "Quote accepted to paid, with nothing typed twice"
+  steps:
+    - label: Quote
+      text: Customer accepts the quote
+    - label: Order
+      text: Order and supplier POs created
+    - label: Delivered
+      text: Customer updated automatically
+    - label: Paid
+      text: Invoice raised in Xero
 ---
 
 ## The copy-and-paste tax
 
 Most trade, building and supply businesses run on the same loop: quote, order, purchase from suppliers, deliver, invoice. And in most of them, a person retypes information at every step. Each handoff costs time, and each retype is a chance to get a price, a quantity or an address wrong.
+
+{{flow}}
 
 ## The automations that pay off first
 

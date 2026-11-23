@@ -22,6 +22,21 @@ if the frontmatter is wrong.
 | `readTime` | no | e.g. `6 min read`. Worked out from the word count (230 words a minute) if left out. |
 | `draft` | no | `true` keeps the post off the live site (no page, not in the sitemap). It still shows in `pnpm dev`. |
 | `slug` | no | Overrides the URL if it must differ from the file name. Lowercase words joined by hyphens. |
+| `takeaway` | no | A dark panel with the post's answer in big type: `headline` (wrap words in `*stars*` to colour them), optional `answer`, optional `label` (defaults to "The short answer"). |
+| `flow` | no | A simple process picture: 2 to 5 `steps`, each a short `label` and `text`, plus an optional `caption`. The last step is highlighted. |
+| `beforeAfter` | no | The messy "now" next to the tidy result: `before` and `after`, each with `items` and a `caption`. A before item starting with `note:` is drawn as a sticky note. |
+
+## Artwork and visual blocks
+
+Every post automatically gets its own block-stack artwork at the top (and as its thumbnail
+on /insights). It's generated from the URL, so there's nothing to set.
+
+The three optional blocks above are for when a picture says it better than a paragraph.
+Keep them plain English: the readers are business owners, not developers. By default the
+takeaway sits at the top of the post and the others go just before the first `##` heading.
+To place one somewhere else, put `{{takeaway}}`, `{{flow}}` or `{{before-after}}` on a line
+of its own in the text. See `zoho-one-vs-zoho-crm.md`, `automated-workflow-software-logistics.md`
+and `signs-you-have-outgrown-spreadsheets.md` for one of each.
 
 ## Writing
 

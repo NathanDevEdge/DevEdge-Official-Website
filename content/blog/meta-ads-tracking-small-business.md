@@ -4,6 +4,20 @@ description: "Before you blame the creative or the budget, check what you're tel
 date: 2026-10-29
 category: Tracking
 readTime: 6 min read
+takeaway:
+  headline: "Meta finds more of *whatever you tell it a win is.*"
+  answer: "If the tracking is wrong, the ads optimise for the wrong thing. Fix the tracking before you touch the creative or the budget."
+flow:
+  caption: "Tell the ad platform which leads became customers"
+  steps:
+    - label: Ad
+      text: Someone clicks your ad
+    - label: Lead
+      text: They fill in your form, tracked once
+    - label: CRM
+      text: The lead lands with its source attached
+    - label: Sale
+      text: Meta learns which leads became customers
 ---
 
 When Meta ads stop performing, the usual reaction is to change the creative, change the audience or turn up the budget. Sometimes that's right. But more often than not, the real problem is underneath: the ad account doesn't know what a good result looks like, because the tracking is broken.
@@ -19,6 +33,8 @@ Meta's delivery system is very good at finding people who will do the thing you'
 - **Optimising for the wrong event.** Campaigns set to clicks or landing page views when what you actually want is a form submission or a phone call.
 - **Leads tracked, sales not.** If leads go into a CRM and nobody tells Meta which ones became customers, the algorithm can't tell a tyre-kicker from a buyer.
 - **A landing page that leaks.** Slow load times, a form that's hard to use on a phone, or a page that doesn't match the ad. Tracking can't fix that, but it will show you where people drop off.
+
+{{flow}}
 
 ## What a solid setup looks like
 

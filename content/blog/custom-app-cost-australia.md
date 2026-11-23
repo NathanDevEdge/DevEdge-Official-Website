@@ -4,6 +4,9 @@ description: "The honest answer is \"it depends\", so here's exactly what it dep
 date: 2026-10-29
 category: Apps
 readTime: 7 min read
+takeaway:
+  headline: "A price without a scope *is just a guess.*"
+  answer: "Five things move the cost of an app: screens, user roles, integrations, platforms and admin. Pin those down and you get a quote you can hold someone to."
 ---
 
 Search "how much does an app cost" and you'll find price ranges so wide they're useless. That's not because agencies are being cagey. It's because "app" covers everything from a quoting calculator to a two-sided marketplace. A number without a scope is a guess.

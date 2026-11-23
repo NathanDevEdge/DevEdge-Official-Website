@@ -281,3 +281,15 @@
 .flow-label-line { font-size: 13px; line-height: 1.4; opacity: 0.55; transition: opacity 200ms ease-out; }
 .flow-label[data-active] .flow-label-line { opacity: 1; color: #1A1008; }
 .flow-label[data-active] .flow-label-title { color: #C97B3A; }
+
+/* Insights post artwork: blocks rise into place on load (components/insights/StackArt.tsx) */
+@keyframes stack-rise {
+  from { transform: translateY(48px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.stack-rise {
+  animation: stack-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .stack-rise { animation: none; }
+}

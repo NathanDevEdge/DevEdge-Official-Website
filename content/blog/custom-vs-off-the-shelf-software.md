@@ -5,6 +5,9 @@ date: 2026-05-05
 updated: 2026-10-29
 category: Apps
 readTime: 6 min read
+takeaway:
+  headline: "Buy what every business does the same. *Build what makes you different.*"
+  answer: "Off-the-shelf suits standard work. There's often a middle option too: set up the tools you already pay for properly before building anything."
 ---
 
 ## The SaaS trap

@@ -6,7 +6,7 @@ import path from "node:path";
 import { Marked } from "marked";
 import { parse as parseYaml } from "yaml";
 import type { Plugin } from "vite";
-import { BLOG_CATEGORIES, type BlogPost } from "../shared/blog";
+import { BLOG_CATEGORIES, type BeforeAfter, type BlogPost, type BodyPart, type Flow, type Takeaway } from "../shared/blog";
 import { LEGACY_BLOG_REDIRECTS } from "../client/src/data/blogRedirects";
 
 const VIRTUAL_ID = "virtual:blog-posts";
@@ -60,6 +60,81 @@ function asText(value: unknown, field: string, file: string): string {
   return value.trim();
 }
 
+// ── Visual blocks ─────────────────────────────────────────────────────────────
+// Optional frontmatter blocks a post can show alongside its text (see content/blog/README.md).
+
+function strings(value: unknown, field: string, file: string, min: number, max: number): string[] {
+  if (!Array.isArray(value) || value.length < min || value.length > max || value.some((v) => typeof v !== "string" || !v.trim())) {
+    throw new Error(`${file}: "${field}" needs ${min} to ${max} lines of text`);
+  }
+  return value.map((v: string) => v.trim());
+}
+
+function parseTakeaway(value: unknown, file: string): Takeaway | undefined {
+  if (value == null) return undefined;
+  const v = value as Record<string, unknown>;
+  return {
+    label: v.label == null ? "The short answer" : asText(v.label, "takeaway.label", file),
+    headline: asText(v.headline, "takeaway.headline", file),
+    answer: v.answer == null ? undefined : asText(v.answer, "takeaway.answer", file),
+  };
+}
+
+function parseFlow(value: unknown, file: string): Flow | undefined {
+  if (value == null) return undefined;
+  const v = value as Record<string, unknown>;
+  if (!Array.isArray(v.steps) || v.steps.length < 2 || v.steps.length > 5) {
+    throw new Error(`${file}: "flow.steps" needs 2 to 5 steps, each with a label and text`);
+  }
+  const steps = v.steps.map((step: Record<string, unknown>, i: number) => ({
+    label: asText(step?.label, `flow.steps[${i}].label`, file),
+    text: asText(step?.text, `flow.steps[${i}].text`, file),
+  }));
+  return { caption: v.caption == null ? undefined : asText(v.caption, "flow.caption", file), steps };
+}
+
+function parseBeforeAfter(value: unknown, file: string): BeforeAfter | undefined {
+  if (value == null) return undefined;
+  const v = value as Record<string, Record<string, unknown> | undefined>;
+  return {
+    before: {
+      items: strings(v.before?.items, "beforeAfter.before.items", file, 2, 5),
+      caption: asText(v.before?.caption, "beforeAfter.before.caption", file),
+    },
+    after: {
+      items: strings(v.after?.items, "beforeAfter.after.items", file, 2, 4),
+      caption: asText(v.after?.caption, "beforeAfter.after.caption", file),
+    },
+  };
+}
+
+// A line like {{flow}} in the Markdown puts that block there. Blocks a post has but
+// doesn't place go in by default: the takeaway first, the others after the intro.
+const MARKERS = { takeaway: "takeaway", flow: "flow", "before-after": "beforeAfter" } as const;
+type Marker = keyof typeof MARKERS;
+
+function buildBody(markdownText: string, has: Record<Marker, boolean>, file: string): BodyPart[] {
+  let text = markdownText;
+  for (const marker of Object.keys(MARKERS) as Marker[]) {
+    const count = text.match(new RegExp(`^\\{\\{${marker}\\}\\}[ \\t]*$`, "gm"))?.length ?? 0;
+    if (count > 1) throw new Error(`${file}: {{${marker}}} is used more than once`);
+    if (count && !has[marker]) throw new Error(`${file}: {{${marker}}} is in the text but the frontmatter has no ${MARKERS[marker]} block`);
+    if (count || !has[marker]) continue;
+    if (marker === "takeaway") text = `{{takeaway}}\n\n${text}`;
+    else {
+      const firstHeading = text.search(/^## /m);
+      text = firstHeading < 0 ? `${text}\n\n{{${marker}}}\n` : `${text.slice(0, firstHeading)}{{${marker}}}\n\n${text.slice(firstHeading)}`;
+    }
+  }
+  const parts: BodyPart[] = [];
+  for (const chunk of text.split(/^(\{\{(?:takeaway|flow|before-after)\}\})[ \t]*$/m)) {
+    const marker = chunk.match(/^\{\{(.+)\}\}$/)?.[1] as Marker | undefined;
+    if (marker) parts.push({ type: MARKERS[marker] });
+    else if (chunk.trim()) parts.push({ type: "html", html: markdown.parse(chunk, { async: false }) as string });
+  }
+  return parts;
+}
+
 // ── Loading ───────────────────────────────────────────────────────────────────
 export function loadPosts(dir: string, { includeDrafts }: { includeDrafts: boolean }): BlogPost[] {
   const files = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith(".md") && !f.startsWith("_") && f.toLowerCase() !== "readme.md") : [];
@@ -99,8 +174,12 @@ export function loadPosts(dir: string, { includeDrafts }: { includeDrafts: boole
       readTime: data.readTime == null ? `${Math.max(1, Math.round(words / WORDS_PER_MINUTE))} min read` : String(data.readTime),
       category: category as BlogPost["category"],
       draft: data.draft === true,
-      html: markdown.parse(body, { async: false }) as string,
+      body: [],
     };
+    post.takeaway = parseTakeaway(data.takeaway, file);
+    post.flow = parseFlow(data.flow, file);
+    post.beforeAfter = parseBeforeAfter(data.beforeAfter, file);
+    post.body = buildBody(body, { takeaway: !!post.takeaway, flow: !!post.flow, "before-after": !!post.beforeAfter }, file);
     if (post.draft && !includeDrafts) continue;
     posts.push(post);
   }

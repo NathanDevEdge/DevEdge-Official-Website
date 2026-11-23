@@ -4,6 +4,20 @@ description: "Spreadsheets are brilliant until they aren't. Here are the warning
 date: 2026-10-29
 category: CRM & ERP
 readTime: 7 min read
+beforeAfter:
+  before:
+    items:
+      - Quotes_FINAL.xlsx
+      - Quotes_FINAL_v3.xlsx
+      - Leads (Sam's).xlsx
+      - "note: call back Tues??"
+    caption: "Three versions. One person who knows how it works."
+  after:
+    items:
+      - Customers & quotes
+      - Orders & stock
+      - Invoices in Xero
+    caption: "One system everyone trusts."
 ---
 
 Almost every business we work with started on spreadsheets, and that's the right call. They're flexible, free and everyone knows how to use them. The trouble is that they don't tell you when you've outgrown them. You just slowly start losing time, money and customers.

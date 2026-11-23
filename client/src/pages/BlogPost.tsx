@@ -7,6 +7,10 @@ import Footer from "@/components/Footer";
 import ContactModal from "@/components/ContactModal";
 import { m } from "framer-motion";
 import posts from "virtual:blog-posts";
+import StackArt from "@/components/insights/StackArt";
+import Takeaway from "@/components/insights/Takeaway";
+import FlowDiagram from "@/components/insights/FlowDiagram";
+import BeforeAfter from "@/components/insights/BeforeAfter";
 
 // Posts live in content/blog/*.md (see content/blog/README.md).
 // Prices never appear in them: every project is quoted privately.
@@ -112,7 +116,7 @@ function BlogIndex() {
                             const { slug } = post;
                             return (
                                 <Link key={slug} href={`/insights/${slug}`}>
-                                    <div className="border-b border-[#D4B896] py-8 group hover:bg-[#F5DFC8] transition-colors duration-150 cursor-pointer">
+                                    <div className="border-b border-[#D4B896] py-8 grid md:grid-cols-[1fr_220px] gap-8 items-center group hover:bg-[#F5DFC8] transition-colors duration-150 cursor-pointer">
                                         {/* Text */}
                                         <div>
                                             <div className="flex items-center gap-4 font-mono text-[11px] text-muted-foreground tracking-widest mb-3">
@@ -129,6 +133,9 @@ function BlogIndex() {
                                             <span className="font-mono text-[11px] text-primary tracking-[0.18em] uppercase inline-flex items-center gap-2">
                                                 Read article →
                                             </span>
+                                        </div>
+                                        <div className="hidden md:block h-[132px] overflow-hidden border border-[#2E1F0F] group-hover:border-[#C97B3A]/50 transition-colors duration-300">
+                                            <StackArt seed={slug} variant="thumb" />
                                         </div>
                                     </div>
                                 </Link>
@@ -248,6 +255,20 @@ export default function BlogPost() {
                 </div>
             </section>
 
+            {/* Artwork, unique to each post */}
+            <div className="container">
+                <m.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3, delay: 0.12, ease }}
+                    className="h-[220px] md:h-[360px] overflow-hidden"
+                >
+                    {/* The wide layout gets cropped too hard on phones, so they get the compact one */}
+                    <StackArt seed={post.slug} variant="hero" animate className="hidden md:block" />
+                    <StackArt seed={post.slug} variant="thumb" animate className="md:hidden" />
+                </m.div>
+            </div>
+
             {/* Article body */}
             <div className="container max-w-3xl mt-12">
                 <m.div
@@ -262,8 +283,20 @@ export default function BlogPost() {
                         prose-blockquote:border-l-primary prose-blockquote:bg-[#EDD9C0] prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:text-foreground prose-blockquote:not-italic prose-blockquote:font-medium
                         prose-a:text-primary hover:prose-a:text-primary/80"
                     onClick={onBodyClick}
-                    dangerouslySetInnerHTML={{ __html: post.html }}
-                />
+                >
+                    {post.body.map((part, i) => {
+                        switch (part.type) {
+                            case "html":
+                                return <div key={i} dangerouslySetInnerHTML={{ __html: part.html }} />;
+                            case "takeaway":
+                                return post.takeaway && <Takeaway key={i} {...post.takeaway} />;
+                            case "flow":
+                                return post.flow && <FlowDiagram key={i} {...post.flow} />;
+                            case "beforeAfter":
+                                return post.beforeAfter && <BeforeAfter key={i} {...post.beforeAfter} />;
+                        }
+                    })}
+                </m.div>
 
                 {/* CTA */}
                 <m.div
