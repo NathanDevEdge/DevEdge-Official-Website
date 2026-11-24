@@ -46,7 +46,6 @@ That did its job. In Graeme's words, it gave customers "an accurate way to measu
 
 ## After: draw the deck, price it, send the quote
 
-![The new DeckMate homepage: draw the deck, price it, send the quote](/images/insights/deckmate/after-homepage.webp)
 
 The new DeckMate is a quoting app for carpenters, on the web and on iPhone. You draw the deck on screen, and the app works out everything a quote needs from that one drawing:
 
@@ -59,7 +58,6 @@ The new DeckMate is a quoting app for carpenters, on the web and on iPhone. You 
 
 There's also a free cost calculator for homeowners, permit drawing sets, and a marketplace where homeowners can post a job for up to five local carpenters to quote.
 
-![Drawing a deck in the DeckMate app, with the pergola, stairs and dimensions set out](/images/insights/deckmate/after-app-plan.webp)
 
 ## Why the deck calculator was hard to build
 

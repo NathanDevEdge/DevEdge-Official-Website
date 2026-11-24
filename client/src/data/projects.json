@@ -13,7 +13,14 @@
             "End-to-end Zoho CRM integration for Leads & Contacts",
             "Automated sales pipeline and customer communications",
             "Custom-built frontend for architectural visualization"
-        ]
+        ],
+        "image": {
+            "src": "/images/work/deckmate-home.webp",
+            "alt": "The DeckMate homepage: draw your deck and we'll count every board for you",
+            "url": "deckmate.au",
+            "width": 1600,
+            "height": 1000
+        }
     },
     {
         "id": "tradeflow",

@@ -5,7 +5,17 @@ import Footer from "@/components/Footer";
 import ContactModal from "@/components/ContactModal";
 import { m } from "framer-motion";
 import { Link } from "wouter";
-import projects from "@/data/projects.json";
+import projectsData from "@/data/projects.json";
+
+type Project = {
+    id: string;
+    title: string;
+    tags: string[];
+    description: string;
+    features: string[];
+    image?: { src: string; alt: string; url: string; width: number; height: number };
+};
+const projects = projectsData as Project[];
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -89,7 +99,7 @@ export default function ProjectsPage() {
                         className="border-t border-[#D4B896] space-y-0"
                     >
                         {projects.map((project) => (
-                            <div key={project.id} className="border-b border-[#D4B896] py-16 max-w-3xl">
+                            <div key={project.id} className={`border-b border-[#D4B896] py-16 ${project.image ? "grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-12 items-center" : "max-w-3xl"}`}>
                                 {/* Case study content */}
                                 <m.div
                                     initial={{ opacity: 0, y: 20 }}
@@ -137,6 +147,23 @@ export default function ProjectsPage() {
                                         </div>
                                     </div>
                                 </m.div>
+                                {project.image && (
+                                    <m.figure
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true, amount: 0.2 }}
+                                        transition={{ duration: 0.4, delay: 0.14, ease }}
+                                        className="border border-[#D4B896] bg-white shadow-[0_24px_60px_-30px_rgba(46,31,15,0.45)] overflow-hidden"
+                                    >
+                                        <div className="flex items-center gap-1.5 px-3 h-7 border-b border-[#E8D9C4] bg-[#F7F1E8]">
+                                            <span className="w-2 h-2 rounded-full bg-[#D4B896]" />
+                                            <span className="w-2 h-2 rounded-full bg-[#D4B896]" />
+                                            <span className="w-2 h-2 rounded-full bg-[#D4B896]" />
+                                            <span className="ml-3 font-mono text-[10px] tracking-[0.12em] text-muted-foreground">{project.image.url}</span>
+                                        </div>
+                                        <img src={project.image.src} alt={project.image.alt} width={project.image.width} height={project.image.height} loading="lazy" decoding="async" className="block w-full h-auto" />
+                                    </m.figure>
+                                )}
                             </div>
                         ))}
                     </m.div>
