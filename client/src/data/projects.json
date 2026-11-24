@@ -3,16 +3,16 @@
         "id": "deckmate",
         "title": "DeckMate",
         "tags": [
-            "Web & iPhone App",
+            "Web App",
             "Zoho Integration",
             "Architecture"
         ],
-        "description": "Started as a website with a deck calculator feeding Zoho CRM. Rebuilt into a full deck quoting app for carpenters, on the web and iPhone.",
+        "description": "A comprehensive digital ecosystem for decking professionals, featuring a dynamic 3D calculator and deep business automation.",
         "features": [
-            "Drag-to-draw deck plans: L-shapes, angles, steps, pergolas and pools",
-            "Framing with span checks, a 3D build and a cut list packed into stock lengths",
-            "Live pricing from real trade rates, with markup and margin sliders",
-            "Branded PDF quotes emailed to the client from the app"
+            "Dynamic Deck Calculator with material and cost estimation",
+            "End-to-end Zoho CRM integration for Leads & Contacts",
+            "Automated sales pipeline and customer communications",
+            "Custom-built frontend for architectural visualization"
         ]
     },
     {
